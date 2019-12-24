@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="huacloud.jwdsj.module.zlfx.chqsrs.mapper.ZlfxChqsrsMapper">
+
+    <select id="getAyfbTotal" resultType="java.lang.Long">
+         SELECT
+            COUNT(1)
+        FROM
+                (
+                        select
+                                AJXZ
+                        from
+                                "APP"."APP_ZLFX_QSQK"
+                        WHERE
+                                1 = 1
+                            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                            AND RQTJ BETWEEN #{sDate} AND #{eDate}
+                        GROUP BY
+                                AJXZ
+                )
+    </select>
+
+    <select id="getAyfb" resultType="huacloud.jwdsj.module.zlfx.bqsrs.model.vo.ZlfxBqsrsAyfbVo">
+         select
+                AJXZ name,
+                SUM(CHQSRS) AS num
+        from
+                "APP"."APP_ZLFX_QSQK"
+        WHERE
+                1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND RQTJ BETWEEN #{sDate} AND #{eDate}
+        GROUP BY
+                AJXZ
+        ORDER BY num DESC
+        LIMIT #{s1},#{s2}
+    </select>
+
+    <select id="getAydqfb" resultType="huacloud.jwdsj.module.zlfx.bqsrs.model.vo.ZlfxBqsrsAydqfbVo">
+        SELECT
+        T.CBDW_SZSF AS name,
+        SUM(T.CHQSRS) AS num1,
+        (
+        SELECT
+        SUM(CHQSRS)
+        FROM
+        "APP"."APP_ZLFX_QSQK"
+        WHERE
+        1 = 1
+        <if test="ajxz != null and ajxz != ''">
+            AND AJXZ = #{ajxz}
+        </if>
+        AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+        AND CBDW_SZSF = T.CBDW_SZSF
+        ) AS num2
+        FROM
+        "APP"."APP_ZLFX_QSQK" T
+        WHERE
+        1 = 1
+        <if test="ajxz != null and ajxz != ''">
+            AND AJXZ = #{ajxz}
+        </if>
+        AND T.RQTJ BETWEEN #{sDate} AND #{eDate}
+        GROUP BY
+        T.CBDW_SZSF
+    </select>
+</mapper>

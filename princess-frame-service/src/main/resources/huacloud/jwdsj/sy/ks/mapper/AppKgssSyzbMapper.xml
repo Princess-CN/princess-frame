@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="huacloud.jwdsj.module.sy.ks.mapper.AppKgssSyzbMapper">
+
+
+	<resultMap id="AppKgssSyzbTotalMap" type="huacloud.jwdsj.module.sy.ks.model.entity.AppKgssSyzbEntity">
+        <result column="KGSLJS" property="kgsljs" />
+        <result column="JBSLJS" property="jbsljs" />
+        <result column="SSSLJS" property="sssljs" />
+        <result column="SCXFJS" property="scxfjs" />
+        <result column="SSSCCLGLKGSSJBJS" property="ssscclglkgssjbjs" />
+        <result column="KGSCCLGLKGSSKBKS" property="kgscclglkgsskbks" />
+        <result column="XSPCLAJS" property="xspclajs" />
+        <result column="SLXSPCSQJS" property="slxspcsqjs" />
+        <result column="JDGYPCJS" property="jdgypcjs" />
+        <result column="ZFPCJ" property="zfpcj" />
+        <result column="FHCCZHRMB" property="fhcczhrmb" />
+        <result column="BFJCJGCLJDSSAJLAFCJS" property="bfjcjgcljdssajlafcjs" />
+        <result column="BFFYSXXSCPSSAJLAFCJS" property="bffysxxscpssajlafcjs" />
+        <result column="JFCWCYJDJS" property="jfcwcyjdjs" />
+        <result column="JFCGBYJDJS" property="jfcgbyjdjs" />
+        <result column="JFCJZYJDJS" property="jfcjzyjdjs" />
+        <result column="TCKSJS" property="tcksjs" />
+        <result column="TCZSJCJYJS" property="tczsjcjyjs" />
+        <result column="TCGJSFJZJS" property="tcgjsfjzjs" />
+        <result column="SJJZRS" property="sjjzrs" />
+        <result column="FFJZJ" property="ffjzj" />
+        <result column="LAFCBFFYSXXSCPSSAJJS" property="lafcbffysxxscpssajjs" />
+        <result column="LAFCBFJCJGXSCLJDSSAJJS" property="lafcbfjcjgxscljdssajjs" />
+    </resultMap>
+    <!-- 通用查询映射结果 -->
+    <resultMap id="AppKgssSyzbEntityMap" type="huacloud.jwdsj.module.sy.ks.model.entity.AppKgssSyzbEntity">
+        <result column="ETL_DT" property="etlDt" />
+        <result column="CBDW_BM" property="cbdwBm" />
+        <result column="CBDW_MC" property="cbdwMc" />
+        <result column="CBDW_SZCS" property="cbdwSzcs" />
+        <result column="CBDW_SZQX" property="cbdwSzqx" />
+        <result column="CBDW_SZSF" property="cbdwSzsf" />
+        <result column="RQTJ" property="rqtj" />
+        <result column="AJXZ_MC" property="ajxzMc" />
+        <result column="SLJS" property="sljs" />
+        <result column="TCKSJS" property="tcksjs" />
+        <result column="YSJS" property="ysjs" />
+        <result column="YSGBJS" property="ysgbjs" />
+        <result column="TCJCJYJS" property="tcjcjyjs" />
+        <result column="TCZSJCJYJS" property="tczsjcjyjs" />
+        <result column="CNZSJCJYJS" property="cnzsjcjyjs" />
+        <result column="SJJS" property="sjjs" />
+        <result column="ZCQSJS" property="zcqsjs" />
+        <result column="ZCNMGQSJS" property="zcnmgqsjs" />
+        <result column="TCJCJY_CNJS" property="tcjcjyCnjs" />
+        <result column="SJXJSSJS" property="sjxjssjs" />
+        <result column="FYGPJS" property="fygpjs" />
+        <result column="FYFHCSJS" property="fyfhcsjs" />
+        <result column="FYHJCSJS" property="fyhjcsjs" />
+        <result column="FYTJJAJS" property="fytjjajs" />
+        <result column="TCJCJY_XJSS_JS" property="tcjcjyXjssJs" />
+        <result column="QZCQJDAJJS" property="qzcqjdajjs" />
+        <result column="SCTCKSJS" property="sctcksjs" />
+        <result column="FYXSAJJS" property="fyxsajjs" />
+        <result column="CHJDJYJS" property="chjdjyjs" />
+        <result column="TQSJJS" property="tqsjjs" />
+        <result column="TJJS" property="tjjs" />
+        <result column="CSJS" property="csjs" />
+        <result column="HJCSJS" property="hjcsjs" />
+        <result column="FYWCYZJS" property="fywcyzjs" />
+        <result column="ZSPJJGQT" property="zspjjgqt" />
+        <result column="AYFBJS" property="ayfbjs" />
+        <result column="FYCDZSJS" property="fycdzsjs" />
+        <result column="CNJCJYJS" property="cnjcjyjs" />
+        <result column="TCJCJYS" property="tcjcjys" />
+        <result column="FYCNJS" property="fycnjs" />
+        <result column="XZJGBLXZZAJJS" property="xzjgblxzzajjs" />
+        <result column="XZJGWFAJJS" property="xzjgwfajjs" />
+        <result column="JBSLJS" property="jbsljs" />
+        <result column="QZSCXFJS" property="qzscxfjs" />
+        <result column="KGSLJS" property="kgsljs" />
+        <result column="SCCLGLKGSSKBKS" property="scclglkgsskbks" />
+        <result column="KGSCCLGLKGSSKBKS" property="kgscclglkgsskbks" />
+        <result column="TCGJSFJZJS" property="tcgjsfjzjs" />
+        <result column="SJJZRS" property="sjjzrs" />
+        <result column="FFJZJ" property="ffjzj" />
+        <result column="SLSFJZJS" property="slsfjzjs" />
+        <result column="QZJCJGZDTQSFJZJS" property="qzjcjgzdtqsfjzjs" />
+        <result column="DFPDXSJJZRS" property="dfpdxsjjzrs" />
+        <result column="TQGJSFJZJS" property="tqgjsfjzjs" />
+        <result column="ZFPCJ" property="zfpcj" />
+        <result column="FHCCZHRMB" property="fhcczhrmb" />
+        <result column="SLXSPCSQJS" property="slxspcsqjs" />
+        <result column="XSPCLAJS" property="xspclajs" />
+        <result column="JDGYPCJS" property="jdgypcjs" />
+        <result column="TCZSJCJYS" property="tczsjcjys" />
+        <result column="SSSLJS" property="sssljs" />
+        <result column="SCCLGLKGSSJBJS" property="scclglkgssjbjs" />
+        <result column="SSSCCLGLKGSSJBJS" property="ssscclglkgssjbjs" />
+        <result column="LAFCXSSSAJJS" property="lafcxsssajjs" />
+        <result column="LAFCBFFYSXXSCPSSAJJS" property="lafcbffysxxscpssajjs" />
+        <result column="JFCTCKSJS" property="jfctcksjs" />
+        <result column="JFCTCZSJCJYJS" property="jfctczsjcjyjs" />
+        <result column="SLBFFYSXXSCPSSAJJS" property="slbffysxxscpssajjs" />
+        <result column="BFFYSXXSCPSSAJLAFCJS" property="bffysxxscpssajlafcjs" />
+        <result column="LAFCBFFYSXXSCPBQSJS" property="lafcbffysxxscpbqsjs" />
+        <result column="LAFCBFJCJGXSCLJDSSAJJS" property="lafcbfjcjgxscljdssajjs" />
+        <result column="LAFCBFBQSJS" property="lafcbfbqsjs" />
+        <result column="JFCWCYJDJS" property="jfcwcyjdjs" />
+        <result column="JFCGBYJDJS" property="jfcgbyjdjs" />
+        <result column="JFCJZYJDJS" property="jfcjzyjdjs" />
+        <result column="SLBFJCJGCLJDSSAJJS" property="slbfjcjgcljdssajjs" />
+        <result column="QZBFBQSSSJS" property="qzbfbqsssjs" />
+        <result column="BGYJDJS" property="bgyjdjs" />
+        <result column="JZYJDJS" property="jzyjdjs" />
+        <result column="BLSSAJGCZGKSCJS" property="blssajgczgkscjs" />
+        <result column="QZBFJCJGCLJDGKSCJS" property="qzbfjcjgcljdgkscjs" />
+        <result column="BFFYSXCPGKSCJS" property="bffysxcpgkscjs" />
+        <result column="GKDFJS" property="gkdfjs" />
+        <result column="GPHFHZSZS" property="gphfhzszs" />
+        <result column="GPZS" property="gpzs" />
+        <result column="FHCSZS" property="fhcszs" />
+        <result column="QZSCJBJS" property="qzscjbjs" />
+        <result column="QZSCKGJS" property="qzsckgjs" />
+        <result column="QZSCSSJS" property="qzscssjs" />
+        <result column="BFJCJGCLJDSSAJLAFCJS" property="bfjcjgcljdssajlafcjs" />
+        <result column="QZBFFYSXXSCPBQSSSJS" property="qzbffysxxscpbqsssjs" />
+        <result column="QZBFJCJGCLJDBQSSSJS" property="qzbfjcjgcljdbqsssjs" />
+        <result column="TQJZZTWQTRJS" property="tqjzztwqtrjs" />
+        <result column="TQJZZTWDSRJQSJS" property="tqjzztwdsrjqsjs" />
+        <result column="TQJZZTWDSRJS" property="tqjzztwdsrjs" />
+        <result column="TQJZJS" property="tqjzjs" />
+        <result column="MSSSJDJS" property="msssjdjs" />
+        <result column="SCSSJS" property="scssjs" />
+        <result column="SCXFJS" property="scxfjs" />
+        <result column="MXLSSJS" property="mxlssjs" />
+        <result column="XZSSJDJS" property="xzssjdjs" />
+        <result column="QTLSSJS" property="qtlssjs" />
+        <result column="GYSSJDJS" property="gyssjdjs" />
+        <result column="SCCLGLSSJBJS" property="scclglssjbjs" />
+    </resultMap>
+
+
+	
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ETL_DT, CBDW_BM, CBDW_MC, CBDW_SZCS, CBDW_SZQX, CBDW_SZSF, RQTJ, AJXZ_MC, SLJS, TCKSJS, YSJS, YSGBJS, TCJCJYJS, TCZSJCJYJS, CNZSJCJYJS, SJJS, ZCQSJS, ZCNMGQSJS, TCJCJY_CNJS, SJXJSSJS, FYGPJS, FYFHCSJS, FYHJCSJS, FYTJJAJS, TCJCJY_XJSS_JS, QZCQJDAJJS, SCTCKSJS, FYXSAJJS, CHJDJYJS, TQSJJS, TJJS, CSJS, HJCSJS, FYWCYZJS, ZSPJJGQT, AYFBJS, FYCDZSJS, CNJCJYJS, TCJCJYS, FYCNJS, XZJGBLXZZAJJS, XZJGWFAJJS, JBSLJS, QZSCXFJS, KGSLJS, SCCLGLKGSSKBKS, KGSCCLGLKGSSKBKS, TCGJSFJZJS, SJJZRS, FFJZJ, SLSFJZJS, QZJCJGZDTQSFJZJS, DFPDXSJJZRS, TQGJSFJZJS, ZFPCJ, FHCCZHRMB, SLXSPCSQJS, XSPCLAJS, JDGYPCJS, TCZSJCJYS, SSSLJS, SCCLGLKGSSJBJS, SSSCCLGLKGSSJBJS, LAFCXSSSAJJS, LAFCBFFYSXXSCPSSAJJS, JFCTCKSJS, JFCTCZSJCJYJS, SLBFFYSXXSCPSSAJJS, BFFYSXXSCPSSAJLAFCJS, LAFCBFFYSXXSCPBQSJS, LAFCBFJCJGXSCLJDSSAJJS, LAFCBFBQSJS, JFCWCYJDJS, JFCGBYJDJS, JFCJZYJDJS, SLBFJCJGCLJDSSAJJS, QZBFBQSSSJS, BGYJDJS, JZYJDJS, BLSSAJGCZGKSCJS, QZBFJCJGCLJDGKSCJS, BFFYSXCPGKSCJS, GKDFJS, GPHFHZSZS, GPZS, FHCSZS, QZSCJBJS, QZSCKGJS, QZSCSSJS, BFJCJGCLJDSSAJLAFCJS, QZBFFYSXXSCPBQSSSJS, QZBFJCJGCLJDBQSSSJS, TQJZZTWQTRJS, TQJZZTWDSRJQSJS, TQJZZTWDSRJS, TQJZJS, MSSSJDJS, SCSSJS, SCXFJS, MXLSSJS, XZSSJDJS, QTLSSJS, GYSSJDJS, SCCLGLSSJBJS
+    </sql>
+
+	<sql id="Base_Column_List_sum">
+			sum(KGSLJS)                         as KGSLJS              ,
+	        sum(JBSLJS)                         as JBSLJS              ,
+	        sum(SSSLJS)                         as SSSLJS              ,
+	        sum(SCXFJS)                         as SCXFJS              ,
+	        sum(SSSCCLGLKGSSJBJS)               as SSSCCLGLKGSSJBJS    ,
+	        sum(KGSCCLGLKGSSKBKS)               as KGSCCLGLKGSSKBKS    ,
+	        sum(XSPCLAJS)                       as XSPCLAJS            ,
+	        sum(SLXSPCSQJS)                     as SLXSPCSQJS          ,
+	        sum(JDGYPCJS)                       as JDGYPCJS            ,
+	        sum(ZFPCJ)                          as ZFPCJ               ,
+	        sum(FHCCZHRMB)                      as FHCCZHRMB           ,
+	        sum(BFJCJGCLJDSSAJLAFCJS)           as BFJCJGCLJDSSAJLAFCJS,
+	        sum(BFFYSXXSCPSSAJLAFCJS)           as BFFYSXXSCPSSAJLAFCJS,
+	        sum(LAFCBFFYSXXSCPSSAJJS)			as LAFCBFFYSXXSCPSSAJJS,
+	        sum(LAFCBFJCJGXSCLJDSSAJJS)			as LAFCBFJCJGXSCLJDSSAJJS,
+	        sum(JFCWCYJDJS) as JFCWCYJDJS,
+	        sum(JFCGBYJDJS) as JFCGBYJDJS,
+	        sum(JFCJZYJDJS) as JFCJZYJDJS,
+	        sum(TCKSJS)     as TCKSJS    ,
+	        sum(TCZSJCJYJS) as TCZSJCJYJS,
+	        sum(TCGJSFJZJS) as TCGJSFJZJS,
+	        sum(SJJZRS)     as SJJZRS    ,
+	        sum(FFJZJ)      as FFJZJ
+	        
+	</sql>
+	
+	<select id="selectAppKgssSyzbEntityByQo" parameterType="huacloud.jwdsj.module.sy.ks.model.qo.SyKsQo"
+	resultMap="AppKgssSyzbTotalMap">
+	select <include refid="Base_Column_List_sum" /> ,t.RQTJ
+	from app.APP_KGSS_SYZB t
+	where 1=1 
+	<if test="syKsQo.dwbm != null ">
+		and t.CBDW_BM like CONCAT(CONCAT('',#{syKsQo.dwbm}),'%')
+	</if>
+	<if test="syKsQo.beginDate!=null" >
+		and t.RQTJ BETWEEN  #{syKsQo.beginDate} AND  #{syKsQo.endDate} 
+	</if>
+	group by t.RQTJ
+	
+	order by RQTJ desc limit 10
+	</select>
+	
+	
+	<select id="selectAppKgssSyzbTotalByQo" parameterType="huacloud.jwdsj.module.sy.ks.model.qo.SyKsQo"
+	resultMap="AppKgssSyzbTotalMap">
+		select
+			<include refid="Base_Column_List_sum" />
+		from
+	        app.APP_KGSS_SYZB t
+	        where 1=1 
+		<if test="syKsQo.dwbm != null">
+			and t.CBDW_BM like CONCAT(CONCAT('',#{syKsQo.dwbm}),'%')
+		</if>
+		<if test="syKsQo.beginDate!=null" >
+			and t.RQTJ BETWEEN  #{syKsQo.beginDate} AND  #{syKsQo.endDate} 
+		</if>
+	</select>
+</mapper>

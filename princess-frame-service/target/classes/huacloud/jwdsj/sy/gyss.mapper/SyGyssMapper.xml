@@ -1,0 +1,659 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="huacloud.jwdsj.module.sy.gyss.mapper.SyGyssMapper">
+
+    <!-- 线索受理 -->
+    <select id="selectXssl" resultType="huacloud.jwdsj.module.sy.gyss.model.vo.XsslhlaVo"
+            parameterType="map">
+        SELECT
+            SUM(XZGYSSAJXSJS) AS xzNum,
+            CASE
+                SUM(SLAJXSJS)
+            WHEN 0 THEN 0
+            ELSE
+                ROUND(
+                    (SUM(XZGYSSAJXSJS)*100)
+                    /
+                    SUM(SLAJXSJS)
+                ,2)
+            END AS xzBl,
+            SUM(MSGYSSAJSXJS) AS msNum,
+            CASE
+                SUM(SLAJXSJS)
+            WHEN 0 THEN 0
+            ELSE
+                ROUND(
+                    (SUM(MSGYSSAJSXJS)*100)
+                    /
+                    SUM(SLAJXSJS)
+                ,2)
+            END AS msBl,
+            CASE (
+                    SELECT
+                        SUM(SLAJXSJS)
+                    FROM
+                        "APP"."APP_GYSS_SYZB"
+                    WHERE 1 = 1
+                        AND CBDW_BM LIKE CONCAT(#{code},'%')
+                        AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                 )
+            WHEN 0 THEN 0
+            ELSE
+            ROUND(
+                    (SUM(SLAJXSJS)*100)
+                    /
+                    (
+                    SELECT
+                        SUM(SLAJXSJS)
+                    FROM
+                        "APP"."APP_GYSS_SYZB"
+                    WHERE   1 = 1
+                        AND CBDW_BM LIKE CONCAT(#{code},'%')
+                        AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                    )
+            ,2) END AS tb,
+            SUM(SLAJXSJS) AS num
+        FROM
+            "APP"."APP_GYSS_SYZB"
+        WHERE   1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code},'%')
+            AND RQTJ BETWEEN #{sDate} AND #{eDate}
+    </select>
+
+    <!-- 立案 -->
+    <select id="getLg" resultType="huacloud.jwdsj.module.sy.gyss.model.vo.XsslhlaVo"
+            parameterType="map">
+         SELECT
+            SUM(XZGYSSAJLAJS) AS xzNum,
+            CASE
+                SUM(LAJS)
+            WHEN 0 THEN 0
+            ELSE
+                ROUND(
+                    (SUM(XZGYSSAJLAJS)*100)
+                    /
+                    SUM(LAJS)
+                ,2)
+            END AS xzBl,
+            SUM(MSGYSSLAJS) AS msNum,
+            CASE
+                SUM(LAJS)
+            WHEN 0 THEN 0
+            ELSE
+                ROUND(
+                    (SUM(MSGYSSLAJS)*100)
+                    /
+                    SUM(LAJS)
+                ,2)
+            END AS msBl,
+            CASE
+                (
+                    SELECT
+                        SUM(LAJS)
+                    FROM
+                        "APP"."APP_GYSS_SYZB"
+                    WHERE   1 = 1
+                        AND CBDW_BM LIKE CONCAT(#{code},'%')
+                        AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                )
+            WHEN 0 THEN 0
+            ELSE
+                ROUND(
+                        (SUM(LAJS)*100)
+                            /
+                        (
+                            SELECT
+                                SUM(LAJS)
+                            FROM
+                                "APP"."APP_GYSS_SYZB"
+                            WHERE   1 = 1
+                                AND CBDW_BM LIKE CONCAT(#{code},'%')
+                                AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                        )
+                ,2)
+            END AS tb,
+            SUM(LAJS) AS num
+        FROM
+            "APP"."APP_GYSS_SYZB"
+        WHERE   1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code},'%')
+            AND RQTJ BETWEEN #{sDate} AND #{eDate}
+    </select>
+
+    <!-- 立案件数占受理总数比例 -->
+    <select id="getLajszslzsbl" resultType="huacloud.jwdsj.module.sy.gyss.model.vo.LajszslzsblVo"
+            parameterType="map">
+        SELECT
+            ROUND(
+                (
+                    (
+                        SUM(XZGYSSAJLAJS)+SUM(MSGYSSLAJS)
+                    )*100
+                )
+                /
+                SUM(SLAJXSJS)
+            ,2) AS bl,
+            ROUND(
+                    (
+                        ROUND(
+                            (
+                                (
+                                SUM(XZGYSSAJLAJS)+SUM(MSGYSSLAJS)
+                                )*100
+                            )
+                            /
+                            SUM(SLAJXSJS)
+                        , 2)*100
+                    )
+                     /
+                    (
+                        SELECT
+                            ROUND(
+                                    (
+                                        (
+                                        SUM(XZGYSSAJLAJS)+SUM(MSGYSSLAJS)
+                                        )*100
+                                    )
+                                    /
+                                    SUM(SLAJXSJS)
+                            , 2)
+                        FROM
+                            "APP"."APP_GYSS_SYZB"
+                        WHERE   1 = 1
+                            AND CBDW_BM LIKE CONCAT(#{code},'%')
+                            AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                    )
+            ,2) AS tb
+        FROM
+                "APP"."APP_GYSS_SYZB"
+        WHERE   1 = 1
+        AND CBDW_BM LIKE CONCAT(#{code},'%')
+        AND RQTJ BETWEEN #{sDate} AND #{eDate}
+    </select>
+
+    <!-- 诉前程序 -->
+    <select id="getSqcx" resultType="huacloud.jwdsj.module.sy.gyss.model.vo.XsslhlaVo"
+            parameterType="map">
+        SELECT
+            (
+                SUM(MSGYSQCXAJJS)+SUM(XZGYSSQCXAJJS)
+            )         AS num  ,
+            SUM(MSGYSQCXAJJS)                              AS msNum,
+            SUM(XZGYSSQCXAJJS)                             AS xsNum,
+            ROUND(
+                SUM(MSGYSQCXAJJS)*100
+                /
+                SUM(SQCXAJJS)
+            , 2) AS msBl ,
+            ROUND(
+                SUM(XZGYSSQCXAJJS)*100
+                /
+                SUM(SQCXAJJS)
+            , 2) AS xzBl ,
+            ROUND(
+                SUM(SQCXAJJS)*100
+                /
+                (
+                    SELECT
+                        SUM(SQCXAJJS)
+                    FROM
+                        "APP"."APP_GYSS_SYZB"
+                    WHERE   1 = 1
+                        AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                        AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                )
+            ,2) AS tb
+        FROM
+            "APP"."APP_GYSS_SYZB"
+        WHERE   1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND RQTJ BETWEEN #{sDate} AND #{eDate}
+    </select>
+
+    <!-- 提前公益诉讼 -->
+    <select id="getTqgyss" resultType="huacloud.jwdsj.module.sy.gyss.model.vo.XsslhlaVo"
+            parameterType="map">
+        SELECT
+            SUM(MSGYSSJS)   AS msNum,
+            SUM(QZTQXZGYSSJS)   AS xzNum,
+            (
+                SUM(MSGYSSJS)+SUM(QZTQXZGYSSJS)
+            )   AS num,
+            ROUND(
+                SUM(MSGYSSJS)*100
+                /
+                (
+                    SUM(MSGYSSJS)+SUM(QZTQXZGYSSJS)
+                )
+            , 2) AS msBl ,
+            ROUND(
+                SUM(QZTQXZGYSSJS)*100
+                /
+                (
+                    SUM(MSGYSSJS)+SUM(QZTQXZGYSSJS)
+                )
+            , 2) AS xzBl ,
+            ROUND(
+                SUM(TQGYSSJS)*100
+                /
+                (
+                    SELECT
+                        SUM(TQGYSSJS)
+                    FROM
+                        "APP"."APP_GYSS_SYZB"
+                    WHERE 1 = 1
+                        AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                        AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                )
+            , 2) AS tb
+        FROM
+            "APP"."APP_GYSS_SYZB"
+        WHERE  1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND RQTJ BETWEEN #{sDate} AND #{eDate}
+    </select>
+
+    <!--   提起公益诉讼件数占立案数比率 -->
+    <select id="getTqgyssjszlabl" resultType="huacloud.jwdsj.module.sy.gyss.model.vo.LajszslzsblVo"
+            parameterType="map">
+        SELECT
+            ROUND(
+                (
+                CASE SUM(LAJS)
+                WHEN 0 THEN 0
+                ELSE
+                    (SUM(TQGYSSJS)*100)
+                    /
+                    SUM(LAJS)
+                END
+                )
+            , 2) AS bl,
+            ROUND(
+                ROUND(
+                        (
+                            CASE SUM(LAJS)
+                            WHEN 0 THEN 0
+                            ELSE
+                            (SUM(TQGYSSJS)*100)
+                            /
+                            SUM(LAJS)
+                            END
+                        )
+                , 2)*100
+                /
+                ROUND(
+                        (
+                        SELECT
+                                ROUND(
+                                    CASE SUM(LAJS)
+                                    WHEN 0 THEN 0
+                                    ELSE
+                                    SUM(TQGYSSJS)*100*100
+                                    /
+                                    SUM(LAJS)
+                                    END
+                                , 2)
+                        FROM
+                                "APP"."APP_GYSS_SYZB"
+                        WHERE   1 = 1
+                            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                            AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                        )
+                , 2)
+            , 2) AS tb
+        FROM
+            "APP"."APP_GYSS_SYZB"
+        WHERE  1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND RQTJ BETWEEN #{sDate} AND #{eDate}
+    </select>
+
+    <!--刑事附带民事公益诉讼件数及占比 -->
+    <select id="getXsfdmsgyssjsjzb" resultType="huacloud.jwdsj.module.sy.gyss.model.vo.LajszslzsblVo"
+            parameterType="map">
+        SELECT
+            ROUND(
+                (
+                    CASE SUM(TQGYSSJS)
+                    WHEN 0 THEN 0
+                    ELSE
+                    (SUM(XSFDMSGYSSJS)*100)
+                    /
+                    SUM(TQGYSSJS)
+                    END
+                )
+            , 2) AS bl,
+            ROUND(
+                ROUND(
+                    (
+                        CASE SUM(TQGYSSJS)
+                        WHEN 0 THEN 0
+                        ELSE
+                        (SUM(XSFDMSGYSSJS)*100)
+                        /
+                        SUM(TQGYSSJS)
+                        END
+                    )
+                , 2)*100
+                /
+                ROUND(
+                    (
+                    SELECT
+                        ROUND(
+                            CASE SUM(TQGYSSJS)
+                            WHEN 0 THEN 0
+                            ELSE
+                            SUM(XSFDMSGYSSJS)*100*100
+                            /
+                            SUM(TQGYSSJS)
+                            END
+                        , 2)
+                    FROM
+                        "APP"."APP_GYSS_SYZB"
+                    WHERE   1 = 1
+                        AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                        AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                    )
+                , 2)
+            , 2) AS tb,
+        SUM(XSFDMSGYSSJS) AS num
+        FROM
+            "APP"."APP_GYSS_SYZB"
+        WHERE   1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND RQTJ BETWEEN #{sDate} AND #{eDate}
+    </select>
+
+    <!--  公益诉讼领域分布-诉前程序 -->
+    <select id="getGysslyfbsqcx" resultType="huacloud.jwdsj.module.sy.gyss.model.vo.GysslyfbVo"
+            parameterType="map">
+        SELECT
+            SUM(SQCXSTHJHZYBHLYAJJS) AS num1,
+            SUM(SQCXGYCCBHLYAJJS) AS num2,
+            SUM(SQCXGYTDSYQCRLYAJJS) AS num3,
+            SUM(SQCXSPYPAQLYAJJS) AS num4,
+            SUM(SQCXYXLSMYBHLYAJJS) AS num5
+        FROM
+            "APP"."APP_GYSS_SYZB"
+        WHERE   1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND RQTJ BETWEEN #{sDate} AND #{eDate}
+    </select>
+
+    <!-- 公益诉讼领域分布-提起公益诉讼 -->
+    <select id="getGysslyfbtqgyss" resultType="huacloud.jwdsj.module.sy.gyss.model.vo.GysslyfbVo"
+            parameterType="map">
+        SELECT
+            SUM(TQGYSSSTHJHZYBHLYAJJS) AS num1,
+            SUM(TQGYSSGYCCBHLYAJJS) AS num2,
+            SUM(TQGYSSGTSYQCRLYAJJS) AS num3,
+            SUM(TQGYSSSPYPAQLYAJJS) AS num4,
+            SUM(TQGYSSYXLSMYBHLYAJJS) AS num5
+        FROM
+            "APP"."APP_GYSS_SYZB"
+        WHERE   1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND RQTJ BETWEEN #{sDate} AND #{eDate}
+    </select>
+
+    <!-- 趋势-年 -->
+    <select id="listQsYear" resultType="huacloud.jwdsj.module.sy.gyss.model.vo.QsVo"
+            parameterType="map">
+        SELECT
+            YEAR(RQTJ) AS ym,
+            SUM(SLAJXSJS) AS xssljs,
+            SUM(LAJS) AS lajs,
+            SUM(SQCXAJJS) AS  scxjs,
+            SUM(TQGYSSJS) AS tqgyssjs
+        FROM
+            "APP"."APP_GYSS_SYZB"
+        WHERE   1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+        GROUP BY
+            YEAR(RQTJ)
+        ORDER BY
+            YEAR(RQTJ) ASC
+    </select>
+
+    <!-- 趋势-月 -->
+    <select id="listQsMonth" resultType="huacloud.jwdsj.module.sy.gyss.model.vo.QsVo" parameterType="map">
+        SELECT
+            MONTH(RQTJ) AS ym,
+            SUM(SLAJXSJS) AS xssljs,
+            SUM(LAJS) AS lajs,
+            SUM(SQCXAJJS) AS  scxjs,
+            SUM(TQGYSSJS) AS tqgyssjs
+        FROM
+            "APP"."APP_GYSS_SYZB"
+        WHERE   1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND YEAR(RQTJ) = #{year}
+        GROUP BY
+            MONTH(RQTJ)
+        ORDER BY
+            MONTH(RQTJ) ASC
+    </select>
+
+    <!-- 案件排行榜Top10-线索受理 -->
+    <select id="listTopXssl" resultType="huacloud.jwdsj.module.sy.gyss.model.vo.AjphbTopVo"
+            parameterType="map">
+            SELECT
+                T.AJXZ_MC AS ajxz,
+                SUM(T.SLAJXSJS) AS sls,
+                CASE
+                    (
+                        SELECT
+                            SUM(SLAJXSJS)
+                        FROM
+                            "APP"."APP_GYSS_SYZB"
+                        WHERE   1 = 1
+                            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                            AND RQTJ BETWEEN  #{sDate2} AND #{eDate2}
+                            AND AJXZ_MC = T.AJXZ_MC
+                    )
+                WHEN 0 THEN 0
+                ELSE
+                    ROUND(
+                        SUM(T.SLAJXSJS)*100
+                        /
+                        (
+                        SELECT
+                            SUM(SLAJXSJS)
+                        FROM
+                            "APP"."APP_GYSS_SYZB"
+                        WHERE   1 = 1
+                            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                            AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                            AND AJXZ_MC = T.AJXZ_MC
+                        )
+                    ,2)
+                END AS tb,
+                (
+                    SELECT
+                        SUM(SLAJXSJS)
+                    FROM
+                        "APP"."APP_GYSS_SYZB"
+                    WHERE   1 = 1
+                        AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                        AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                        AND AJXZ_MC = T.AJXZ_MC
+                ) AS tqs
+            FROM
+                "APP"."APP_GYSS_SYZB" T
+            WHERE   1 = 1
+                AND T.CBDW_BM LIKE CONCAT(#{code}, '%')
+                AND T.RQTJ BETWEEN #{sDate} AND #{eDate}
+                AND T.AJXZ_MC != '-1'
+            GROUP BY
+                T.AJXZ_MC
+            ORDER BY
+                SUM(T.SLAJXSJS) DESC
+            LIMIT 10
+    </select>
+
+    <!--案件排行榜Top10-立案 -->
+    <select id="listTopLa" resultType="huacloud.jwdsj.module.sy.gyss.model.vo.AjphbTopVo" parameterType="map">
+        SELECT
+            T.AJXZ_MC AS ajxz,
+            SUM(T.LAJS) AS sls,
+            CASE (
+                    SELECT
+                        SUM(LAJS)
+                    FROM
+                        "APP"."APP_GYSS_SYZB"
+                    WHERE   1 = 1
+                        AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                        AND RQTJ BETWEEN  #{sDate2} AND #{eDate2}
+                        AND AJXZ_MC = T.AJXZ_MC
+                )
+            WHEN 0 THEN 0
+            ELSE
+                ROUND(
+                    SUM(T.LAJS)*100/
+                    (
+                        SELECT
+                            SUM(LAJS)
+                        FROM
+                            "APP"."APP_GYSS_SYZB"
+                        WHERE   1 = 1
+                            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                            AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                            AND AJXZ_MC = T.AJXZ_MC
+                    )
+                ,2)
+            END AS tb,
+            (
+                SELECT
+                    SUM(LAJS)
+                FROM
+                    "APP"."APP_GYSS_SYZB"
+                WHERE   1 = 1
+                    AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                    AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                    AND AJXZ_MC = T.AJXZ_MC
+            ) AS tqs
+        FROM
+            "APP"."APP_GYSS_SYZB" T
+        WHERE   1 = 1
+            AND T.CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND T.RQTJ BETWEEN #{sDate} AND #{eDate}
+            AND T.AJXZ_MC != '-1'
+        GROUP BY
+            T.AJXZ_MC
+        ORDER BY
+            SUM(T.LAJS) DESC
+        LIMIT 10
+    </select>
+
+    <!--  案件排行榜Top10-诉前程序 -->
+    <select id="listTopSqcx" resultType="huacloud.jwdsj.module.sy.gyss.model.vo.AjphbTopVo"
+            parameterType="map">
+        SELECT
+            T.AJXZ_MC AS ajxz,
+            SUM(T.SQCXAJJS) AS sls,
+            CASE (
+                    SELECT
+                        SUM(SQCXAJJS)
+                    FROM
+                        "APP"."APP_GYSS_SYZB"
+                    WHERE   1 = 1
+                        AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                        AND RQTJ BETWEEN  #{sDate2} AND #{eDate2}
+                        AND AJXZ_MC = T.AJXZ_MC
+                )
+            WHEN 0 THEN 0
+            ELSE
+                ROUND(
+                    SUM(T.SQCXAJJS)*100
+                    /
+                    (
+                        SELECT
+                            SUM(SQCXAJJS)
+                        FROM
+                            "APP"."APP_GYSS_SYZB"
+                        WHERE   1 = 1
+                            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                            AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                            AND AJXZ_MC = T.AJXZ_MC
+                    )
+                ,2)
+            END AS tb,
+            (
+                SELECT
+                    SUM(SQCXAJJS)
+                FROM
+                    "APP"."APP_GYSS_SYZB"
+                WHERE   1 = 1
+                    AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                    AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                    AND AJXZ_MC = T.AJXZ_MC
+            ) AS tqs
+        FROM
+            "APP"."APP_GYSS_SYZB" T
+        WHERE   1 = 1
+            AND T.CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND T.RQTJ BETWEEN #{sDate} AND #{eDate}
+            AND T.AJXZ_MC != '-1'
+        GROUP BY
+            T.AJXZ_MC
+        ORDER BY
+            SUM(T.SQCXAJJS) DESC
+        LIMIT 10
+    </select>
+
+    <!-- 案件排行榜Top10-提前公益诉讼 -->
+    <select id="listTopTqgyss" resultType="huacloud.jwdsj.module.sy.gyss.model.vo.AjphbTopVo" parameterType="map">
+            SELECT
+                T.AJXZ_MC AS ajxz,
+                SUM(T.TQGYSSJS) AS sls,
+                CASE (
+                        SELECT
+                            SUM(TQGYSSJS)
+                        FROM
+                            "APP"."APP_GYSS_SYZB"
+                        WHERE   1 = 1
+                            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                            AND RQTJ BETWEEN  #{sDate2} AND #{eDate2}
+                            AND AJXZ_MC = T.AJXZ_MC
+                )
+                WHEN 0 THEN 0
+                ELSE
+                    ROUND(
+                        SUM(T.TQGYSSJS)*100
+                        /
+                        (
+                            SELECT
+                                SUM(TQGYSSJS)
+                            FROM
+                                "APP"."APP_GYSS_SYZB"
+                            WHERE   1 = 1
+                                AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                                AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                                AND AJXZ_MC = T.AJXZ_MC
+                        ),
+                    2)
+                END AS tb,
+                (
+                    SELECT
+                        SUM(TQGYSSJS)
+                    FROM
+                        "APP"."APP_GYSS_SYZB"
+                    WHERE   1 = 1
+                    AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                    AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                    AND AJXZ_MC = T.AJXZ_MC
+                ) AS tqs
+            FROM
+                "APP"."APP_GYSS_SYZB" T
+            WHERE   1 = 1
+                AND T.CBDW_BM LIKE CONCAT(#{code}, '%')
+                AND T.RQTJ BETWEEN #{sDate} AND #{eDate}
+                AND T.AJXZ_MC != '-1'
+            GROUP BY
+                T.AJXZ_MC
+            ORDER BY
+                SUM(T.TQGYSSJS) DESC
+            LIMIT 10
+    </select>
+</mapper>

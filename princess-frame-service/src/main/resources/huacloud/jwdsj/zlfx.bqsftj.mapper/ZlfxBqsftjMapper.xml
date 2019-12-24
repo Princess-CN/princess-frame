@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="huacloud.jwdsj.module.zlfx.bqsftj.mapper.ZlfxBqsftjMapper">
+
+    <select id="listBqssqsYear" resultType="huacloud.jwdsj.module.zlfx.bqss.model.vo.ZlfxBqssqsVo">
+        SELECT
+                YEAR(RQTJ) AS ym,
+                SUM(BQSJS_FTJBQS) num1
+        FROM
+                "APP"."APP_ZLFX_QSQK"
+        WHERE 1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code},'%')
+        GROUP BY
+                YEAR(RQTJ)
+        ORDER BY
+                YEAR(RQTJ) ASC
+    </select>
+    <select id="listBqssqsMonth" resultType="huacloud.jwdsj.module.zlfx.bqss.model.vo.ZlfxBqssqsVo">
+        select
+        MONTH(RQTJ) AS ym,
+        SUM(BQSJS_FTJBQS) num1  ,
+        (
+                SELECT
+                        SUM(BQSJS_FTJBQS)
+                FROM
+                        "APP"."APP_ZLFX_QSQK"
+                WHERE
+                        1 = 1
+                    AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                    AND YEAR(RQTJ) = #{year2}
+        ) AS num2
+        from
+                "APP"."APP_ZLFX_QSQK"
+        WHERE
+                1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND YEAR(RQTJ) = #{year1}
+        GROUP BY
+                MONTH(RQTJ)
+        ORDER BY
+                MONTH(RQTJ) ASC
+    </select>
+    <select id="listPageAyfbTotal" resultType="java.lang.Long">
+        SELECT COUNT(1) FROM
+        (
+                select AJXZ from "APP"."APP_ZLFX_QSQK"
+                where 1 = 1
+                AND CBDW_BM LIKE CONCAT(#{code},'%')
+                AND RQTJ BETWEEN #{sDate} AND #{eDate}
+                GROUP BY AJXZ
+        )
+    </select>
+    <select id="listPageAyfb" resultType="huacloud.jwdsj.module.zlfx.bqss.model.vo.ZlfxBqssAyfbVo">
+        select
+        AJXZ       AS name,
+        SUM(BQSJS_FTJBQS) AS num
+        from
+                "APP"."APP_ZLFX_QSQK"
+        where
+                1 = 1
+                AND CBDW_BM LIKE CONCAT(#{code},'%')
+                AND RQTJ BETWEEN #{sDate} AND #{eDate}
+        GROUP BY
+                AJXZ
+        ORDER BY
+                num DESC
+        LIMIT #{s1},#{s2}
+    </select>
+    <select id="listAydqfb" resultType="huacloud.jwdsj.module.zlfx.bqss.model.vo.ZlfxBqssAydqfbVo">
+        select
+        T.CBDW_SZSF AS name,
+        SUM(T.BQSJS_FTJBQS) num1  ,
+        (
+        SELECT
+        SUM(BQSJS_FTJBQS)
+        FROM
+        "APP"."APP_ZLFX_QSQK"
+        WHERE
+        1 = 1
+        AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+        AND CBDW_SZSF = T.CBDW_SZSF
+        <if test="ajxz != null and ajxz != ''">
+            AND AJXZ = #{ajxz}
+        </if>
+        ) AS num2
+        from
+        "APP"."APP_ZLFX_QSQK" T
+        WHERE
+        1 = 1
+        AND T.RQTJ BETWEEN #{sDate} AND #{eDate}
+        <if test="ajxz != null and ajxz != ''">
+            AND AJXZ = #{ajxz}
+        </if>
+        GROUP BY
+        T.CBDW_SZSF
+    </select>
+</mapper>

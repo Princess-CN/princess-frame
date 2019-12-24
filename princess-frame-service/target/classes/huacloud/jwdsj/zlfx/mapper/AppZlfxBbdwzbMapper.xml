@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="huacloud.jwdsj.module.zlfx.mapper.AppZlfxBbdwzbMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ETL_DT,CBDW_BM,CBDW_MC,CBDW_SZSF,CBDW_SZCS,CBDW_SZQX,AJLX,FYFHJG,BBQXYY,RQTJ,GADBPBJDTCFYFHJS,GADBPBJDTCFYFHRS,BBRS,YWLX
+    </sql>
+
+    <!--不捕复议复核情况-->
+    <select id="selectBbfyfhqk" resultType="huacloud.jwdsj.module.zlfx.module.entity.AppZlfxBbdwzbEntity" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+      SELECT YWLX,
+            FYFHJG,
+            SUM(GADBPBJDTCFYFHJS) GADBPBJDTCFYFHJS,
+            SUM(GADBPBJDTCFYFHRS) GADBPBJDTCFYFHRS
+             FROM APP.APP_ZLFX_BBDWZB
+             WHERE YWLX != ''
+             AND RQTJ BETWEEN #{beginDate} AND #{endDate}
+            <if test="ajlx != null and ajlx != ''">
+                AND AJLX = #{ajlx}
+            </if>
+             AND CBDW_BM LIKE #{dwbm}||'%'
+             GROUP BY YWLX,FYFHJG
+             order by YWLX, FYFHJG
+    </select>
+
+    <!--不捕情形分布-->
+    <select id="selectBbqxfb" resultType="huacloud.jwdsj.module.zlfx.module.entity.AppZlfxBbdwzbEntity" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        SELECT SUM(BBRS) BBRS ,
+		 (CASE BBQXYY WHEN '调查后排除非法证据' THEN '证据不足' WHEN '刑事和解不捕' THEN '无社会危害性' ELSE BBQXYY END ) AS BBQXYY
+		FROM APP.APP_ZLFX_BBDWZB
+		WHERE BBQXYY != ''
+		 AND RQTJ BETWEEN #{beginDate} AND #{endDate}
+        <if test="ajlx != null and ajlx != ''">
+            AND AJLX = #{ajlx}
+        </if>
+        AND CBDW_BM LIKE #{dwbm}||'%'
+		GROUP BY (CASE BBQXYY WHEN '调查后排除非法证据' THEN '证据不足' WHEN '刑事和解不捕' THEN '无社会危害性' ELSE BBQXYY END )
+		ORDER BY BBQXYY
+    </select>
+
+
+</mapper>

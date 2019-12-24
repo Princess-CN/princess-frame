@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="huacloud.jwdsj.module.sy.ms.mapper.AppMsztSyzbMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="huacloud.jwdsj.module.sy.ms.model.entity.AppMsztSyzbEntity">
+        <result column="ETL_DT" property="etlDt" />
+        <result column="CBDW_BM" property="cbdwBm" />
+        <result column="CBDW_MC" property="cbdwMc" />
+        <result column="CBDW_SZSF" property="cbdwSzsf" />
+        <result column="CBDW_SZCS" property="cbdwSzcs" />
+        <result column="CBDW_SZQX" property="cbdwSzqx" />
+        <result column="RQTJ" property="rqtj" />
+        <result column="SXJD_SLJS" property="sxjdSljs" />
+        <result column="SXJD_SJJS" property="sxjdSjjs" />
+        <result column="SXJD_TCKSJS" property="sxjdTcksjs" />
+        <result column="SXJD_TCKSSJXJSSJS" property="sxjdTckssjxjssjs" />
+        <result column="SXJD_TCJCJYJS" property="sxjdTcjcjyjs" />
+        <result column="SXJD_CNJCJYJS" property="sxjdCnjcjyjs" />
+        <result column="SXJD_TCZSJCJYJS" property="sxjdTczsjcjyjs" />
+        <result column="SXJD_CNZSJCJYJS" property="sxjdCnzsjcjyjs" />
+        <result column="SXJD_YSJS" property="sxjdYsjs" />
+        <result column="SXJD_YSGBJS" property="sxjdYsgbjs" />
+        <result column="SPWFJD_SLJS" property="spwfjdSljs" />
+        <result column="SPWFJD_SJJS" property="spwfjdSjjs" />
+        <result column="SPWFJD_TCJCJYJS" property="spwfjdTcjcjyjs" />
+        <result column="SPWFJD_CNJCJYJS" property="spwfjdCnjcjyjs" />
+        <result column="SPWFJD_TCKSJS" property="spwfjdTcksjs" />
+        <result column="SPWFJD_TCKSSJXJSSJS" property="spwfjdTckssjxjssjs" />
+        <result column="ZXJD_SLJS" property="zxjdSljs" />
+        <result column="ZXJD_SJJS" property="zxjdSjjs" />
+        <result column="ZXJD_TCJCJYJS" property="zxjdTcjcjyjs" />
+        <result column="ZXJD_CNJCJYJS" property="zxjdCnjcjyjs" />
+        <result column="ZXJD_TCJCJYSJXJSSJS" property="zxjdTcjcjysjxjssjs" />
+        <result column="ZCQS_SLJS" property="zcqsSljs" />
+        <result column="ZCQS_SJJS" property="zcqsSjjs" />
+        <result column="ZCQS_TCJCJYJS" property="zcqsTcjcjyjs" />
+        <result column="ZCQS_CNJCJYJS" property="zcqsCnjcjyjs" />
+        <result column="ZCQS_ZCQSJS" property="zcqsZcqsjs" />
+        <result column="ZCQS_ZCNMGQSJS" property="zcqsZcnmgqsjs" />
+    </resultMap>
+
+	<!-- 计算民事首页指标总数 -->
+	<resultMap id="BaseResultSumMap" type="huacloud.jwdsj.module.sy.ms.model.entity.AppMsztSyzbEntity">
+	
+		<result column="SXJD_SLJS" property="sxjdSljs" />
+		<result column="SXJD_SJJS" property="sxjdSjjs" />
+		<result column="SXJD_TCKSJS" property="sxjdTcksjs" />
+		<result column="SXJD_TCKSSJXJSSJS" property="sxjdTckssjxjssjs" />
+		<result column="SXJD_TCJCJYJS" property="sxjdTcjcjyjs" />
+		<result column="SXJD_CNJCJYJS" property="sxjdCnjcjyjs" />
+		<result column="SXJD_TCZSJCJYJS" property="sxjdTczsjcjyjs" />
+		<result column="SXJD_CNZSJCJYJS" property="sxjdCnzsjcjyjs" />
+		<result column="SXJD_YSJS" property="sxjdYsjs" />
+		<result column="SXJD_YSGBJS" property="sxjdYsgbjs" />
+		<result column="SPWFJD_SLJS" property="spwfjdSljs" />
+		<result column="SPWFJD_SJJS" property="spwfjdSjjs" />
+		<result column="SPWFJD_TCJCJYJS" property="spwfjdTcjcjyjs" />
+		<result column="SPWFJD_CNJCJYJS" property="spwfjdCnjcjyjs" />
+		<result column="SPWFJD_TCKSJS" property="spwfjdTcksjs" />
+		<result column="SPWFJD_TCKSSJXJSSJS" property="spwfjdTckssjxjssjs" />
+		<result column="ZXJD_SLJS" property="zxjdSljs" />
+		<result column="ZXJD_SJJS" property="zxjdSjjs" />
+		<result column="ZXJD_TCJCJYJS" property="zxjdTcjcjyjs" />
+		<result column="ZXJD_CNJCJYJS" property="zxjdCnjcjyjs" />
+		<result column="ZXJD_TCJCJYSJXJSSJS" property="zxjdTcjcjysjxjssjs" />
+		<result column="ZCQS_SLJS" property="zcqsSljs" />
+		<result column="ZCQS_SJJS" property="zcqsSjjs" />
+		<result column="ZCQS_TCJCJYJS" property="zcqsTcjcjyjs" />
+		<result column="ZCQS_CNJCJYJS" property="zcqsCnjcjyjs" />
+		<result column="ZCQS_ZCQSJS" property="zcqsZcqsjs" />
+		<result column="ZCQS_ZCNMGQSJS" property="zcqsZcnmgqsjs" />
+	</resultMap>
+	
+	<!-- 计算民事首页分析图 -->
+	<resultMap id="QSFXBaseResultSumMap" type="huacloud.jwdsj.module.sy.ms.model.entity.SyMsQsfxEntity">
+	
+		<result column="SXJD_SLJS" property="sxjdSljs" />
+		<result column="SXJD_SJJS" property="sxjdSjjs" />
+		<result column="SXJD_TCKSJS" property="sxjdTcksjs" />
+		<result column="SXJD_TCKSSJXJSSJS" property="sxjdTckssjxjssjs" />
+		<result column="SXJD_TCJCJYJS" property="sxjdTcjcjyjs" />
+		<result column="SXJD_CNJCJYJS" property="sxjdCnjcjyjs" />
+		<result column="SXJD_TCZSJCJYJS" property="sxjdTczsjcjyjs" />
+		<result column="SXJD_CNZSJCJYJS" property="sxjdCnzsjcjyjs" />
+		<result column="SXJD_YSJS" property="sxjdYsjs" />
+		<result column="SXJD_YSGBJS" property="sxjdYsgbjs" />
+		<result column="SPWFJD_SLJS" property="spwfjdSljs" />
+		<result column="SPWFJD_SJJS" property="spwfjdSjjs" />
+		<result column="SPWFJD_TCJCJYJS" property="spwfjdTcjcjyjs" />
+		<result column="SPWFJD_CNJCJYJS" property="spwfjdCnjcjyjs" />
+		<result column="SPWFJD_TCKSJS" property="spwfjdTcksjs" />
+		<result column="SPWFJD_TCKSSJXJSSJS" property="spwfjdTckssjxjssjs" />
+		<result column="ZXJD_SLJS" property="zxjdSljs" />
+		<result column="ZXJD_SJJS" property="zxjdSjjs" />
+		<result column="ZXJD_TCJCJYJS" property="zxjdTcjcjyjs" />
+		<result column="ZXJD_CNJCJYJS" property="zxjdCnjcjyjs" />
+		<result column="ZXJD_TCJCJYSJXJSSJS" property="zxjdTcjcjysjxjssjs" />
+		<result column="ZCQS_SLJS" property="zcqsSljs" />
+		<result column="ZCQS_SJJS" property="zcqsSjjs" />
+		<result column="ZCQS_TCJCJYJS" property="zcqsTcjcjyjs" />
+		<result column="ZCQS_CNJCJYJS" property="zcqsCnjcjyjs" />
+		<result column="ZCQS_ZCQSJS" property="zcqsZcqsjs" />
+		<result column="ZCQS_ZCNMGQSJS" property="zcqsZcnmgqsjs" />
+		<result column="RQTJSTR" property="rqtjStr" />	
+	</resultMap>
+	
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ETL_DT, CBDW_BM, CBDW_MC, CBDW_SZSF, CBDW_SZCS, CBDW_SZQX, RQTJ, SXJD_SLJS, SXJD_SJJS, SXJD_TCKSJS, SXJD_TCKSSJXJSSJS, SXJD_TCJCJYJS, SXJD_CNJCJYJS, SXJD_TCZSJCJYJS, SXJD_CNZSJCJYJS, SXJD_YSJS, SXJD_YSGBJS, SPWFJD_SLJS, SPWFJD_SJJS, SPWFJD_TCJCJYJS, SPWFJD_CNJCJYJS, SPWFJD_TCKSJS, SPWFJD_TCKSSJXJSSJS, ZXJD_SLJS, ZXJD_SJJS, ZXJD_TCJCJYJS, ZXJD_CNJCJYJS, ZXJD_TCJCJYSJXJSSJS, ZCQS_SLJS, ZCQS_SJJS, ZCQS_TCJCJYJS, ZCQS_CNJCJYJS, ZCQS_ZCQSJS, ZCQS_ZCNMGQSJS
+    </sql>
+    
+    <!-- 查询首页指标 -->
+	<sql id="Base_Column_List_Sum">
+		sum(SXJD_SLJS) as SXJD_SLJS,
+		sum(SXJD_SJJS) as SXJD_SJJS,
+		sum(SXJD_TCKSJS) as SXJD_TCKSJS,
+		sum(SXJD_TCKSSJXJSSJS) as SXJD_TCKSSJXJSSJS,
+		sum(SXJD_TCJCJYJS) as SXJD_TCJCJYJS,
+		sum(SXJD_CNJCJYJS) as SXJD_CNJCJYJS,
+		sum(SXJD_TCZSJCJYJS) as SXJD_TCZSJCJYJS,
+		sum(SXJD_CNZSJCJYJS) as SXJD_CNZSJCJYJS,
+		sum(SXJD_YSJS) as SXJD_YSJS,
+		sum(SXJD_YSGBJS) as SXJD_YSGBJS,
+		sum(SPWFJD_SLJS) as SPWFJD_SLJS,
+		sum(SPWFJD_SJJS) as SPWFJD_SJJS,
+		sum(SPWFJD_TCJCJYJS) as SPWFJD_TCJCJYJS,
+		sum(SPWFJD_CNJCJYJS) as SPWFJD_CNJCJYJS,
+		sum(SPWFJD_TCKSJS) as SPWFJD_TCKSJS,
+		sum(SPWFJD_TCKSSJXJSSJS) as SPWFJD_TCKSSJXJSSJS,
+		sum(ZXJD_SLJS) as ZXJD_SLJS,
+		sum(ZXJD_SJJS) as ZXJD_SJJS,
+		sum(ZXJD_TCJCJYJS) as ZXJD_TCJCJYJS,
+		sum(ZXJD_CNJCJYJS) as ZXJD_CNJCJYJS,
+		sum(ZXJD_TCJCJYSJXJSSJS) as ZXJD_TCJCJYSJXJSSJS,
+		sum(ZCQS_SLJS) as ZCQS_SLJS,
+		sum(ZCQS_SJJS) as ZCQS_SJJS,
+		sum(ZCQS_TCJCJYJS) as ZCQS_TCJCJYJS,
+		sum(ZCQS_CNJCJYJS) as ZCQS_CNJCJYJS,
+		sum(ZCQS_ZCQSJS) as ZCQS_ZCQSJS,
+		sum(ZCQS_ZCNMGQSJS) as ZCQS_ZCNMGQSJS
+	</sql>
+
+	<select id="selectCpTjZb" parameterType="huacloud.jwdsj.module.sy.ms.model.qo.SyMsQo"
+	resultMap="BaseResultSumMap">
+	select <include refid="Base_Column_List_Sum" /> from APP.APP_MSZT_SYZB t
+	
+	where 1=1 
+		<if test="syMsQo.dwbm != null">
+			and t.CBDW_BM like CONCAT(CONCAT('',#{syMsQo.dwbm}),'%')
+		</if>
+		<if test="syMsQo.beginDate!=null" >
+			and t.RQTJ BETWEEN  #{syMsQo.beginDate} AND  #{syMsQo.endDate} 
+		</if>
+	</select>
+	
+	<select id="selectSlAjPhb" parameterType="huacloud.jwdsj.module.sy.ms.model.qo.SyMsQo"
+		resultType="huacloud.jwdsj.module.sy.ms.model.entity.AppMsztYwzbEntity">
+			select ajxz_mc as ajxzMc,sum(zbz) as zbz from APP.APP_MSZT_YWZB t
+			
+			where 1=1
+			 
+			
+		<if test="syMsQo.dwbm != null">
+			and t.CBDW_BM like CONCAT(CONCAT('',#{syMsQo.dwbm}),'%')
+		</if>
+		<if test="syMsQo.beginDate!=null" >
+			and t.RQTJ BETWEEN  #{syMsQo.beginDate} AND  #{syMsQo.endDate} 
+		</if>
+		
+		<if test="syMsQo.ywType != null">
+			and t.ywlx =#{syMsQo.ywType}
+		</if>
+		group by ajxz_mc
+		order by zbz desc limit 10
+	</select>
+	
+	
+	
+<!-- 	获取同期数据 -->
+	<select id="selectTQslAjPhb" resultType="huacloud.jwdsj.module.sy.ms.model.entity.AppMsztYwzbEntity">
+		select ajxz_mc as ajxzMc,sum(zbz) as zbz from APP.APP_MSZT_YWZB t
+			
+			where 1=1
+			 
+			
+		<if test="syMsQo.dwbm != null">
+			and t.CBDW_BM like CONCAT(CONCAT('',#{syMsQo.dwbm}),'%')
+		</if>
+		<if test="syMsQo.beginDate!=null" >
+			and t.RQTJ BETWEEN  #{syMsQo.beginDate} AND  #{syMsQo.endDate} 
+		</if>
+		
+		<if test="syMsQo.ywType != null">
+			and t.ywlx =#{syMsQo.ywType}
+		</if>
+		
+		and t.ajxz_mc in 
+		
+		<foreach collection="appMsztYwzbEntity" index="index" item="item" open="(" separator="," close=")">
+		#{item.ajxzMc}
+		</foreach>
+		group by ajxz_mc
+		
+	</select>
+	
+	
+	
+	
+	<!-- 查询图标数据 -->
+	<select id="selectTbAppMsztSyzbEntity" parameterType="huacloud.jwdsj.module.sy.ms.model.qo.SyMsQo"
+	resultMap="BaseResultSumMap">
+	select RQTJ,<include refid="Base_Column_List_Sum" /> from APP.APP_MSZT_SYZB t
+		where 1=1 
+		<if test="syMsQo.dwbm != null">
+			and t.CBDW_BM like CONCAT(CONCAT('',#{syMsQo.dwbm}),'%')
+		</if>
+		<if test="syMsQo.beginDate!=null" >
+			and t.RQTJ BETWEEN  #{syMsQo.beginDate} AND  #{syMsQo.endDate} 
+		</if>
+		group by t.RQTJ
+		order by t.RQTJ desc
+		limit 10
+	</select>
+	
+	
+	<!-- 获取受理件数趋势分析 -->
+	<select id="selectSlJsQsfx" parameterType="huacloud.jwdsj.module.sy.ms.model.qo.SyMsQo"
+	resultMap="QSFXBaseResultSumMap">
+		select 
+		
+		<if test='syMsQo.type!=null and syMsQo.type == "Y"' >
+			to_char(rqtj,'yyyy-MM') as RQTJSTR,
+		</if>
+		
+		<if test='syMsQo.type!=null and syMsQo.type == "N"' >
+			to_char(rqtj,'yyyy') as RQTJSTR,
+		</if>
+		
+		<include refid="Base_Column_List_Sum" />
+		
+		
+		
+		from app.APP_MSZT_SYZB t
+		where
+		 1=1
+		<if test="syMsQo.dwbm != null">
+			and t.CBDW_BM like CONCAT(CONCAT('',#{syMsQo.dwbm}),'%')
+		</if>
+		<if test="syMsQo.beginDate!=null" >
+			and t.RQTJ BETWEEN  #{syMsQo.beginDate} AND  #{syMsQo.endDate} 
+		</if>
+		
+		<if test='syMsQo.type!=null and syMsQo.type == "Y"' >
+			group by to_char(t.RQTJ,'yyyy-MM')
+		</if>
+		<if test='syMsQo.type!=null and syMsQo.type == "N"' >
+			group by to_char(t.RQTJ,'yyyy')
+		</if>
+	</select>
+	
+</mapper>

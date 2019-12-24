@@ -1,0 +1,34 @@
+{
+  "groups": [
+    {
+      "name": "custom.properties",
+      "type": "huacloud.jwdsj.common.configuration.CustomProperties",
+      "sourceType": "huacloud.jwdsj.common.configuration.CustomProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "custom.properties.data-id",
+      "type": "java.lang.Integer",
+      "sourceType": "huacloud.jwdsj.common.configuration.CustomProperties"
+    },
+    {
+      "name": "custom.properties.default-user-password",
+      "type": "java.lang.String",
+      "description": "用户默认密码",
+      "sourceType": "huacloud.jwdsj.common.configuration.CustomProperties"
+    },
+    {
+      "name": "custom.properties.time-id-suffix",
+      "type": "java.lang.String",
+      "description": "时间序列ID后缀",
+      "sourceType": "huacloud.jwdsj.common.configuration.CustomProperties"
+    },
+    {
+      "name": "custom.properties.work-id",
+      "type": "java.lang.Integer",
+      "sourceType": "huacloud.jwdsj.common.configuration.CustomProperties"
+    }
+  ],
+  "hints": []
+}

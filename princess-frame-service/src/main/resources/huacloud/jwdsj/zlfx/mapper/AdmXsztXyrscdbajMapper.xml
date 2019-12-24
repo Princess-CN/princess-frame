@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="huacloud.jwdsj.module.zlfx.mapper.AdmXsztXyrscdbajMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ETL_DT,BMSAH,TYSAH,CBDW_BM,CBDW_MC,CBDW_SZSF,CBDW_SZCS,CBDW_SZQX,AJMC,AJLX,ZRRBM,XM,XB_MC,ZJLX_MC,ZJHM,HJSZD_MC,ZSDXXDZ,ZYZAD_MC,SFWZBDFZXYR,SJCLJG_MC,YDDBQX_DMS,YDDBQX_MCS,BBQX_DM,BBQX_MC,BHCAYY_MC,SLRQ,SJRQ,BHCARQ,SDAY_AYDM,SDAY_AYMC,SFJZLBDX,ZASNL,SHSE_DBRS,SHSE_BBRS,SLSCDBRS,DBRS,BBRS,YSDWCHRS,ZBRS,BHCARS,JZLBRS,DATA_SRC
+    </sql>
+
+    <!--selectBbrsym-->
+    <select id="selectBbrsym" resultType="huacloud.jwdsj.module.zlfx.module.entity.AdmXsztXyrscdbajEntity" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        SELECT XM,AJMC,TYSAH,SDAY_AYMC
+        FROM ADM.ADM_XSZT_XYRSCDBAJ
+        WHERE BBRS != 0
+        AND slrq BETWEEN #{beginDate} AND #{endDate}
+        AND CBDW_BM LIKE #{dwbm}||'%'
+        <if test="ajmc != null and ajmc !=''">
+            AND AJMC LIKE COCNAT('%',#{ajmc},'%')
+        </if>
+        <if test="xm != null and xm !=''">
+            AND BMSAH LIKE COCNAT('%',#{xm},'%')
+        </if>
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!--selectBbrsymTal-->
+    <select id="selectBbrsymTal" resultType="java.lang.Integer" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        SELECT COUNT(*) FROM (
+        SELECT XM,AJMC,TYSAH,SDAY_AYMC
+        FROM ADM.ADM_XSZT_XYRSCDBAJ
+        WHERE BBRS != 0
+        AND RQTJ BETWEEN #{beginDate} AND #{endDate}
+        AND CBDW_BM LIKE #{dwbm}||'%'
+        <if test="ajmc != null and ajmc !=''">
+            AND AJMC LIKE COCNAT('%',#{ajmc},'%')
+        </if>
+        <if test="xm != null and xm !=''">
+            AND BMSAH LIKE COCNAT('%',#{xm},'%')
+        </if>
+        )
+    </select>
+</mapper>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="huacloud.jwdsj.module.sy.ztqk.mapper.AppDsjyyxtSyzbMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="huacloud.jwdsj.module.sy.ztqk.model.vo.AppDsjyyxtSyzbEntityVo">
+        <result column="ETL_DT" property="etlDt" />
+        <result column="CBDW_BM" property="cbdwBm" />
+        <result column="CBDW_MC" property="cbdwMc" />
+        <result column="CBDW_SZCS" property="cbdwSzcs" />
+        <result column="CBDW_SZQX" property="cbdwSzqx" />
+        <result column="CBDW_SZSF" property="cbdwSzsf" />
+        <result column="RQTJ" property="rqtj" />
+        <result column="PTXS_SLJS" property="ptxsSljs" />
+        <result column="ZDXS_SLJS" property="zdxsSljs" />
+        <result column="ZWFZ_SLJS" property="zwfzSljs" />
+        <result column="JJFZ_SLJS" property="jjfzSljs" />
+        <result column="PTXS_SJJS" property="ptxsSjjs" />
+        <result column="ZDXS_SJJS" property="zdxsSjjs" />
+        <result column="ZWFZ_SJJS" property="zwfzSjjs" />
+        <result column="JJJRFZ_SJJS" property="jjjrfzSjjs" />
+        <result column="PTXS_ZBJS" property="ptxsZbjs" />
+        <result column="ZDXS_ZBJS" property="zdxsZbjs" />
+        <result column="ZWFZ_ZBJS" property="zwfzZbjs" />
+        <result column="JJJRFZ_ZBJS" property="jjjrfzZbjs" />
+        <result column="XS_DBRS" property="xsDbrs" />
+        <result column="XS_BBRS" property="xsBbrs" />
+        <result column="XS_QSRS" property="xsQsrs" />
+        <result column="XS_BQSRS" property="xsBqsrs" />
+        <result column="MS_SLJS" property="msSljs" />
+        <result column="MS_SJJS" property="msSjjs" />
+        <result column="MS_ZBJS" property="msZbjs" />
+        <result column="MS_TCKSJS" property="msTcksjs" />
+        <result column="MS_TCJCJYJS" property="msTcjcjyjs" />
+        <result column="MS_CNJCJYJS" property="msCnjcjyjs" />
+        <result column="XZ_SLJS" property="xzSljs" />
+        <result column="XZ_SJJS" property="xzSjjs" />
+        <result column="XZ_ZBJS" property="xzZbjs" />
+        <result column="XZ_TCKSJS" property="xzTcksjs" />
+        <result column="XZ_TCJCJYJS" property="xzTcjcjyjs" />
+        <result column="XZ_CNJCJYJS" property="xzCnjcjyjs" />
+        <result column="GYSS_MS_STHJZYBHAJJS" property="gyssMsSthjzybhajjs" />
+        <result column="GYSS_MS_SPYPAQBHAJJS" property="gyssMsSpypaqbhajjs" />
+        <result column="GYSS_MS_GYCCBHAJJS" property="gyssMsGyccbhajjs" />
+        <result column="GYSS_MS_GYTDSYQCRAJJS" property="gyssMsGytdsyqcrajjs" />
+        <result column="GYSS_MS_YLQYBHAJJS" property="gyssMsYlqybhajjs" />
+        <result column="GYSS_XZ_STHJZYBHAJJS" property="gyssXzSthjzybhajjs" />
+        <result column="GYSS_XZ_SPYPAQBHAJJS" property="gyssXzSpypaqbhajjs" />
+        <result column="GYSS_XZ_GYCCBHAJJS" property="gyssXzGyccbhajjs" />
+        <result column="GYSS_XZ_GYTDSYQCRAJJS" property="gyssXzGytdsyqcrajjs" />
+        <result column="GYSS_XZ_YLQYBHAJJS" property="gyssXzYlqybhajjs" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ETL_DT, CBDW_BM, CBDW_MC, CBDW_SZCS, CBDW_SZQX, CBDW_SZSF, RQTJ, PTXS_SLJS, ZDXS_SLJS, ZWFZ_SLJS, JJFZ_SLJS, PTXS_SJJS, ZDXS_SJJS, ZWFZ_SJJS, JJJRFZ_SJJS, PTXS_ZBJS, ZDXS_ZBJS, ZWFZ_ZBJS, JJJRFZ_ZBJS, XS_DBRS, XS_BBRS, XS_QSRS, XS_BQSRS, MS_SLJS, MS_SJJS, MS_ZBJS, MS_TCKSJS, MS_TCJCJYJS, MS_CNJCJYJS, XZ_SLJS, XZ_SJJS, XZ_ZBJS, XZ_TCKSJS, XZ_TCJCJYJS, XZ_CNJCJYJS, GYSS_MS_STHJZYBHAJJS, GYSS_MS_SPYPAQBHAJJS, GYSS_MS_GYCCBHAJJS, GYSS_MS_GYTDSYQCRAJJS, GYSS_MS_YLQYBHAJJS, GYSS_XZ_STHJZYBHAJJS, GYSS_XZ_SPYPAQBHAJJS, GYSS_XZ_GYCCBHAJJS, GYSS_XZ_GYTDSYQCRAJJS, GYSS_XZ_YLQYBHAJJS
+    </sql>
+    
+    <select id="selectZtqkSyDsList" resultMap="BaseResultMap"
+		 parameterType="huacloud.jwdsj.module.sy.ztqk.model.qo.SyZtqkIndexQo">
+		 SELECT 
+		    SUM(PTXS_SLJS) AS PTXS_SLJS,
+			SUM(ZDXS_SLJS) AS ZDXS_SLJS,
+			SUM(ZWFZ_SLJS) AS ZWFZ_SLJS,
+			SUM(JJFZ_SLJS) AS JJFZ_SLJS,
+			SUM(PTXS_SJJS) AS PTXS_SJJS,
+			SUM(ZDXS_SJJS) AS ZDXS_SJJS,
+			SUM(ZWFZ_SJJS) AS ZWFZ_SJJS,
+			SUM(JJJRFZ_SJJS) AS JJJRFZ_SJJS,
+			SUM(PTXS_ZBJS) AS PTXS_ZBJS,
+			SUM(ZDXS_ZBJS) AS ZDXS_ZBJS,
+			SUM(ZWFZ_ZBJS) AS ZWFZ_ZBJS,
+			SUM(JJJRFZ_ZBJS) AS JJJRFZ_ZBJS,
+			SUM(XS_DBRS) AS XS_DBRS,
+			SUM(XS_BBRS) AS XS_BBRS,
+			SUM(XS_QSRS) AS XS_QSRS,
+			SUM(XS_BQSRS) AS XS_BQSRS,
+			SUM(MS_SLJS) AS MS_SLJS,
+			SUM(MS_SJJS) AS MS_SJJS,
+			SUM(MS_ZBJS) AS MS_ZBJS,
+			SUM(MS_TCKSJS) AS MS_TCKSJS,
+			SUM(MS_TCJCJYJS) AS MS_TCJCJYJS,
+			SUM(MS_CNJCJYJS) AS MS_CNJCJYJS,
+			SUM(XZ_SLJS) AS XZ_SLJS,
+			SUM(XZ_SJJS) AS XZ_SJJS,
+			SUM(XZ_ZBJS) AS XZ_ZBJS,
+			SUM(XZ_TCKSJS) AS XZ_TCKSJS,
+			SUM(XZ_TCJCJYJS) AS XZ_TCJCJYJS,
+			SUM(XZ_CNJCJYJS) AS XZ_CNJCJYJS,
+			SUM(GYSS_MS_STHJZYBHAJJS) AS GYSS_MS_STHJZYBHAJJS,
+			SUM(GYSS_MS_SPYPAQBHAJJS) AS GYSS_MS_SPYPAQBHAJJS,
+			SUM(GYSS_MS_GYCCBHAJJS) AS GYSS_MS_GYCCBHAJJS,
+			SUM(GYSS_MS_GYTDSYQCRAJJS) AS GYSS_MS_GYTDSYQCRAJJS,
+			SUM(GYSS_MS_YLQYBHAJJS) AS GYSS_MS_YLQYBHAJJS,
+			SUM(GYSS_XZ_STHJZYBHAJJS) AS GYSS_XZ_STHJZYBHAJJS,
+			SUM(GYSS_XZ_SPYPAQBHAJJS) AS GYSS_XZ_SPYPAQBHAJJS,
+			SUM(GYSS_XZ_GYCCBHAJJS) AS GYSS_XZ_GYCCBHAJJS,
+			SUM(GYSS_XZ_GYTDSYQCRAJJS) AS GYSS_XZ_GYTDSYQCRAJJS,
+			SUM(GYSS_XZ_YLQYBHAJJS) AS GYSS_XZ_YLQYBHAJJS
+			FROM APP.APP_DSJYYXT_SYZB
+			WHERE 1=1 
+			<if test="syZtqkIndexQo.dwbm != null">
+			and CBDW_BM like CONCAT(CONCAT('',#{syZtqkIndexQo.dwbm}),'%')
+		   </if>
+	    </select>
+
+</mapper>

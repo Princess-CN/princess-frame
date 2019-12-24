@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="huacloud.jwdsj.module.zlfx.chqsqkfx.mapper.ZlfxChqsqkfxMapper">
+
+    <!--  撤回起诉情况分析  -->
+    <select id="getChqsqkfx" resultType="huacloud.jwdsj.module.zlfx.chqsqkfx.model.vo.ZlfxChqsqkfxVo"
+            parameterType="map">
+        select
+                SUM(CHQSJS) AS num1,
+                CASE
+                                (
+                                        SELECT
+                                                SUM(CHQSJS)
+                                        FROM
+                                                "APP"."APP_ZLFX_QSQK"
+                                        WHERE
+                                                1 = 1 AND CBDW_BM LIKE CONCAT(#{code}, '%') AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                                ) WHEN 0 THEN 0 ELSE ( ROUND( SUM(CHQSJS) /
+                                (
+                                        SELECT
+                                                SUM(CHQSJS)
+                                        FROM
+                                                "APP"."APP_ZLFX_QSQK"
+                                        WHERE
+                                                1 = 1 AND CBDW_BM LIKE CONCAT(#{code}, '%') AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                                )
+                                , 2) ) END AS tb1 ,
+                SUM(CHQSRS)                AS num2,
+                CASE
+                                (
+                                        SELECT
+                                                SUM(CHQSRS)
+                                        FROM
+                                                "APP"."APP_ZLFX_QSQK"
+                                        WHERE
+                                                1 = 1 AND CBDW_BM LIKE CONCAT(#{code}, '%') AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                                ) WHEN 0 THEN 0 ELSE ROUND( SUM(CHQSRS) /
+                                (
+                                        SELECT
+                                                SUM(CHQSRS)
+                                        FROM
+                                                "APP"."APP_ZLFX_QSQK"
+                                        WHERE
+                                                1 = 1 AND CBDW_BM LIKE CONCAT(#{code}, '%') AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                                )
+                                , 2)                                                  END AS tb2,
+                CASE SUM(QSRS) WHEN 0 THEN 0 ELSE ROUND(SUM(CHQSRS)*100/SUM(QSRS), 2) END AS bl ,
+                SUM(CHQSRS_TYYSDWCH)                                                      AS num3
+        from
+                "APP"."APP_ZLFX_QSQK"
+        WHERE
+                1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND RQTJ BETWEEN #{sDate} AND #{eDate}
+
+    </select>
+
+    <select id="getChqsblpjz" resultType="java.lang.Float" parameterType="map">
+         SELECT
+                CASE (SUM(CHQSRS) + SUM(QSRS)) WHEN 0 THEN 0 ELSE ROUND((SUM(CHQSRS)*100) / (SUM(CHQSRS) + SUM(QSRS)), 2) END
+        FROM
+                "APP"."APP_ZLFX_QSQK"
+        WHERE
+                1 = 1
+        AND CBDW_BM LIKE CONCAT (#{code}, '%')
+        AND RQTJ BETWEEN #{sDate} AND #{eDate}
+    </select>
+
+    <select id="getChqssqsYear" resultType="huacloud.jwdsj.module.zlfx.chqsqkfx.model.vo.ZlfxChqsqkfxQsVo"
+            parameterType="map">
+        select
+        YEAR(RQTJ) AS ym,
+        <choose>
+            <when test="type == 1">
+                SUM(CHQSJS)
+            </when>
+            <when test="type == 2">
+                SUM(CHQSRS)
+            </when>
+            <when test="type == 3">
+                CASE SUM(QSRS)
+                WHEN 0 THEN 0
+                ELSE
+                ROUND(
+                (SUM(CHQSRS)*100)/SUM(QSRS)
+                ,2) END
+            </when>
+            <when test="type == 4">
+                SUM(CHQSRS_TYYSDWCH)
+            </when>
+            <otherwise>
+                0
+            </otherwise>
+        </choose>
+        AS num1
+        from
+        "APP"."APP_ZLFX_QSQK"
+        WHERE
+        1 = 1
+        AND CBDW_BM LIKE CONCAT(#{code}, '%')
+        GROUP BY
+            YEAR(RQTJ)
+        ORDER BY
+            YEAR(RQTJ) ASC
+    </select>
+
+    <select id="getChqssqsMonth" resultType="huacloud.jwdsj.module.zlfx.chqsqkfx.model.vo.ZlfxChqsqkfxQsVo"
+        parameterType="map">
+        select
+        MONTH(T.RQTJ) AS ym  ,
+        <choose>
+            <when test="type == 1">
+                SUM(T.CHQSJS)
+            </when>
+            <when test="type == 2">
+                SUM(T.CHQSRS)
+            </when>
+            <when test="type == 3">
+                CASE SUM(T.QSRS)
+                WHEN 0 THEN 0
+                ELSE
+                ROUND(
+                (SUM(T.CHQSRS)*100)/SUM(T.QSRS)
+                ,2) END
+            </when>
+            <when test="type == 4">
+                SUM(T.CHQSRS_TYYSDWCH)
+            </when>
+            <otherwise>
+                0
+            </otherwise>
+        </choose>
+        AS num1,
+        CASE
+        (
+        SELECT
+        <choose>
+            <when test="type == 1">
+                SUM(CHQSJS)
+            </when>
+            <when test="type == 2">
+                SUM(CHQSRS)
+            </when>
+            <when test="type == 3">
+                CASE SUM(QSRS)
+                WHEN 0 THEN 0
+                ELSE
+                ROUND(
+                (SUM(CHQSRS)*100)/SUM(QSRS)
+                ,2) END
+            </when>
+            <when test="type == 4">
+                SUM(CHQSRS_TYYSDWCH)
+            </when>
+            <otherwise>
+                0
+            </otherwise>
+        </choose>
+        FROM
+        "APP"."APP_ZLFX_QSQK"
+        WHERE
+        1 = 1
+        AND CBDW_BM LIKE CONCAT(#{code}, '%')
+        AND YEAR(RQTJ) = #{year2}
+        AND MONTH(RQTJ) = MONTH(T.RQTJ)
+        ) WHEN 0 THEN 0
+        ELSE ROUND(
+        <choose>
+            <when test="type == 1">
+                SUM(T.CHQSJS)
+            </when>
+            <when test="type == 2">
+                SUM(T.CHQSRS)
+            </when>
+            <when test="type == 3">
+                CASE SUM(T.QSRS)
+                WHEN 0 THEN 0
+                ELSE
+                ROUND(
+                (SUM(T.CHQSRS)*100)/SUM(T.QSRS)
+                ,2) END
+            </when>
+            <when test="type == 4">
+                SUM(T.CHQSRS_TYYSDWCH)
+            </when>
+            <otherwise>
+                0
+            </otherwise>
+        </choose>
+        /
+        (
+        SELECT
+        <choose>
+            <when test="type == 1">
+                SUM(CHQSJS)
+            </when>
+            <when test="type == 2">
+                SUM(CHQSRS)
+            </when>
+            <when test="type == 3">
+                CASE SUM(QSRS)
+                WHEN 0 THEN 0
+                ELSE
+                ROUND(
+                (SUM(CHQSRS)*100)/SUM(QSRS)
+                ,2) END
+            </when>
+            <when test="type == 4">
+                SUM(CHQSRS_TYYSDWCH)
+            </when>
+            <otherwise>
+                0
+            </otherwise>
+        </choose>
+        FROM
+        "APP"."APP_ZLFX_QSQK"
+        WHERE
+        1 = 1
+        AND CBDW_BM LIKE CONCAT(#{code}, '%')
+        AND YEAR(RQTJ) = #{year2}
+        AND MONTH(RQTJ) = MONTH(T.RQTJ)
+        )
+        , 2) END AS num2
+        from
+        "APP"."APP_ZLFX_QSQK" T
+        WHERE
+        1 = 1
+        AND T.CBDW_BM LIKE CONCAT(#{code}, '%')
+        AND YEAR(T.RQTJ) = #{year}
+        GROUP BY
+        MONTH(T.RQTJ)
+        ORDER BY
+        MONTH(T.RQTJ) ASC
+    </select>
+
+    <select id="getChqsrszdddqMax" resultType="java.lang.String"
+        parameterType="map">
+        SELECT
+        <choose>
+            <when test="level == 1">
+                CBDW_SZSF
+            </when>
+            <when test="level == 2">
+                CBDW_SZCS
+            </when>
+            <when test="level == 3">
+                CBDW_SZQX
+            </when>
+        </choose>
+        from
+        "APP"."APP_ZLFX_QSQK"
+        WHERE
+        1 = 1
+        AND YEAR(RQTJ) = #{year}
+        AND CBDW_BM LIKE CONCAT (#{code}, '%')
+        <choose>
+            <when test="level == 1">
+                AND CBDW_SZSF IS NOT NULL AND CBDW_SZSF != ''
+            </when>
+            <when test="level == 2">
+                AND CBDW_SZCS   IS NOT NULL AND CBDW_SZCS != ''
+            </when>
+            <when test="level == 3">
+                AND CBDW_SZQX   IS NOT NULL AND CBDW_SZQX != ''
+            </when>
+        </choose>
+        GROUP BY
+        <choose>
+            <when test="level == 1">
+                CBDW_SZSF
+            </when>
+            <when test="level == 2">
+                CBDW_SZCS
+            </when>
+            <when test="level == 3">
+                CBDW_SZQX
+            </when>
+        </choose>
+        ORDER BY SUM(CHQSRS) DESC
+        LIMIT 1
+    </select>
+
+    <select id="getChqsrszdddq" resultType="huacloud.jwdsj.module.zlfx.chqsqkfx.model.vo.ZlfxChqsqkfxZdddqVo"
+        parameterType="map">
+        select
+        MONTH(RQTJ) ym,
+        SUM(CHQSRS) num
+        from
+        "APP"."APP_ZLFX_QSQK"
+        WHERE
+        1 = 1
+        AND CBDW_BM LIKE CONCAT(#{code}, '%')
+        AND YEAR(RQTJ) = #{year}
+        <choose>
+            <when test="level == 1">
+                AND CBDW_SZSF = #{name}
+            </when>
+            <when test="level == 2">
+                AND CBDW_SZCS = #{name}
+            </when>
+            <when test="level == 3">
+                AND CBDW_SZQX = #{name}
+            </when>
+        </choose>
+        GROUP BY MONTH(RQTJ)
+        ORDER BY MONTH(RQTJ) ASC
+    </select>
+
+    <select id="getAyfbTotal" resultType="java.lang.Long"
+        parameterType="map">
+        SELECT COUNT(1) FROM (  select
+        AJXZ
+        from "APP"."APP_ZLFX_QSQK"
+        WHERE 1 = 1
+        AND CBDW_BM LIKE CONCAT(#{code}, '%')
+        AND RQTJ BETWEEN #{sDate} AND #{eDate}
+        <if test="ay != null and ay != ''">
+            AND AJXZ LIKE CONCAT('%',#{ay}, '%')
+        </if>
+        GROUP BY AJXZ
+        )
+    </select>
+
+    <select id="getAyfb" resultType="huacloud.jwdsj.module.zlfx.chqsqkfx.model.vo.ZlfxChqsqkfxAyfbVo"
+        parameterType="map">
+        select
+        AJXZ AS ay,
+        SUM(CHQSRS) AS num,
+        CASE SUM(QSRS)
+        WHEN 0 THEN 0
+        ELSE ROUND(SUM(CHQSRS)*100/SUM(QSRS) ,2)
+        end AS bl
+        from "APP"."APP_ZLFX_QSQK"
+        WHERE 1 = 1
+        AND CBDW_BM LIKE CONCAT(#{code}, '%')
+        AND RQTJ BETWEEN #{sDate} AND #{eDate}
+        <if test="ay != null and ay != ''">
+            AND AJXZ LIKE CONCAT('%',#{ay}, '%')
+        </if>
+        GROUP BY AJXZ
+        ORDER BY num DESC
+        Limit #{s1},#{s2}
+    </select>
+    <select id="getChqsyyfbj" resultType="huacloud.jwdsj.module.zlfx.chqsqkfx.model.vo.ZlfxChqsqkfxBqsqxfb"
+        parameterType="map">
+        SELECT DISTINCT
+        CHQSYY_MC name,
+        SUM(CHQSJS) num
+        from
+                "APP"."APP_ZLFX_QSQK_DWZB"
+        WHERE
+                1=1
+            AND CHQSYY_MC != ''
+            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND RQTJ BETWEEN #{sDate} AND #{eDate}
+        GROUP BY
+                CHQSYY_MC
+        ORDER BY num desc
+    </select>
+
+    <select id="getChqsyyfbr" resultType="huacloud.jwdsj.module.zlfx.chqsqkfx.model.vo.ZlfxChqsqkfxBqsqxfb"
+        parameterType="map">
+        SELECT DISTINCT
+        CHQSYY_MC name,
+        SUM(CHQSRS) num
+        from
+                "APP"."APP_ZLFX_QSQK_DWZB"
+        WHERE
+                1=1
+            AND CHQSYY_MC != ''
+            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND RQTJ BETWEEN #{sDate} AND #{eDate}
+        GROUP BY
+                CHQSYY_MC
+        ORDER BY num desc
+    </select>
+
+    <select id="getChqsdqfb" resultType="huacloud.jwdsj.module.zlfx.chqsqkfx.model.vo.ZlfxChqsqkfxDqfbVo"
+        parameterType="map">
+        SELECT
+            T.CBDW_SZCS AS name,
+            SUM(T.CHQSJS) AS num,
+            (SELECT SUM(CHQSJS) FROM "APP"."APP_ZLFX_QSQK" WHERE 1 = 1 AND CBDW_SZCS = T.CBDW_SZCS
+            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND RQTJ BETWEEN #{sDate2} AND #{eDate2}) AS num2
+        from
+            "APP"."APP_ZLFX_QSQK" T
+        WHERE
+                1 =1
+            AND T.CBDW_SZCS != ''
+            AND T.CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND T.RQTJ BETWEEN #{sDate} AND #{eDate}
+        GROUP BY
+                CBDW_SZCS
+    </select>
+</mapper>

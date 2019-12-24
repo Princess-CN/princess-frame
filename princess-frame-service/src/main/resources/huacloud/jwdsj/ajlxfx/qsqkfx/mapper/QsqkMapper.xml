@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="huacloud.jwdsj.module.ajlxfx.qsqkfx.mapper.QsqkMapper">
+
+
+    <select id="countAjqk" resultType="huacloud.jwdsj.module.ajlxfx.qsqkfx.model.vo.QsqkfxVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qsqkfx.model.dto.QsqkfxDto">
+        SELECT
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.SCQSJS ELSE 0 END ),0) QSJSCOUNT,
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.SCQSJS ELSE 0 END ),0) QSJSCOUNTTB,
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.QSRS ELSE 0 END ),0) QSRSCOUNT,
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.QSRS ELSE 0 END ),0) QSRSCOUNTTB,
+
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.QSRS ELSE 0 END ),0)
+            /
+            (CASE WHEN
+              NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.ZRS ELSE 0 END ),0) == 0 THEN 1
+            ELSE
+              NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.ZRS ELSE 0 END ),0) END) QSL,
+
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.SCBQSJS ELSE 0 END ),0) BQSJSCOUNT,
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.SCBQSJS ELSE 0 END ),0) BQSJSCOUNTTB,
+
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.BQSRS ELSE 0 END ),0) BQSRSCOUNT,
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.BQSRS ELSE 0 END ),0) BQSRSCOUNTTB,
+
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.BQSRS ELSE 0 END ),0)
+            /
+            (CASE WHEN
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.ZRS ELSE 0 END ),0) == 0 THEN 1
+            ELSE
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.ZRS ELSE 0 END ),0) END) BQSL
+        FROM APP.APP_AJLXFX_QSQK T
+        WHERE T.RQTJ  BETWEEN  #{tbBeginDate}  AND   #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+    </select>
+    
+    <select id="countQsjsrq"  resultType="huacloud.jwdsj.module.ajlxfx.qsqkfx.model.vo.QsqkfxajqkVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qsqkfx.model.dto.QsqkfxDto">
+        SELECT
+              TO_CHAR(T.RQTJ,'YYYY-MM') AS RQ ,
+              NVL(SUM(T.SCQSJS),0) SZ
+          FROM  APP.APP_AJLXFX_QSQK T
+        WHERE T.RQTJ  BETWEEN  #{beginDate}  AND   #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+        GROUP BY TO_CHAR(T.RQTJ,'YYYY-MM')
+        ORDER BY TO_CHAR(T.RQTJ,'YYYY-MM')
+    </select>
+
+
+    
+    <select id="countBqsjsrq" resultType="huacloud.jwdsj.module.ajlxfx.qsqkfx.model.vo.QsqkfxajqkVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qsqkfx.model.dto.QsqkfxDto">
+        SELECT
+            TO_CHAR(T.RQTJ,'YYYY-MM') AS RQ ,
+            NVL(SUM(T.SCBQSJS),0) SZ
+        FROM  APP.APP_AJLXFX_QSQK T
+        WHERE T.RQTJ  BETWEEN  #{beginDate}  AND   #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+        GROUP BY TO_CHAR(T.RQTJ,'YYYY-MM')
+        ORDER BY TO_CHAR(T.RQTJ,'YYYY-MM')
+    </select>
+    
+    
+    <select id="countThbl" resultType="huacloud.jwdsj.module.ajlxfx.qsqkfx.model.vo.QsqkthVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qsqkfx.model.dto.QsqkfxDto">
+          SELECT
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.THBCZCAJS ELSE 0 END ),0) THBCZCAJCOUNT,
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.THBCZCAJS ELSE 0 END ),0) THBCZCAJCOUNTTB,
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.THBCZCAJS ELSE 0 END ),0)
+                /
+                CASE WHEN SUM(
+                  CASE WHEN
+                        T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate} THEN  NVL(T.SCQSSLWJJS,0)+NVL(T.SLSCQSJS,0)+NVL(T.CFAJJS,0)
+                  ELSE 0 END ) == 0 THEN 1
+                ELSE
+                  SUM(CASE WHEN
+                        T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate} THEN  NVL(T.SCQSSLWJJS,0)+NVL(T.SLSCQSJS,0)+NVL(T.CFAJJS,0)
+                  ELSE 0 END )
+                END THBCZCAJB,
+
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.TCHBZCBJS ELSE 0 END ),0) TCHBZCBAJCOUNT,
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.TCHBZCBJS ELSE 0 END ),0) TCHBZCBAJCOUNTTB,
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.TCHBZCBJS ELSE 0 END ),0)
+                /
+                CASE WHEN NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.THBCZCAJS ELSE 0 END ),0) ==0 THEN 1
+                ELSE NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.THBCZCAJS ELSE 0 END ),0) END TCHBZCBAJB,
+
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.GBGXAJJS ELSE 0 END ),0) GBGXCOUNT,
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.GBGXAJJS ELSE 0 END ),0) GBGXCOUNTTB,
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.GBGXAJJS ELSE 0 END ),0)
+                /
+                CASE WHEN NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.AJSL ELSE 0 END ),0) ==0 THEN 1
+                ELSE NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.AJSL ELSE 0 END ),0) END GBGXB,
+
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.SSRS ELSE 0 END ),0) SSCOUNT,
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.SSRS ELSE 0 END ),0) SSCOUNTTB,
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.SSRS ELSE 0 END ),0)
+                /
+                CASE WHEN NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.YSXGXHJRS ELSE 0 END ),0) ==0 THEN 1
+                ELSE NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.YSXGXHJRS ELSE 0 END ),0) END SSB,
+
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.CHQSRS ELSE 0 END ),0) CHQSRSCOUNT,
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.CHQSRS ELSE 0 END ),0) CHQSRSCOUNTTB,
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.CHQSRS ELSE 0 END ),0)
+                /
+                CASE WHEN NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.QSRS ELSE 0 END ),0) ==0 THEN 1
+                ELSE NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.QSRS ELSE 0 END ),0) END CHQSRSB
+          FROM  APP.APP_AJLXFX_QSQK T
+          WHERE T.RQTJ  BETWEEN  #{tbBeginDate}  AND   #{endDate}
+          <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+          </if>
+    </select>
+
+    <select id="countQgqaajzl" resultType="huacloud.jwdsj.module.ajlxfx.qsqkfx.model.vo.QsqgqsajVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qsqkfx.model.dto.QsqkfxDto">
+          SELECT
+                T.CBDW_SZSF sf,
+                NVL(SUM(T.AJSL),0) sz
+          FROM APP.APP_AJLXFX_QSQK T
+          WHERE T.RQTJ  BETWEEN  #{beginDate}  AND   #{endDate}
+          GROUP BY T.CBDW_SZSF
+    </select>
+
+    <select id="countAjqszmph" resultType="huacloud.jwdsj.module.ajlxfx.qsqkfx.model.vo.QsajqszmphVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qsqkfx.model.dto.QsqkfxDto">
+        SELECT
+            T.AJXZ,
+            SUM(T.SCQSJS) QSJS,
+            SUM(T.QSRS) QSRS,
+            SUM(T.QSRS)
+            /
+            CASE WHEN SUM(T.ZRS) == 0 THEN 1 ELSE SUM(T.ZRS) END  QSL
+        FROM APP.APP_AJLXFX_QSQK T
+        WHERE  T.RQTJ  BETWEEN  #{beginDate}  AND   #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+        GROUP BY T.AJXZ
+        ORDER BY T.AJXZ
+        LIMIT ((#{pageNumber}-1)*#{pageSize}),#{pageSize}
+    </select>
+
+    <select id="countAjqszmphTotal" resultType="java.lang.Long"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qsqkfx.model.dto.QsqkfxDto">
+        SELECT
+            COUNT(1)
+        FROM
+        (SELECT
+            T.AJXZ,
+            SUM(T.SCQSJS),
+            SUM(T.QSRS),
+            SUM(T.QSRS)/SUM(T.ZRS)
+        FROM APP.APP_AJLXFX_QSQK T
+        WHERE  T.RQTJ  BETWEEN  #{beginDate}  AND   #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+        GROUP BY T.AJXZ)
+    </select>
+
+
+    <select id="countCf" resultType="huacloud.jwdsj.module.ajlxfx.qsqkfx.model.vo.QsqkfxcfVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qsqkfx.model.dto.QsqkfxDto">
+        SELECT
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.CFAJJS ELSE 0 END ),0) CFAJCOUNT,
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.CFAJJS ELSE 0 END ),0) CFAJCOUNTTB,
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.CFAJJS ELSE 0 END ),0)
+            /
+            CASE WHEN NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.AJSL ELSE 0 END ),0) ==0 THEN 1
+            ELSE NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.AJSL ELSE 0 END ),0) END CFAJB,
+
+
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.HBAJJS ELSE 0 END ),0) HBAJCOUNT,
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.HBAJJS ELSE 0 END ),0) HBAJCOUNTTB,
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.HBAJJS ELSE 0 END ),0)
+            /
+            CASE WHEN NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.AJSL ELSE 0 END ),0) ==0 THEN 1
+            ELSE NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.AJSL ELSE 0 END ),0) END HBAJB,
+
+
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.YSXGYZRS ELSE 0 END ),0) PJCOUNT,
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.YSXGYZRS ELSE 0 END ),0) PJCOUNTTB,
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.YSXGYZRS ELSE 0 END ),0)
+            /
+            CASE WHEN NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.YSXGXHJRS ELSE 0 END ),0) ==0 THEN 1
+            ELSE NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.YSXGXHJRS ELSE 0 END ),0) END PJB,
+
+
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.FYKSGPJCJS ELSE 0 END ),0) KSJGPCOUNT,
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.FYKSGPJCJS ELSE 0 END ),0) KSJGPCOUNTTB,
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.FYKSGPJCJS ELSE 0 END ),0)
+            /
+            CASE WHEN
+             NVL(SUM(
+                  CASE WHEN T.RQTJ BETWEEN  #{beginDate}  AND   #{endDate}  THEN  NVL(T.ESKSYJCPJS,0)+NVL(T.ZSKSAJCPJS,0)  ELSE 0 END
+                ),0) == 0 THEN 1
+            ELSE
+                NVL(SUM(
+                  CASE WHEN T.RQTJ BETWEEN  #{beginDate}  AND   #{endDate} THEN  NVL(T.ESKSYJCPJS,0)+NVL(T.ZSKSAJCPJS,0) ELSE 0 END
+                ),0) END KSJGPB,
+
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.YPGBJS ELSE 0 END ),0) YPGBCOUNT,
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.YPGBJS ELSE 0 END ),0) YPGBCOUNTTB,
+            NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.YPGBJS ELSE 0 END ),0)
+            /
+            CASE WHEN
+            NVL(SUM(
+                CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN NVL(T.ESKSYJCPJS,0) + NVL(T.ZSKSAJCPJS,0) ELSE 0 END
+            ),0) == 0 THEN 1
+            ELSE
+            NVL(SUM(
+                CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}   THEN NVL(T.ESKSYJCPJS,0) + NVL(T.ZSKSAJCPJS,0) ELSE 0 END
+            ),0) END YPGBB
+        FROM  APP.APP_AJLXFX_QSQK T
+        WHERE T.RQTJ  BETWEEN  #{tbBeginDate}  AND   #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+    </select>
+
+</mapper>

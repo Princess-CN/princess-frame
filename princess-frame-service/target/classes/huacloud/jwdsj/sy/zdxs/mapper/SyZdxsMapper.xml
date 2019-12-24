@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="huacloud.jwdsj.module.sy.zdxs.mapper.SyZdxsMapper">
+
+    <!--公诉业务-->
+
+    <resultMap id="zdxsGsyw" type="huacloud.jwdsj.module.sy.zdxs.model.vo.AppSyZdxsGsywVo">
+        <result column="RQTJ" property="rqtj"/>
+        <result column="SCQSSLWJJS" property="scqsslwjjs"/>
+        <result column="SLSCQSJS" property="slscqsjs"/>
+        <result column="SLSCQSRS" property="slscqsrs"/>
+        <result column="SCQSSJJS" property="scqssjjs"/>
+        <result column="SCQSJS" property="scqsjs"/>
+        <result column="QSRS" property="qsrs"/>
+        <result column="SCBQSJS" property="scbqsjs"/>
+        <result column="BQSRS" property="bqsrs"/>
+        <result column="FYKSGPJCJS" property="fyksgpjcjs"/>
+        <result column="SCQSTQJRJS" property="scqstqjrjs"/>
+        <result column="JZLSRS" property="jzlsrs"/>
+        <result column="TCKSJS" property="tcksjs"/>
+        <result column="SCQSAJSJL_FZ" property="scqsajsjlFz"/>
+        <result column="CFAJJS" property="cfajjs"/>
+        <result column="HBAJJS" property="hbajjs"/>
+    </resultMap>
+
+    <select id="selectGsSlwjs" resultType="java.lang.Long"  parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo">
+        SELECT NVL(SUM(SCQSSLWJJS),0)
+        FROM APP.APP_XSZT_SYZB_QSYW
+        WHERE AJLX = '重大犯罪案件' AND  RQTJ &lt; #{ksrq}
+              AND CBDW_BM LIKE #{dwbm}||'%'
+    </select>
+
+    <select id="selectGsywZbhz" resultMap="zdxsGsyw" parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo">
+        SELECT NVL(SUM(SLSCQSJS),0) AS SLSCQSJS,
+                NVL(SUM(SLSCQSRS),0) AS SLSCQSRS,
+                NVL(SUM(SCQSSJJS),0) AS SCQSSJJS,
+                NVL(SUM(SCQSJS),0) AS SCQSJS,
+                NVL(SUM(QSRS),0) AS QSRS,
+                NVL(SUM(SCBQSJS),0) AS SCBQSJS,
+                NVL(SUM(BQSRS),0) AS BQSRS,
+                NVL(SUM(FYKSGPJCJS),0) AS FYKSGPJCJS,
+                NVL(SUM(SCQSTQJRJS),0) AS SCQSTQJRJS,
+                NVL(SUM(JZLSRS),0) AS JZLSRS,
+                NVL(SUM(TCKSJS),0) AS TCKSJS,
+                NVL(SUM(SCQSAJSJL_FZ),0) AS SCQSAJSJL_FZ,
+                NVL(SUM(CFAJJS),0) AS CFAJJS,
+                NVL(SUM(HBAJJS),0) AS HBAJJS
+        FROM "APP"."APP_XSZT_SYZB_QSYW"
+        WHERE AJLX = '重大犯罪案件' AND  RQTJ BETWEEN #{ksrq} AND #{jzrq}
+              AND CBDW_BM LIKE #{dwbm}||'%'
+    </select>
+
+    <select id="selectGsywXqList" resultMap="zdxsGsyw" parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo">
+        SELECT RQTJ,
+        NVL(SUM(SLSCQSJS),0) AS SLSCQSJS,
+        NVL(SUM(SLSCQSRS),0) AS SLSCQSRS,
+        NVL(SUM(SCQSJS),0) AS SCQSJS,
+        NVL(SUM(SCBQSJS),0) AS SCBQSJS
+        FROM  "APP"."APP_XSZT_SYZB_QSYW"
+        WHERE AJLX = '重大犯罪案件' AND   RQTJ BETWEEN #{ksrq} AND #{jzrq}
+              AND CBDW_BM LIKE #{dwbm}||'%'
+        GROUP BY RQTJ
+        ORDER BY RQTJ
+        LIMIT 10
+    </select>
+
+    <!--公诉业务 - 追踪 - 案件-->
+
+    <resultMap id="zdxsGsywAjZz" type="huacloud.jwdsj.module.sy.zdxs.model.vo.AdmZdxsGsywAjZzVo">
+        <result column="SLRQ"  property="slrq"/>
+        <result column="SLSCQSJS"  property="sljs"/>
+        <result column="SCQSSJJS"  property="sjjs"/>
+        <result column="SCQSJS"  property="qsjs"/>
+        <result column="SCBQSJS"  property="bqsjs"/>
+        <result column="JRZCJS"  property="tqjr"/>
+    </resultMap>
+    <select id="selectGsywZzAjZbhz" resultMap="zdxsGsywAjZz" parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo">
+        SELECT NVL(SUM(SLSCQSJS),0) AS SLSCQSJS,
+        NVL(SUM(SCQSJS),0) AS SCQSJS,
+        NVL(SUM(SCQSSJJS),0) AS SCQSSJJS,
+        NVL(SUM(SCBQSJS),0) AS SCBQSJS,
+        NVL(SUM(CASE WHEN JRZCRQ IS NULL THEN 1 ELSE 0 END),0) AS JRZCJS
+        FROM "ADM"."ADM_XSZT_SCQS"
+        WHERE AJLX = '重大犯罪案件' AND SLRQ BETWEEN  #{ksrq} AND #{jzrq} AND CBDW_BM LIKE #{dwbm}||'%'
+    </select>
+
+    <select id="selectGsywZzAjZblb" resultMap="zdxsGsywAjZz" parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo">
+        SELECT SLRQ,
+        NVL(SUM(SLSCQSJS),0) AS SLSCQSJS,
+        NVL(SUM(SCQSJS),0) AS SCQSJS,
+        NVL(SUM(SCQSSJJS),0) AS SCQSSJJS,
+        NVL(SUM(SCBQSJS),0) AS SCBQSJS,
+        NVL(SUM(CASE WHEN JRZCRQ IS NULL THEN 1 ELSE 0 END),0) AS JRZCJS
+        FROM "ADM"."ADM_XSZT_SCQS"
+        WHERE AJLX = '重大犯罪案件' AND SLRQ BETWEEN  #{ksrq} AND #{jzrq} AND CBDW_BM LIKE #{dwbm}||'%'
+        GROUP BY SLRQ
+        ORDER BY SLRQ
+        LIMIT 10
+    </select>
+
+    <!--公诉业务 - 追踪 - 嫌疑人-->
+
+    <select id="selectGsywZzXyrZbhz" resultType="huacloud.jwdsj.module.sy.zdxs.model.vo.AdmZdxsGsywXyrZzVo"
+            parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo">
+        SELECT NVL(SUM(QSRS),0) AS QSRS,NVL(SUM(BQSRS),0) AS BQSRS,NVL(SUM(JZLSRS),0) AS JZCLRS
+        FROM "ADM"."ADM_XSZT_XYRSCQS" A
+        WHERE EXISTS(SELECT 1 FROM "ADM"."ADM_XSZT_SCQS" B WHERE A.BMSAH = B.BMSAH AND AJLX = '重大犯罪案件'
+        AND SLRQ BETWEEN  #{ksrq} AND #{jzrq} AND CBDW_BM LIKE #{dwbm}||'%')
+    </select>
+
+    <!--公诉业务 - 追踪 - 案件明细表-->
+    <select id="selectGsywZzAnjmxZbhz" resultType="huacloud.jwdsj.module.sy.zdxs.model.vo.AdmZdxsGsywAjmxZzVo"
+            parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo">
+        SELECT NVL(SUM(FYKSGPJCJS),0) AS FYGPJCJS,NVL(SUM(TCKSJS),0) AS  TCKS
+        FROM "ADM"."ADM_XSZT_QS_AJZB_MX" A
+        WHERE EXISTS(SELECT 1 FROM "ADM"."ADM_XSZT_SCQS" B WHERE A.BMSAH = B.BMSAH AND AJLX = '重大犯罪案件'
+        AND SLRQ BETWEEN  #{ksrq} AND #{jzrq} AND CBDW_BM LIKE #{dwbm}||'%')
+    </select>
+
+    <!--侦监业务-->
+
+    <resultMap id="zdxsZjyw" type="huacloud.jwdsj.module.sy.zdxs.model.vo.AppSyZdxsZjywVo">
+        <result column="RQTJ" property="rqtj"/>
+        <result column="SLJS"  property="sljs"/>
+        <result column="SLRS"  property="slrs"/>
+        <result column="SJJS"  property="sjjs"/>
+        <result column="DBJS"  property="dbjs"/>
+        <result column="DBRS"  property="dbrs"/>
+        <result column="BBJS"  property="bbjs"/>
+        <result column="BBRS"  property="bbrs"/>
+        <result column="TQJRJS"  property="tqjrjs"/>
+        <result column="JDLAJS"  property="jdlajs"/>
+        <result column="JDCAJS"  property="jdcajs"/>
+        <result column="JZLBRS"  property="jzlbrs"/>
+        <result column="SLWJJS"  property="slwjjs"/>
+    </resultMap>
+
+    <select id="selectZjSlwjs" resultType="java.lang.Long"  parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo">
+        SELECT NVL(SUM(SLWJJS),0)
+        FROM APP.APP_XSZT_SYZB_ZJYW
+        WHERE AJLX = '重大犯罪案件' AND  RQTJ &lt; #{ksrq}
+        AND CBDW_BM LIKE #{dwbm}||'%'
+    </select>
+
+    <select id="selectZjywZbhz" resultMap="zdxsZjyw" parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo">
+        SELECT NVL(SUM(SLJS),0) AS SLJS,
+                NVL(SUM(SLRS),0) AS SLRS,
+                NVL(SUM(SJJS),0) AS SJJS,
+                NVL(SUM(DBJS),0) AS DBJS,
+                NVL(SUM(DBRS),0) AS DBRS,
+                NVL(SUM(BBJS),0) AS BBJS,
+                NVL(SUM(BBRS),0) AS BBRS,
+                NVL(SUM(TQJRJS),0) AS TQJRJS,
+                NVL(SUM(JDLAJS),0) AS JDLAJS,
+                NVL(SUM(JDCAJS),0) AS JDCAJS,
+                NVL(SUM(JZLBRS),0) AS JZLBRS
+        FROM "APP"."APP_XSZT_SYZB_ZJYW"
+        WHERE AJLX = '重大犯罪案件' AND  RQTJ BETWEEN #{ksrq} AND #{jzrq}
+        AND CBDW_BM LIKE #{dwbm}||'%'
+    </select>
+
+    <select id="selectZjywXqList" resultMap="zdxsZjyw" parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo">
+        SELECT RQTJ,
+                NVL(SUM(SLJS),0) AS SLJS,
+                NVL(SUM(SLRS),0) AS SLRS,
+                NVL(SUM(DBJS),0) AS DBJS,
+                NVL(SUM(BBJS),0) AS BBJS
+        FROM  "APP"."APP_XSZT_SYZB_ZJYW"
+        WHERE  AJLX = '重大犯罪案件' AND  RQTJ BETWEEN #{ksrq} AND #{jzrq}
+        AND CBDW_BM LIKE #{dwbm}||'%'
+        GROUP BY RQTJ
+        ORDER BY RQTJ
+        LIMIT 10
+    </select>
+
+
+    <!--侦监业务 - 追踪 - 案件-->
+    <resultMap id="zdxsZjywAjZz" type="huacloud.jwdsj.module.sy.zdxs.model.vo.AdmZdxsZjywAjZzVo">
+        <result column="SLRQ"  property="slrq"/>
+        <result column="SLJS"  property="sljs"/>
+        <result column="SJJS"  property="sjjs"/>
+        <result column="DBJS"  property="dbjs"/>
+        <result column="BBJS"  property="bbjs"/>
+        <result column="TQJRJS"  property="tqjrjs"/>
+    </resultMap>
+    <select id="selectZjywZzAjZbhz" resultMap="zdxsZjywAjZz" parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo">
+        SELECT NVL(SUM(1),0) AS SLJS,
+        NVL(SUM(SJJS),0) AS SJJS,
+        NVL(SUM(SLSCDBJS),0) AS DBJS,
+        NVL(SUM(BBJS),0) AS BBJS,
+        NVL(SUM(TQJRJS),0) AS TQJRJS
+        FROM "ADM"."ADM_XSZT_SCDBAJ"
+        WHERE AJLX = '重大犯罪案件' AND SLRQ BETWEEN  #{ksrq} AND #{jzrq} AND CBDW_BM LIKE #{dwbm}||'%'
+    </select>
+
+    <select id="selectZjywZzAjZblb" resultMap="zdxsZjywAjZz" parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo">
+        SELECT SLRQ,
+        NVL(SUM(SLSCDBJS),0) AS DBJS,
+        NVL(SUM(BBJS),0) AS BBJS
+        FROM "ADM"."ADM_XSZT_SCDBAJ"
+        WHERE AJLX = '重大犯罪案件' AND SLRQ BETWEEN  #{ksrq} AND #{jzrq} AND CBDW_BM LIKE #{dwbm}||'%'
+        GROUP BY SLRQ
+        ORDER BY SLRQ
+        LIMIT 10
+    </select>
+
+    <!--侦监业务 - 追踪 - 嫌疑人 -->
+    <resultMap id="zdxsZjywXyrZz" type="huacloud.jwdsj.module.sy.zdxs.model.vo.AdmZdxsZjywXyrZzVo">
+        <result column="SLRQ"  property="slrq"/>
+        <result column="SLRS"  property="slrs"/>
+        <result column="DBRS"  property="dbrs"/>
+        <result column="BBRS"  property="bbrs"/>
+        <result column="JZLBRS"  property="jzlbrs"/>
+    </resultMap>
+    <select id="selectZjywZzXyrZbhz" resultMap="zdxsZjywXyrZz" parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo">
+        SELECT SUM(1) AS SLRS,SUM(DBRS) AS DBRS,SUM(BBRS) AS BBRS,SUM(JZLBRS) AS JZLBRS
+        FROM "ADM"."ADM_XSZT_XYRSCDBAJ" A
+        WHERE EXISTS (SELECT 1 FROM "ADM"."ADM_XSZT_SCDBAJ" B
+        WHERE A.BMSAH = B.BMSAH AND AJLX = '重大犯罪案件'
+        AND SLRQ BETWEEN  #{ksrq} AND #{jzrq} AND CBDW_BM LIKE #{dwbm}||'%')
+    </select>
+    <select id="selectZjywZzXyrZblb" resultMap="zdxsZjywXyrZz" parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo">
+        SELECT SLRQ,SUM(1) AS SLRS,SUM(DBRS) AS DBRS,SUM(BBRS) AS BBRS,SUM(JZLBRS) AS JZLBRS
+        FROM "ADM"."ADM_XSZT_XYRSCDBAJ" A
+        WHERE EXISTS (SELECT 1 FROM "ADM"."ADM_XSZT_SCDBAJ" B
+        WHERE A.BMSAH = B.BMSAH AND AJLX = '重大犯罪案件'
+        AND SLRQ BETWEEN  #{ksrq} AND #{jzrq} AND CBDW_BM LIKE #{dwbm}||'%')
+        GROUP BY SLRQ
+        ORDER BY SLRQ
+        LIMIT 10
+    </select>
+
+    <!--侦查业务 - 追踪 - 监督 -->
+    <resultMap id="zdxsZjywJdZz" type="huacloud.jwdsj.module.sy.zdxs.model.vo.AdmZdxsZjywjdZzVo">
+        <result column="JDLAJS"  property="jdlajs"/>
+        <result column="JDCAJS"  property="jdcajs"/>
+    </resultMap>
+    <select id="selectZjywZzJdZbhz" resultMap="zdxsZjywJdZz" parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo">
+        SELECT SUM(JDLAJS) AS JDLAJS,SUM(JDCAJS) AS JDCAJS
+        FROM "ADM"."ADM_XSZT_LAJDAJ" A
+        WHERE EXISTS (SELECT 1 FROM "ADM"."ADM_XSZT_SCDBAJ" B
+        WHERE A.BMSAH = B.BMSAH AND AJLX = '重大犯罪案件'
+        AND SLRQ BETWEEN  #{ksrq} AND #{jzrq} AND CBDW_BM LIKE #{dwbm}||'%')
+    </select>
+
+    <!--                        案件比                   -->
+    <resultMap id="zdxsAjb" type="huacloud.jwdsj.module.sy.zdxs.model.vo.AdmZdxsAjbVo">
+        <result column="ANS" property="ans"/>
+        <result column="JIANS"  property="jians"/>
+    </resultMap>
+    <select id="selectAjb" parameterType="huacloud.jwdsj.module.sy.zdxs.model.qo.AppZdxsCxtjQo" resultMap="zdxsAjb">
+        SELECT (SUM(CASE WHEN BPZDBFY_SLRQ    BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN BPZDBFH_SLRQ     BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN DBSS_SLRQ        BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN PZYCZCJYQX_SLRQ  BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN YCTCRQ           BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN ECTCRQ           BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN YCYCRQ           BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN ECYCRQ           BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN SCYCRQ           BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN BQSFY_SLRQ       BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN BQSFH_SLRQ       BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN ESSS_SLRQ        BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN ESKS_SLRQ        BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN SPJDCXKS_SLRQ    BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN FYZXJDZS_SLRQ    BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN FHCSYS_SLRQ      BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN FHCSES_SLRQ      BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN XSSSSF_SLRQ      BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN XSSSCFF_SLRQ     BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) +
+                SUM(CASE WHEN BFFYCPXSSS_SLRQ  BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END)) AS JIANS,
+                SUM(1) AS ANS
+        FROM ADM.ADM_XSZT_AJBFX
+        WHERE AJLX = '重大犯罪案件' AND CBDW_BM LIKE #{dwbm}||'%' AND SCQS_SLRQ BETWEEN #{ksrq} AND #{jzrq}
+    </select>
+
+</mapper>

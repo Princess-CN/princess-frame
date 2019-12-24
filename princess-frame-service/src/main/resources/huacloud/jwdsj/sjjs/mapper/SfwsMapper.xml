@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="huacloud.jwdsj.module.sjjs.mapper.AppSfwsMapper">
+
+    <select id="selectAll" resultType="huacloud.jwdsj.module.sjjs.entity.AppSfws">
+        SELECT ID,AH,YWZL,WSZL,AY,WSZW,MD5,FY,PJRQ,XYR,JCG,DSR,JCY,BHRDW,JBAQ,BYRW,SPJG,SPZ,SPY,SJY,WSBT
+        FROM "APP"."APP_SFWS"
+        WHERE FY IS NOT NULL
+        limit 1000
+    </select>
+
+    <select id="selectById" resultType="huacloud.jwdsj.module.sjjs.entity.AppSfws"
+            parameterType="java.lang.String">
+        SELECT ID,AH,YWZL,WSZL,AY,WSZW,MD5,FY,PJRQ,XYR,JCG,DSR,JCY,BHRDW,JBAQ,BYRW,SPJG,SPZ,SPY,SJY,WSBT
+        FROM "APP"."APP_SFWS"
+        WHERE ID = #{id}
+    </select>
+
+    <select id="selectByAh" resultType="huacloud.jwdsj.module.sjjs.model.vo.SfwsVo"
+            parameterType="huacloud.jwdsj.module.sjjs.model.qo.SfwsQo">
+        SELECT ID,AH,FY,PJRQ,SPZ,SPY,SJY,WSBT
+        FROM "APP"."APP_SFWS"
+        WHERE AH = #{ah}
+        limit #{beginNum},#{pageSize}
+    </select>
+
+    <select id="countByAh" resultType="java.lang.Long"
+            parameterType="java.lang.String">
+        SELECT COUNT(1)
+        FROM "APP"."APP_SFWS"
+        WHERE AH = #{ah}
+    </select>
+
+</mapper>

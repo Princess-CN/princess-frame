@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="huacloud.jwdsj.module.zlfx.mapper.AppXsztSyzbZjywMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ETL_DT,CBDW_BM,CBDW_MC,CBDW_SZCS,CBDW_SZQX,CBDW_SZSF,AJLX,RQTJ,SLJS,SLRS,SJJS,DBJS,DBRS,BBJS,BBRS,TQJRJS,JDLAJS,JDCAJS,JZLBRS,SLWJJS,BHBQSRS
+    </sql>
+
+    <!--不捕情况分析-->
+    <select id="selectBbqkfx" resultType="huacloud.jwdsj.module.zlfx.module.entity.AppXsztSyzbZjywEntity" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        SELECT NVL(SUM(BBJS),0) as BBJS,--不捕件数
+                NVL(SUM(BBRS),0) as BBRS, --不捕人数
+                NVL(SUM(BHBQSRS),0) as BHBQSRS, --捕后不起诉人数
+                NVL(SUM(DBRS),0) as DBRS --逮捕人数
+        FROM APP.APP_XSZT_SYZB_ZJYW
+        WHERE RQTJ BETWEEN #{beginDate} AND #{endDate}
+        <if test="ajlx != null and ajlx != ''">
+            AND AJLX = #{ajlx}
+        </if>
+            AND CBDW_BM LIKE #{dwbm}||'%'
+    </select>
+
+    <!--不捕率平均值-->
+    <select id="selectBblpjz" resultType="java.math.BigDecimal" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+          SELECT
+            SUM(BBRS)/(SUM(BBRS) + SUM(DBRS))
+            FROM
+            APP.APP_XSZT_SYZB_ZJYW
+            WHERE CBDW_BM LIKE #{fdwbm}||'%'
+        <if test="ajlx != null and ajlx != ''">
+            AND AJLX = #{ajlx}
+        </if>
+    </select>
+
+    <!--不批准逮捕趋势-->
+    <select id="selectBpzdbqs" resultType="huacloud.jwdsj.module.zlfx.module.entity.AppXsztSyzbZjywEntity" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        <choose>
+            <when test='type=="Y"'>
+                SELECT YEAR(RQTJ) timeStr,
+                    SUM(BBRS) BBRS
+                    FROM APP.APP_XSZT_SYZB_ZJYW
+                    WHERE CBDW_BM LIKE #{dwbm}||'%'
+                    AND RQTJ > '1000-01-01'
+                <if test="ajlx != null and ajlx != ''">
+                    AND AJLX = #{ajlx}
+                </if>
+                    GROUP BY YEAR(RQTJ)
+            </when>
+            <otherwise>
+                SELECT MONTH(RQTJ) timeStr
+                 ,SUM(CASE WHEN substring(RQTJ,1,4) = #{year} THEN BBRS ELSE 0 END) BBRS
+                ,SUM(CASE WHEN substring(RQTJ,1,4) = #{lastYear} THEN BBRS ELSE 0 END) lastYearVal
+                 FROM APP.APP_XSZT_SYZB_ZJYW
+                    WHERE CBDW_BM LIKE #{dwbm}||'%'
+                    AND (substring(RQTJ,1,4) = #{year} or substring(RQTJ,1,4) = #{lastYear})
+                <if test="ajlx != null and ajlx != ''">
+                    AND AJLX = #{ajlx}
+                </if>
+                    GROUP BY MONTH(RQTJ)
+                    ORDER BY timeStr
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--不捕件数趋势-->
+    <select id="selectBbjsqs" resultType="huacloud.jwdsj.module.zlfx.module.entity.AppXsztSyzbZjywEntity" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        <choose>
+            <when test="type=='Y'">
+                SELECT YEAR(RQTJ) RQTJ,
+                SUM(${sqlStr}) ${sqlStr} FROM APP.APP_XSZT_SYZB_ZJYW
+                WHERE CBDW_BM LIKE #{dwbm}||'%'
+                AND RQTJ > '1000-01-01'
+                <if test="ajlx != null and ajlx != ''">
+                    AND AJLX = #{ajlx}
+                </if>
+                GROUP BY YEAR(RQTJ)
+            </when>
+            <otherwise>
+                SELECT MONTH(RQTJ) RQTJ
+                 ,SUM(CASE WHEN substring(RQTJ,1,4) = #{year} THEN ${sqlStr} ELSE 0 END ) ${sqlStr}
+                ,SUM(CASE WHEN substring(RQTJ,1,4) = #{lastYear} THEN ${sqlStr} ELSE 0 END ) lastYearVal
+                FROM APP.APP_XSZT_SYZB_ZJYW
+                WHERE CBDW_BM LIKE #{dwbm}||'%'
+                AND substring(RQTJ,1,4) = #{year}
+                <if test="ajlx != null and ajlx != ''">
+                    AND AJLX = #{ajlx}
+                </if>
+                GROUP BY MONTH(RQTJ)
+                ORDER BY RQTJ
+            </otherwise>
+        </choose>
+    </select>
+
+    <!--不捕人数最多的地区-->
+    <select id="selectBbrszdddq" resultType="huacloud.jwdsj.module.zlfx.module.entity.AppXsztSyzbZjywEntity" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        <choose>
+            <when test='type=="1"'>
+                SELECT
+                YEAR(RQTJ) ||'-'|| MONTH(RQTJ) AS timeStr,
+                CBDW_SZSF AS CBDW_SZSF ,
+                SUM(BBRS) BBRS
+                FROM APP.APP_XSZT_SYZB_ZJYW
+                WHERE RQTJ BETWEEN #{beginDate} AND #{endDate}
+                AND CBDW_BM LIKE #{dwbm}||'%'
+                AND CBDW_SZSF = #{name}
+                <if test="ajlx != null and ajlx != ''">
+                    AND AJLX = #{ajlx}
+                </if>
+                GROUP BY CBDW_SZSF,YEAR(RQTJ) ||'-'|| MONTH(RQTJ)
+                ORDER BY  CBDW_SZSF
+            </when>
+            <when test='type=="2"'>
+                SELECT
+                YEAR(RQTJ) ||'-'|| MONTH(RQTJ) AS timeStr,
+                CBDW_SZCS AS CBDW_SZSF,
+                SUM(BBRS) BBRS
+                FROM APP.APP_XSZT_SYZB_ZJYW
+                WHERE RQTJ BETWEEN #{beginDate} AND #{endDate}
+                AND CBDW_BM LIKE #{dwbm}||'%'
+                AND CBDW_SZCS = #{name}
+                <if test="ajlx != null and ajlx != ''">
+                    AND AJLX = #{ajlx}
+                </if>
+                GROUP BY CBDW_SZCS,YEAR(RQTJ) ||'-'|| MONTH(RQTJ)
+                ORDER BY  CBDW_SZCS
+            </when>
+            <when test='type=="3"'>
+                SELECT
+                YEAR(RQTJ) ||'-'|| MONTH(RQTJ) AS timeStr,
+                CBDW_SZQX AS CBDW_SZSF,
+                SUM(BBRS) BBRS
+                FROM APP.APP_XSZT_SYZB_ZJYW
+                WHERE RQTJ BETWEEN #{beginDate} AND #{endDate}
+                AND CBDW_BM LIKE #{dwbm}||'%'
+                AND CBDW_SZQX = #{name}
+                <if test="ajlx != null and ajlx != ''">
+                    AND AJLX = #{ajlx}
+                </if>
+                GROUP BY CBDW_SZQX,YEAR(RQTJ) ||'-'|| MONTH(RQTJ)
+                ORDER BY  CBDW_SZQX
+            </when>
+        </choose>
+    </select>
+
+    <!--不捕人数最多的地区+查询地区名字-->
+    <select id="selectBbrszdddqName" resultType="huacloud.jwdsj.module.zlfx.module.entity.AppXsztSyzbZjywEntity" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        SELECT
+        <choose>
+            <when test='type=="1"'>
+                CBDW_SZSF AS CBDW_SZSF,
+                SUM(BBRS) BBRS
+                FROM APP.APP_XSZT_SYZB_ZJYW
+                WHERE RQTJ BETWEEN #{beginDate} AND #{endDate}
+                AND CBDW_BM LIKE #{dwbm}||'%'
+                <if test="ajlx != null and ajlx != ''">
+                    AND AJLX = #{ajlx}
+                </if>
+                GROUP BY CBDW_SZSF
+                ORDER BY CBDW_SZSF DESC
+                LIMIT 1
+            </when>
+            <when test='type=="2"'>
+                CBDW_SZCS AS CBDW_SZSF,
+                SUM(BBRS) BBRS
+                FROM APP.APP_XSZT_SYZB_ZJYW
+                WHERE RQTJ BETWEEN #{beginDate} AND #{endDate}
+                AND CBDW_BM LIKE #{dwbm}||'%'
+                <if test="ajlx != null and ajlx != ''">
+                    AND AJLX = #{ajlx}
+                </if>
+                GROUP BY CBDW_SZCS
+                ORDER BY CBDW_SZCS DESC
+                LIMIT 1
+            </when>
+            <when test='type=="3"'>
+                CBDW_SZQX AS CBDW_SZSF,
+                SUM(BBRS) BBRS
+                FROM APP.APP_XSZT_SYZB_ZJYW
+                WHERE RQTJ BETWEEN #{beginDate} AND #{endDate}
+                AND CBDW_BM LIKE #{dwbm}||'%'
+                <if test="ajlx != null and ajlx != ''">
+                    AND AJLX = #{ajlx}
+                </if>
+                GROUP BY CBDW_SZQX
+                ORDER BY  CBDW_SZQX DESC
+                LIMIT 1
+            </when>
+        </choose>
+    </select>
+
+    <!--不捕案件分布selectBbajfb-->
+    <select id="selectBbajfb" resultType="huacloud.jwdsj.module.zlfx.module.entity.AppXsztSyzbZjywEntity" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        <choose>
+            <when test='type=="1"'>
+                SELECT
+                CBDW_SZSF AS CBDW_SZSF,
+                SUM(${sqlStr}) ${sqlStr}
+                FROM APP.APP_XSZT_SYZB_ZJYW
+                WHERE RQTJ BETWEEN #{beginDate} AND #{endDate}
+                AND CBDW_BM LIKE #{dwbm}||'%'
+                <if test='ajlx != null and ajlx != ""'>
+                    AND AJLX = #{ajlx}
+                </if>
+
+                GROUP BY CBDW_SZSF
+                ORDER BY CBDW_SZSF DESC
+            </when>
+            <when test='type=="2"'>
+                SELECT
+                CBDW_SZCS AS CBDW_SZSF,
+                SUM(${sqlStr}) ${sqlStr}
+                FROM APP.APP_XSZT_SYZB_ZJYW
+                WHERE RQTJ BETWEEN #{beginDate} AND #{endDate}
+                AND CBDW_BM LIKE #{dwbm}||'%'
+                <if test='ajlx != null and ajlx != ""'>
+                    AND AJLX = #{ajlx}
+                </if>
+                GROUP BY CBDW_SZCS
+                ORDER BY CBDW_SZCS DESC
+            </when>
+            <when test='type=="3"'>
+                SELECT
+                CBDW_SZQX AS CBDW_SZSF,
+                SUM(${sqlStr}) ${sqlStr}
+                FROM APP.APP_XSZT_SYZB_ZJYW
+                WHERE RQTJ BETWEEN #{beginDate} AND #{endDate}
+                AND CBDW_BM LIKE #{dwbm}||'%'
+                <if test='ajlx != null and ajlx != ""'>
+                    AND AJLX = #{ajlx}
+                </if>
+                GROUP BY CBDW_SZQX
+                ORDER BY  CBDW_SZQX DESC
+            </when>
+        </choose>
+    </select>
+
+
+
+</mapper>

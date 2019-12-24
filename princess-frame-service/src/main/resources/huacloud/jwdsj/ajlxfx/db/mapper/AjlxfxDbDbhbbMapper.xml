@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="huacloud.jwdsj.module.ajlxfx.db.mapper.IAjlxfxDbDbhbbMapper">
+
+    <!-- 趋势（年） -->
+    <select id="listAjlxfxQsy" parameterType="huacloud.jwdsj.module.ajlxfx.db.model.qo.AjlxfxQsQo" resultType="huacloud.jwdsj.module.ajlxfx.db.model.vo.AjlxfxQsVo">
+        SELECT SUBSTR(RQTJ,1,4) rq,
+        <if test="type=='逮捕'">
+            NVL(SUM(CASE WHEN ZBBM='DBRS' THEN ZBZ END),0) zbz,
+            ROUND(NVL(SUM(CASE WHEN ZBBM='DBRS' THEN ZBZ END),0)/NVL(SUM(CASE WHEN (ZBBM='DBRS' OR ZBBM='BBRS') THEN ZBZ END),0),2)*100 bl
+        </if>
+        <if test="type=='不捕'">
+            NVL(SUM(CASE WHEN ZBBM='BBRS' THEN ZBZ END),0) zbz,
+            ROUND(NVL(SUM(CASE WHEN ZBBM='BBRS' THEN ZBZ END),0)/NVL(SUM(CASE WHEN (ZBBM='DBRS' OR ZBBM='BBRS') THEN ZBZ END),0),2)*100 bl
+        </if>
+        FROM "APP"."APP_AJLXFX_DB_YWZB" WHERE CBDW_BM LIKE #{dwbm}||'%'
+        GROUP BY SUBSTR(RQTJ,1,4)
+    </select>
+
+    <!-- 趋势（月） -->
+    <select id="listAjlxfxQsm" parameterType="huacloud.jwdsj.module.ajlxfx.db.model.qo.AjlxfxQsQo" resultType="huacloud.jwdsj.module.ajlxfx.db.model.vo.AjlxfxQsVo">
+        SELECT SUBSTR(RQTJ,6,2) rq,
+        <if test="type=='逮捕'">
+            NVL(SUM(CASE WHEN ZBBM='DBRS' THEN ZBZ END),0) zbz,
+            ROUND(NVL(SUM(CASE WHEN ZBBM='DBRS' THEN ZBZ END),0)/NVL(SUM(CASE WHEN (ZBBM='DBRS' OR ZBBM='BBRS') THEN ZBZ END),0),2)*100 bl
+        </if>
+        <if test="type=='不捕'">
+            NVL(SUM(CASE WHEN ZBBM='BBRS' THEN ZBZ END),0) zbz,
+            ROUND(NVL(SUM(CASE WHEN ZBBM='BBRS' THEN ZBZ END),0)/NVL(SUM(CASE WHEN (ZBBM='DBRS' OR ZBBM='BBRS') THEN ZBZ END),0),2)*100 bl
+        </if>
+        FROM "APP"."APP_AJLXFX_DB_YWZB" WHERE CBDW_BM LIKE #{dwbm}||'%' AND SUBSTR(RQTJ,1,4)=#{sj}
+        GROUP BY SUBSTR(RQTJ,6,2) ORDER BY rq
+    </select>
+
+    <!-- 人数分布 -->
+    <select id="listAjlxfxRsfb" parameterType="huacloud.jwdsj.module.ajlxfx.db.model.qo.AjlxfxRsfbQo" resultType="huacloud.jwdsj.module.ajlxfx.db.model.vo.AjlxfxRsfbVo">
+        SELECT
+        <if test="lev==1">
+            CBDW_SZSF name,
+        </if>
+        <if test="lev==2">
+            CBDW_SZCS name,
+        </if>
+        <if test="lev==3">
+            CBDW_SZQX name,
+        </if>
+        <if test="type=='逮捕'">
+            NVL(SUM(CASE WHEN ZBBM='DBRS' AND RQTJ BETWEEN #{ksrq} AND #{jzrq} THEN ZBZ END),0) zbz,
+            NVL(SUM(CASE WHEN ZBBM='DBRS' AND RQTJ BETWEEN #{tqksrq} AND #{tqjzrq} THEN ZBZ END),0) tqzbz
+        </if>
+        <if test="type=='不捕'">
+            NVL(SUM(CASE WHEN ZBBM='BBRS' AND RQTJ BETWEEN #{ksrq} AND #{jzrq} THEN ZBZ END),0) zbz,
+            NVL(SUM(CASE WHEN ZBBM='BBRS' AND RQTJ BETWEEN #{tqksrq} AND #{tqjzrq} THEN ZBZ END),0) tqzbz
+        </if>
+        FROM "APP"."APP_AJLXFX_DB_YWZB" WHERE CBDW_BM LIKE #{dwbm}||'%'
+        <if test="lev==1">
+            GROUP BY CBDW_SZSF
+        </if>
+        <if test="lev==2">
+            GROUP BY CBDW_SZCS
+        </if>
+        <if test="lev==3">
+            GROUP BY CBDW_SZQX
+        </if>
+    </select>
+
+    <!-- 案由分布 -->
+    <select id="listPageAjlxfxAyfb" parameterType="huacloud.jwdsj.module.ajlxfx.db.model.qo.AjlxfxAyfbQo" resultType="huacloud.jwdsj.module.ajlxfx.db.model.vo.AjlxfxAyfbVo">
+        SELECT AJXZ aymc,
+        <if test="type=='逮捕'">
+            NVL(SUM(CASE WHEN ZBBM='DBJS' AND RQTJ BETWEEN #{ksrq} AND #{jzrq} THEN ZBZ END),0) zbz
+        </if>
+        <if test="type=='不捕'">
+            NVL(SUM(CASE WHEN ZBBM='BBJS' AND RQTJ BETWEEN #{ksrq} AND #{jzrq} THEN ZBZ END),0) zbz
+        </if>
+        FROM "APP"."APP_AJLXFX_DB_YWZB" WHERE CBDW_BM LIKE #{dwbm}||'%' AND RQTJ BETWEEN #{ksrq} AND #{jzrq}
+        <if test="ay!=null and ay!=''">
+            AND AJXZ LIKE '%'||#{ay}||'%'
+        </if>
+        GROUP BY AJXZ ORDER BY zbz DESC LIMIT #{pageNumber},#{pageSize}
+    </select>
+
+    <select id="listAjlxfxAyDqfb" parameterType="huacloud.jwdsj.module.ajlxfx.db.model.qo.AjlxfxAyfbQo" resultType="huacloud.jwdsj.module.ajlxfx.db.model.vo.AjlxfxAyDqfbVo">
+        SELECT
+        <if test="lev==1">
+            CBDW_SZSF name,
+        </if>
+        <if test="lev==2">
+            CBDW_SZCS name,
+        </if>
+        <if test="lev==3">
+            CBDW_SZQX name,
+        </if>
+        <if test="type=='逮捕'">
+            NVL(SUM(CASE WHEN ZBBM='DBJS' AND RQTJ BETWEEN #{ksrq} AND #{jzrq} THEN ZBZ END),0) dqzbz,
+            NVL(SUM(CASE WHEN ZBBM='DBJS' AND RQTJ BETWEEN #{tqksrq} AND #{tqjzrq} THEN ZBZ END),0) tqzbz
+        </if>
+        <if test="type=='不捕'">
+            NVL(SUM(CASE WHEN ZBBM='BBJS' AND RQTJ BETWEEN #{ksrq} AND #{jzrq} THEN ZBZ END),0) dqzbz,
+            NVL(SUM(CASE WHEN ZBBM='BBJS' AND RQTJ BETWEEN #{tqksrq} AND #{tqjzrq} THEN ZBZ END),0) tqzbz
+        </if>
+        FROM "APP"."APP_AJLXFX_DB_YWZB" WHERE CBDW_BM LIKE #{dwbm}||'%'
+        <if test="ay!=null and ay!=''">
+            AND AJXZ LIKE '%'||#{ay}||'%'
+        </if>
+        <if test="lev==1">
+            GROUP BY CBDW_SZSF
+        </if>
+        <if test="lev==2">
+            GROUP BY CBDW_SZCS
+        </if>
+        <if test="lev==3">
+            GROUP BY CBDW_SZQX
+        </if>
+    </select>
+</mapper>

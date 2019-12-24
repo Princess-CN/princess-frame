@@ -1,0 +1,11 @@
+#!/bin/bash
+ID=`ps -ef | grep java | grep jc-jwdsj-server | awk '{print $2}'`
+echo $ID
+echo "----------------------"
+kill -9 $ID
+echo "kill $ID done"
+echo "----------------------"
+cd /usr/app/jwdsj
+#sh bootstrap.sh
+nohup java -jar  -Xms128m -Xmx1024m  jc-jwdsj-server.jar > /usr/app/jwdsj/run.log 2>&1 &
+echo "java start done"

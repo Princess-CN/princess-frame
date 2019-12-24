@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="huacloud.jwdsj.module.ztfx.shse.mapper.ShseZtokMapper">
+
+    <!-- 案件基本情况分析 -->
+    <select id="countAjjbqkfx" resultType="java.lang.Integer"
+            parameterType="map">
+        SELECT
+        <choose>
+            <when test="type == 1">
+                IFNULL(SUM(SHSE_SLSCDBJS), 0) AS tNum
+            </when>
+            <when test="type == 2">
+                IFNULL(SUM(SHSE_SLSCQSJS), 0) AS tNum
+            </when>
+            <when test="type == 3">
+                IFNULL(SUM(SHSE_BQSS), 0) AS tNum
+            </when>
+            <when test="type == 4">
+                IFNULL(SUM(SHSE_KSJS), 0) AS tNum
+            </when>
+            <otherwise>
+                0 AS tNum
+            </otherwise>
+        </choose>
+        FROM
+            "APP"."APP_SHSE_SYZB"
+        WHERE 1 = 1
+            AND RQTJ between #{sDate} AND #{eDate}
+        <if test="region != null and region != ''">
+            AND CBDW_BM LIKE CONCAT(#{region},'%')
+        </if>
+    </select>
+
+    <resultMap type="huacloud.jwdsj.module.ztfx.shse.model.vo.ResQsModelVO"
+               id="ResQsModelBaseMap">
+        <id column="DATE_YM" property="dateYm"/>
+        <result column="DB_NUMBER" property="dbNumber"/>
+        <result column="QS_NUMBER" property="qsNumber"/>
+    </resultMap>
+
+    <!--  理审查逮捕、起诉趋势 年份 -->
+    <select id="selectAjjbqkfxqsYear" resultMap="ResQsModelBaseMap"
+            parameterType="map">
+        SELECT
+            YEAR(RQTJ) DATE_YM ,
+            SUM(SHSE_SLSCDBJS) AS DB_NUMBER,
+            SUM(SHSE_SLSCQSJS) AS QS_NUMBER
+        FROM
+            "APP"."APP_SHSE_SYZB"
+        WHERE
+        1 = 1
+        <if test="region != null and region != ''">
+            AND CBDW_BM LIKE CONCAT(#{region},'%')
+        </if>
+        GROUP BY
+            YEAR(RQTJ)
+        ORDER BY
+            YEAR(RQTJ) ASC;
+    </select>
+
+    <!-- 受理审查逮捕、起诉趋势 月份-->
+    <select id="selectAjjbqkfxqsMonth" resultMap="ResQsModelBaseMap"
+            parameterType="map">
+        SELECT
+        MONTH(RQTJ) DATE_YM,
+        SUM(SHSE_SLSCDBJS) AS DB_NUMBER,
+        SUM(SHSE_SLSCQSJS) AS QS_NUMBER
+        FROM
+        "APP"."APP_SHSE_SYZB"
+        WHERE 1 = 1
+        AND YEAR(RQTJ) = #{year}
+        <if test="region != null and region != ''">
+            AND CBDW_BM LIKE CONCAT(#{region},'%')
+        </if>
+        GROUP BY
+        MONTH(RQTJ)
+        ORDER BY
+        MONTH(RQTJ) ASC;
+    </select>
+
+    <!-- 高发案件最多的类型 -->
+    <select id="countGfajMax" resultType="java.lang.String">
+        SELECT
+        AJXZ_MC
+        FROM
+        "APP"."APP_SHSE_SYZB"
+        WHERE 1 = 1
+        AND AJXZ_MC != '-1'
+        AND YEAR(RQTJ) = #{year}
+        <if test="region != null and region != ''">
+            AND CBDW_BM LIKE CONCAT(#{region},'%')
+        </if>
+        GROUP BY
+        AJXZ_MC
+        ORDER BY SUM(SHSE_GFAJ) DESC
+        LIMIT 1
+    </select>
+
+    <resultMap id="ResGfModelBaseMap"
+               type="huacloud.jwdsj.module.ztfx.shse.model.vo.ResGfModelVO">
+        <id column="MONTHLY" property="monthly"/>
+        <result column="AJXZ_MC" property="ajxzMc"/>
+        <result column="NUM" property="number"/>
+    </resultMap>
+
+    <!--  高发案件 -->
+    <select id="selectGfaj" resultMap="ResGfModelBaseMap"
+            parameterType="map">
+        SELECT
+        MONTH(RQTJ) AS MONTHLY,
+        SUM(SHSE_GFAJ) AS NUM
+        FROM
+        "APP"."APP_SHSE_SYZB"
+        WHERE 1 = 1
+        AND AJXZ_MC != '-1'
+        AND AJXZ_MC = #{ajxzMc}
+        AND YEAR(RQTJ) = #{year}
+        <if test="region != null and region != ''">
+            AND CBDW_BM LIKE CONCAT(#{region},'%')
+        </if>
+        GROUP BY
+        MONTH(RQTJ)
+        ORDER BY
+        MONTH(RQTJ) ASC;
+    </select>
+
+    <resultMap id="ResGfModelVOBaseMap"
+               type="huacloud.jwdsj.module.ztfx.shse.model.vo.ResGfModelVO">
+        <id column="REGION" property="region"/>
+        <result column="NUM" property="number"/>
+    </resultMap>
+
+    <!--  高发案件所有  -->
+    <select id="selectGfajAll" resultMap="ResGfModelVOBaseMap"
+            parameterType="map">
+		SELECT
+		    CBDW_SZSF AS REGION,
+		    SUM(SHSE_GFAJ) NUM
+		FROM
+		    "APP"."APP_SHSE_SYZB"
+		WHERE 1 = 1
+		    AND YEAR(RQTJ) = #{year}
+		GROUP BY
+		    CBDW_SZSF
+		ORDER BY
+		    CBDW_SZSF ASC;
+	</select>
+
+    <!-- 起诉、逮捕率 -->
+    <select id="selectQsdbl"
+            resultType="huacloud.jwdsj.module.ztfx.shse.model.vo.ResQsDbModelVO"
+            parameterType="map">
+    SELECT
+        CASE (SUM(SHSE_SLSCQSJS)+SUM(SHSE_BQSS)) WHEN 0 THEN 0 ELSE ROUND(ROUND(SUM(SHSE_SLSCQSJS)*100, 2)/(SUM(SHSE_SLSCQSJS)+SUM(SHSE_BQSS)),2) END AS qs,
+        CASE (SUM(SHSE_BBRS)+SUM(SHSE_DBRS)) WHEN 0 THEN (0+SUM(SHSE_BBRS)) ELSE (ROUND(SUM(SHSE_DBRS)/(SUM(SHSE_BBRS)+SUM(SHSE_DBRS)),2)+SUM(SHSE_BBRS)) END AS db
+    FROM
+        "APP"."APP_SHSE_SYZB"
+    WHERE 1 = 1
+        <if test="region != null and region != ''">
+            AND CBDW_BM LIKE CONCAT(#{region},'%')
+        </if>
+        <if test="sDate != null and sDate != ''">
+            AND RQTJ <![CDATA[>=]]> #{sDate}
+        </if>
+        <if test="eDate != null and eDate != ''">
+            AND RQTJ <![CDATA[<=]]> #{eDate}
+        </if>
+        ;
+    </select>
+
+
+    <resultMap
+            type="huacloud.jwdsj.module.ztfx.shse.model.vo.ResFzsdfbModelVO"
+            id="ResFzsdfbModelBaseMap">
+        <id column="type" property="type"/>
+        <result column="bl" property="bl"/>
+    </resultMap>
+
+    <!-- 犯罪手段分布 -->
+    <select id="selectFzsdfb" resultMap="ResFzsdfbModelBaseMap"
+            parameterType="map">
+        SELECT
+        FZSD AS type,
+        ROUND((ROUND((COUNT(1)*100),2)/
+        (SELECT COUNT(1) FROM "APP"."APP_SHSE_SYZB"
+        WHERE 1 = 1
+        AND FZSD != '-1'
+        <if test="region != null and region != ''">
+            AND CBDW_BM LIKE CONCAT(#{region},'%')
+        </if>
+        <if test="sDate != null and sDate != ''">
+            AND RQTJ <![CDATA[>=]]> #{sDate}
+        </if>
+        <if test="eDate != null and eDate != ''">
+            AND RQTJ <![CDATA[<=]]> #{eDate}
+        </if>
+        ) ) ,2) AS bl
+        FROM
+        "APP"."APP_SHSE_SYZB"
+        WHERE 1 = 1
+        AND FZSD != '-1'
+        <if test="region != null and region != ''">
+            AND CBDW_BM LIKE CONCAT(#{region},'%')
+        </if>
+        <if test="sDate != null and sDate != ''">
+            AND RQTJ <![CDATA[>=]]> #{sDate}
+        </if>
+        <if test="eDate != null and eDate != ''">
+            AND RQTJ <![CDATA[<=]]> #{eDate}
+        </if>
+        GROUP BY FZSD;
+    </select>
+
+    <resultMap
+            type="huacloud.jwdsj.module.ztfx.shse.model.vo.ResSazmfbqkModelVO"
+            id="ResSazmfbqkModelBaseMap">
+        <id column="NAME" property="name"/>
+        <result column="NUM" property="num"/>
+    </resultMap>
+
+    <!-- 涉案罪名分布情况 -->
+    <select id="selectSazmfbqk" resultMap="ResSazmfbqkModelBaseMap"
+            parameterType="map">
+        SELECT
+        AJXZ_MC AS NAME,
+        CAST(COUNT(1) AS DECIMAL(18,6)) AS NUM
+        FROM
+        "APP"."APP_SHSE_SYZB"
+        WHERE
+        1 = 1
+        AND AJXZ_MC != '-1'
+        <if test="region != null and region != ''">
+            AND CBDW_BM LIKE CONCAT(#{region},'%')
+        </if>
+        <if test="sDate != null and sDate != ''">
+            AND RQTJ <![CDATA[>=]]> #{sDate}
+        </if>
+        <if test="eDate != null and eDate != ''">
+            AND RQTJ <![CDATA[<=]]>  #{eDate}
+        </if>
+        GROUP BY AJXZ_MC
+        ORDER BY AJXZ_MC ASC
+        <if test="a != null and b != null">
+            LIMIT #{a},#{b}
+        </if>
+    </select>
+
+
+    <resultMap
+            type="huacloud.jwdsj.module.ztfx.shse.model.vo.ResXyrqkfxModelVO"
+            id="ResXyrqkfxModelBaseMap">
+        <result column="NAME" property="name"/>
+        <result column="NUM" property="num"/>
+    </resultMap>
+
+    <!-- 年龄 -->
+    <select id="selectXyrqkfx1" resultMap="ResXyrqkfxModelBaseMap"
+            parameterType="map">
+		SELECT
+		    CAST(NL AS DECIMAL(18,6)) AS NAME,
+		    CAST(SUM(SHSE_ZRS) AS DECIMAL(18, 6)) AS NUM
+		FROM
+		    "APP"."APP_SHSE_XYRSYZB"
+		WHERE 1 = 1
+        <if test="region != null and region != ''">
+            AND CBDW_BM LIKE CONCAT(#{region},'%')
+        </if>
+        <if test="sDate != null and sDate != ''">
+            AND RQTJ <![CDATA[>=]]> #{sDate}
+        </if>
+        <if test="eDate != null and eDate != ''">
+            AND RQTJ <![CDATA[<=]]>  #{eDate}
+        </if>
+		GROUP BY NL
+		ORDER BY NL;
+	</select>
+    <select id="selectXyrqkfx2" resultMap="ResXyrqkfxModelBaseMap"
+            parameterType="map">
+		SELECT
+            SF AS NAME,
+		    SUM(SHSE_ZRS) AS NUM
+		FROM
+		    "APP"."APP_SHSE_XYRSYZB"
+        WHERE 1 = 1
+        AND SF != '其他职务'
+        <if test="region != null and region != ''">
+            AND CBDW_BM LIKE CONCAT(#{region},'%')
+        </if>
+        <if test="sDate != null and sDate != ''">
+            AND RQTJ <![CDATA[>=]]> #{sDate}
+        </if>
+        <if test="eDate != null and eDate != ''">
+            AND RQTJ <![CDATA[<=]]>  #{eDate}
+        </if>
+		GROUP BY SF
+		ORDER BY SUM(SHSE_ZRS) DESC;
+	</select>
+    <select id="selectXyrqkfx3" resultMap="ResXyrqkfxModelBaseMap"
+            parameterType="map">
+		SELECT
+		    ZY AS NAME,
+		    SUM(SHSE_ZRS) AS NUM
+		FROM
+		    "APP"."APP_SHSE_XYRSYZB"
+        WHERE 1 = 1
+        AND ZY != '其他'
+        <if test="region != null and region != ''">
+            AND CBDW_BM LIKE CONCAT(#{region},'%')
+        </if>
+        <if test="sDate != null and sDate != ''">
+            AND RQTJ <![CDATA[>=]]> #{sDate}
+        </if>
+        <if test="eDate != null and eDate != ''">
+            AND RQTJ <![CDATA[<=]]>  #{eDate}
+        </if>
+		GROUP BY ZY
+		ORDER BY SUM(SHSE_ZRS) DESC;
+	</select>
+    <select id="selectXyrqkfx4" resultMap="ResXyrqkfxModelBaseMap"
+            parameterType="map">
+		SELECT
+		    QZCS AS NAME,
+		    SUM(SHSE_ZRS) AS NUM
+		FROM
+		    "APP"."APP_SHSE_XYRSYZB"
+        WHERE 1 = 1
+        AND QZCS IS NOT NULL
+        <if test="region != null and region != ''">
+            AND CBDW_BM LIKE CONCAT(#{region},'%')
+        </if>
+        <if test="sDate != null and sDate != ''">
+            AND RQTJ <![CDATA[>=]]> #{sDate}
+        </if>
+        <if test="eDate != null and eDate != ''">
+            AND RQTJ <![CDATA[<=]]>  #{eDate}
+        </if>
+		GROUP BY QZCS
+		ORDER BY SUM(SHSE_ZRS) DESC;
+	</select>
+
+
+</mapper>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="huacloud.jwdsj.module.zlfx.mapper.AppXsztYwzbMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ETL_DT,CBDW_BM,CBDW_MC,CBDW_SZSF,CBDW_SZCS,CBDW_SZQX,AJXZ,AJLX,RQTJ,RQTJMC,ZBBM,ZBMC,ZBZ,YWLX,SJLYB,SJLYXT
+    </sql>
+
+    <!--案件性质分布-->
+    <select id="selectAjxzfb" resultType="huacloud.jwdsj.module.zlfx.module.entity.AppXsztYwzbEntity" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        SELECT
+        AJXZ
+        , SUM(CASE WHEN RQTJ BETWEEN #{lastYearBeginDate} AND #{lastYearEndDate} THEN ZBZ ELSE 0 END) zbzLastYear
+        , SUM(CASE WHEN RQTJ BETWEEN #{beginDate} AND #{endDate} THEN ZBZ ELSE 0 END) ZBZ
+        FROM APP.APP_XSZT_YWZB
+        WHERE YWLX LIKE '%捕%'
+        AND  ZBMC = #{sqlStr}
+        <if test="ajlx != null and ajlx != ''">
+            AND AJLX = #{ajlx}
+        </if>
+        AND ZBZ != 0
+        AND CBDW_BM LIKE #{dwbm}||'%'
+        AND (RQTJ BETWEEN #{beginDate} AND #{endDate} OR RQTJ BETWEEN #{lastYearBeginDate} AND #{lastYearEndDate})
+        GROUP BY AJXZ
+        ORDER BY ZBZ DESC
+        LIMIT #{offset},#{limit}
+    </select>
+
+    <!--案件性质分布总数-->
+    <select id="selectAjxzfbTotal" resultType="java.lang.Integer" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        select count(*) from (
+            SELECT
+            AJXZ
+            , SUM(ZBZ) ZBZ
+            FROM APP.APP_XSZT_YWZB
+            WHERE YWLX LIKE '%捕%'
+            AND  ZBMC =  #{sqlStr}
+        <if test="ajlx != null and ajlx != ''">
+            AND AJLX = #{ajlx}
+        </if>
+            AND ZBZ != 0
+            AND CBDW_BM LIKE #{dwbm}||'%'
+            AND RQTJ BETWEEN #{beginDate} AND #{endDate}
+            GROUP BY AJXZ
+        )
+    </select>
+
+    <!--案件性质分布-->
+    <select id="selectAjxzfbLastYear" resultType="huacloud.jwdsj.module.zlfx.module.entity.AppXsztYwzbEntity" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        SELECT
+        AJXZ
+        , SUM(ZBZ) ZBZ
+        FROM APP.APP_XSZT_YWZB
+        WHERE YWLX LIKE '%逮捕%'
+        AND  ZBMC = '不捕人数'
+        <if test="ajlx != null and ajlx != ''">
+            AND AJLX = #{ajlx}
+        </if>
+        AND ZBZ != 0
+        AND CBDW_BM LIKE #{dwbm}||'%'
+        AND RQTJ BETWEEN #{beginDate} AND #{endDate}
+        and AJXZ IN
+            <foreach collection="ajxzLi" item="AJXZ" index="index" open="(" close=")" separator=",">
+                #{AJXZ}
+            </foreach>
+        GROUP BY AJXZ
+    </select>
+
+    <!--案由/地区分布selectAydqfb-->
+    <select id="selectAydqfb" resultType="huacloud.jwdsj.module.zlfx.module.entity.AppXsztYwzbEntity" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        <choose>
+             <when test='type=="1"'>
+                SELECT
+                CBDW_SZSF
+                , SUM(CASE WHEN RQTJ BETWEEN #{lastYearBeginDate} AND #{lastYearEndDate} THEN ZBZ ELSE 0 END) zbzLastYear
+                ,SUM(CASE WHEN RQTJ BETWEEN #{beginDate} AND #{endDate} THEN ZBZ ELSE 0 END) ZBZ
+                FROM APP.APP_XSZT_YWZB
+                WHERE YWLX LIKE '%捕%'
+                AND  ZBMC = #{sqlStr}
+               <if test="ajlx != null and ajlx != ''">
+                   AND AJLX = #{ajlx}
+              </if>
+                AND ZBZ != 0
+                AND CBDW_BM LIKE #{dwbm}||'%'
+                AND (RQTJ BETWEEN #{beginDate} AND #{endDate} OR RQTJ BETWEEN #{lastYearBeginDate} AND #{lastYearEndDate})
+                AND AJXZ=#{ajxz}
+                GROUP BY CBDW_SZSF
+                ORDER BY ZBZ DESC
+            </when>
+            <when test='type=="2"'>
+                SELECT
+                CBDW_SZCS CBDW_SZSF
+                , SUM(CASE WHEN RQTJ BETWEEN #{lastYearBeginDate} AND #{lastYearEndDate} THEN ZBZ ELSE 0 END) zbzLastYear
+                ,SUM(CASE WHEN RQTJ BETWEEN #{beginDate} AND #{endDate} THEN ZBZ ELSE 0 END) ZBZ
+                FROM APP.APP_XSZT_YWZB
+                WHERE YWLX LIKE '%捕%'
+                AND  ZBMC = #{sqlStr}
+                <if test="ajlx != null and ajlx != ''">
+                    AND AJLX = #{ajlx}
+                </if>
+                AND ZBZ != 0
+                AND CBDW_BM LIKE #{dwbm}||'%'
+                AND (RQTJ BETWEEN #{beginDate} AND #{endDate} OR RQTJ BETWEEN #{lastYearBeginDate} AND #{lastYearEndDate})
+                AND AJXZ=#{ajxz}
+                GROUP BY CBDW_SZCS
+                ORDER BY ZBZ DESC
+            </when>
+            <when test='type=="3"'>
+                SELECT
+                CBDW_SZQX CBDW_SZSF
+                , SUM(CASE WHEN RQTJ BETWEEN #{lastYearBeginDate} AND #{lastYearEndDate} THEN ZBZ ELSE 0 END) zbzLastYear
+                ,SUM(CASE WHEN RQTJ BETWEEN #{beginDate} AND #{endDate} THEN ZBZ ELSE 0 END) ZBZ
+                FROM APP.APP_XSZT_YWZB
+                WHERE YWLX LIKE '%捕%'
+                AND  ZBMC = #{sqlStr}
+                <if test="ajlx != null and ajlx != ''">
+                    AND AJLX = #{ajlx}
+                </if>
+                AND ZBZ != 0
+                AND CBDW_BM LIKE #{dwbm}||'%'
+                AND (RQTJ BETWEEN #{beginDate} AND #{endDate} OR RQTJ BETWEEN #{lastYearBeginDate} AND #{lastYearEndDate})
+                AND AJXZ=#{ajxz}
+                GROUP BY CBDW_SZQX
+                ORDER BY ZBZ DESC
+            </when>
+        </choose>
+    </select>
+
+
+</mapper>

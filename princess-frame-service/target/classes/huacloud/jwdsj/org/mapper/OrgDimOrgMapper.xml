@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="huacloud.jwdsj.module.org.mapper.ProDimOrgMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="huacloud.jwdsj.module.org.model.vo.ProDimOrgEntityVo">
+        <id column="DWBM" property="dwbm" />
+        <result column="DWMC" property="dwmc" />
+        <result column="PDWBM" property="pdwbm" />
+        <result column="SZDBM" property="szdbm" />
+        <result column="SZDMC" property="szdmc" />
+        <result column="PSZDBM" property="pszdbm" />
+        <result column="DTBM" property="dtbm" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        DWBM, DWMC, PDWBM, SZDBM, SZDMC, PSZDBM, DTBM
+    </sql>
+	<select id="selectProList" resultMap="BaseResultMap"
+		 parameterType="huacloud.jwdsj.module.org.model.qo.OrgIndexQo">
+		 SELECT
+			DWBM,
+			DWMC,
+			PDWBM,
+			SZDMC,
+			SZDBM,
+			PSZDBM,
+			DTBM
+			FROM PRO.DIM_ORG
+			WHERE 1=1 
+			 <if test="orgIndexQo.dwbm != null">
+				and PDWBM = #{orgIndexQo.dwbm}
+			</if>
+	    </select>
+
+</mapper>

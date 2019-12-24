@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="huacloud.jwdsj.module.sy.xz.mapper.AppXzztSxcpjdSyzbMapper">
+
+     <resultMap id="xzztSxcpjdSyzb" type="huacloud.jwdsj.module.sy.xz.model.vo.AppXzztSxcpjdSyzbVo"> 
+         <result column="ETL_DT" property="etlDt"/>
+        <result column="CBDW_BM" property="cbdwBm"/>
+        <result column="CBDW_MC" property="cbdwMc"/>
+        <result column="CBDW_SZCS" property="cbdwSzcs"/>
+        <result column="CBDW_SZQX" property="cbdwSzqx"/>       
+        <result column="CBDW_SZSF" property="cbdwSzsf"/>
+        <result column="AJXZ_MC" property="ajxzMc"/>
+        <result column="RQTJ" property="rqtj"/>
+        <result column="SLJS" property="sljs"/>
+        <result column="QZCQJDAJJS" property="qzcqjdajjs"/>
+        <result column="SCTCKSJS" property="sctcksjs"/>
+        <result column="FYXSAJJS" property="fyxsajjs"/>
+        <result column="CHJDJYJS" property="chjdjyjs"/>
+        <result column="TQSJJS" property="tqsjjs"/>
+        <result column="FYGPJS" property="fygpjs"/>
+        <result column="CSJS" property="csjs"/>
+        <result column="TJJS" property="tjjs"/>
+        <result column="HJCSJS" property="hjcsjs"/>
+        <result column="FYWCYZJS" property="fywcypjs"/>
+        <result column="ZSPJJGQT" property="zspjjgqt"/>
+        <result column="AYFBJS" property="ayfbjs"/>
+        <result column="FYCDZSJS" property="fycdzsjs"/>
+        <result column="TCZSJCJYJS" property="tczsjcjyjs"/>
+        <result column="TCJCJYJS" property="tcjcjyjs"/>
+        <result column="CNJCJYJS" property="cnjcjyjs"/>
+        <result column="CNZSJCJYJS" property="cnzsjcjyjs"/>      
+    </resultMap>
+
+
+    <select id="selectXzsxcpjdSljs" resultMap="xzztSxcpjdSyzb"
+	parameterType="huacloud.jwdsj.module.sy.xz.model.qo.SyXzIndexQo">
+		SELECT SUM(SLJS) as SLJS,
+		SUM(QZCQJDAJJS) as QZCQJDAJJS,
+		SUM(SCTCKSJS) as SCTCKSJS,
+		SUM(FYXSAJJS) as FYXSAJJS,
+		SUM(CHJDJYJS) as CHJDJYJS,
+		SUM(TQSJJS) as TQSJJS,
+		SUM(FYGPJS) as FYGPJS,
+		SUM(CSJS) as CSJS,
+		SUM(TJJS) as TJJS,
+		SUM(HJCSJS) as HJCSJS,
+		SUM(FYWCYZJS) as FYWCYZJS,
+		SUM(ZSPJJGQT) as ZSPJJGQT,
+		SUM(AYFBJS) as AYFBJS,
+		SUM(FYCDZSJS) as FYCDZSJS,
+		SUM(TCZSJCJYJS) as TCZSJCJYJS,
+		SUM(TCJCJYJS) as TCJCJYJS,
+		SUM(CNJCJYJS) as CNJCJYJS,
+		SUM(CNZSJCJYJS) as CNZSJCJYJS
+		FROM "APP"."APP_XZZT_SXCPJD_SYZB"
+		WHERE 1=1 
+		<if test="syXzIndexQo.beginDate != null ">
+		 AND RQTJ BETWEEN #{syXzIndexQo.beginDate} AND #{syXzIndexQo.endDate}
+		</if>
+		 <if test="syXzIndexQo.dwbm != null">
+			and CBDW_BM like CONCAT(CONCAT('',#{syXzIndexQo.dwbm}),'%')
+		</if>
+    </select>
+
+    <select id="selectXzsxcpjdList" resultMap="xzztSxcpjdSyzb"
+	parameterType="huacloud.jwdsj.module.sy.xz.model.qo.SyXzIndexQo">
+		SELECT SLJS,
+		RQTJ,
+		QZCQJDAJJS,
+		SCTCKSJS,
+		FYXSAJJS,
+		CHJDJYJS,
+		TQSJJS,
+		FYGPJS,
+		CSJS,
+		TJJS,
+		HJCSJS,
+		FYWCYZJS,
+		ZSPJJGQT,
+		AYFBJS,
+		FYCDZSJS,
+		TCZSJCJYJS,
+		TCJCJYJS,
+		CNJCJYJS,
+		CNZSJCJYJS
+		FROM "APP"."APP_XZZT_SXCPJD_SYZB"
+		WHERE 1=1 
+		<if test="syXzIndexQo.beginDate != null ">
+		 AND RQTJ BETWEEN #{syXzIndexQo.beginDate} AND #{syXzIndexQo.endDate}
+		</if>		
+		<if test="syXzIndexQo.dwbm != null">
+			and CBDW_BM like CONCAT(CONCAT('',#{syXzIndexQo.dwbm}),'%')
+		</if>
+		ORDER BY RQTJ
+		LIMIT 10 
+       </select>
+       
+       <select id="selectXzslajPhList" resultMap="xzztSxcpjdSyzb"
+	    parameterType="huacloud.jwdsj.module.sy.xz.model.qo.SyXzIndexQo">
+			SELECT
+			nvl ( ajxz_mc, '其他' ) as AJXZ_MC,
+			sum( SLJS ) sljs,
+			max( AYFBJS ) ayfbjs		
+			FROM
+			APP.APP_XZZT_SXCPJD_SYZB
+			WHERE 1=1 
+		   <if test="syXzIndexQo.ajxzMc != null">
+		     AND AJXZ_MC = #{syXzIndexQo.ajxzMc}
+		   </if>
+			AND RQTJ BETWEEN #{syXzIndexQo.beginDate}
+			AND #{syXzIndexQo.endDate}
+			GROUP BY
+			AJXZ_MC
+			ORDER BY
+			AYFBJS DESC
+			LIMIT 10
+       </select>
+       
+       <select id="selectXzslajQsList" resultMap="xzztSxcpjdSyzb"
+	    parameterType="huacloud.jwdsj.module.sy.xz.model.qo.SyXzIndexQo">
+			SELECT  to_date(to_char(t.RQTJ,'yyyy'),'yyyy') as RQTJ,
+			sum(t.SLJS)as SLJS,
+			sum(t.TQSJJS)as TQSJJS,
+			sum(t.SCTCKSJS)as SCTCKSJS,
+			sum(t.CHJDJYJS)as CHJDJYJS,			
+			sum(t.TCJCJYJS)as TCJCJYJS,			
+			sum(t.CNJCJYJS)as CNJCJYJS,
+			sum(t.TCZSJCJYJS)as TCZSJCJYJS,
+			sum(t.FYXSAJJS)as FYXSAJJS,	
+			sum(t.QZCQJDAJJS)as QZCQJDAJJS,		
+			sum(t.CNZSJCJYJS)as CNZSJCJYJS			    
+		    FROM APP.APP_XZZT_SXCPJD_SYZB t WHERE t.RQTJ IS NOT NULL
+		    group by to_char(t.RQTJ,'yyyy') 
+		    order by RQTJ
+       </select>
+       
+       <select id="selectXzslajQsMonth" resultMap="xzztSxcpjdSyzb"
+	    parameterType="huacloud.jwdsj.module.sy.xz.model.qo.SyXzIndexQo">
+			SELECT  to_date(to_char(t.RQTJ,'yyyy-mm'),'yyyy-mm') as RQTJ,
+			sum(t.SLJS)as SLJS,
+			sum(t.TQSJJS)as TQSJJS,
+			sum(t.SCTCKSJS)as SCTCKSJS,
+			sum(t.CHJDJYJS)as CHJDJYJS,			
+			sum(t.TCJCJYJS)as TCJCJYJS,			
+			sum(t.CNJCJYJS)as CNJCJYJS,
+			sum(t.TCZSJCJYJS)as TCZSJCJYJS,
+			sum(t.FYXSAJJS)as FYXSAJJS,	
+			sum(t.QZCQJDAJJS)as QZCQJDAJJS,		
+			sum(t.CNZSJCJYJS)as CNZSJCJYJS	  
+		    FROM APP.APP_XZZT_SXCPJD_SYZB t
+		    where 1=1 AND t.RQTJ BETWEEN #{syXzIndexQo.beginDate} AND #{syXzIndexQo.endDate}
+		    group by to_char(t.RQTJ,'yyyy-mm')
+		    order by to_char(t.RQTJ,'yyyy-mm');
+       </select>
+       
+</mapper>

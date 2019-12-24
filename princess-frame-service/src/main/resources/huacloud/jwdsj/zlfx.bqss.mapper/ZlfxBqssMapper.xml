@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+        namespace="huacloud.jwdsj.module.zlfx.bqss.mapper.ZlfxBqssMapper">
+
+    <!--    不起诉数趋势-年  -->
+    <select id="listBqssqsYear" resultType="huacloud.jwdsj.module.zlfx.bqss.model.vo.ZlfxBqssqsVo"
+            parameterType="map">
+        SELECT
+                YEAR(RQTJ) AS ym,
+                SUM(BQSJS) num1
+        FROM
+                "APP"."APP_ZLFX_QSQK"
+        WHERE 1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code},'%')
+        GROUP BY
+                YEAR(RQTJ)
+        ORDER BY
+                YEAR(RQTJ) ASC
+    </select>
+
+    <!--    不起诉数趋势-月-->
+    <select id="listBqssqsMonth" resultType="huacloud.jwdsj.module.zlfx.bqss.model.vo.ZlfxBqssqsVo"
+            parameterType="map">
+        select
+        MONTH(RQTJ) AS ym,
+        SUM(BQSJS) num1  ,
+        (
+                SELECT
+                        SUM(BQSJS)
+                FROM
+                        "APP"."APP_ZLFX_QSQK"
+                WHERE
+                        1 = 1
+                    AND CBDW_BM LIKE CONCAT(#{code}, '%')
+                    AND YEAR(RQTJ) = #{year2}
+        ) AS num2
+        from
+                "APP"."APP_ZLFX_QSQK"
+        WHERE
+                1 = 1
+            AND CBDW_BM LIKE CONCAT(#{code}, '%')
+            AND YEAR(RQTJ) = #{year1}
+        GROUP BY
+                MONTH(RQTJ)
+        ORDER BY
+                MONTH(RQTJ) ASC
+    </select>
+
+    <!--    案由分布-计算总条数 -->
+    <select id="listPageAyfbTotal" resultType="java.lang.Long" parameterType="map">
+        SELECT COUNT(1) FROM
+        (
+                select AJXZ from "APP"."APP_ZLFX_QSQK"
+                where 1 = 1
+                AND CBDW_BM LIKE CONCAT(#{code},'%')
+                AND RQTJ BETWEEN #{sDate} AND #{eDate}
+                GROUP BY AJXZ
+        )
+    </select>
+
+    <!--  案由分布 -->
+    <select id="listPageAyfb" resultType="huacloud.jwdsj.module.zlfx.bqss.model.vo.ZlfxBqssAyfbVo"
+            parameterType="map">
+        select
+        AJXZ       AS name,
+        SUM(BQSJS) AS num
+        from
+                "APP"."APP_ZLFX_QSQK"
+        where
+                1 = 1
+                AND CBDW_BM LIKE CONCAT(#{code},'%')
+                AND RQTJ BETWEEN #{sDate} AND #{eDate}
+        GROUP BY
+                AJXZ
+        ORDER BY
+                num DESC
+        LIMIT #{s1},#{s2}
+    </select>
+
+    <!--    案由/地区分布  -->
+    <select id="listAydqfb" resultType="huacloud.jwdsj.module.zlfx.bqss.model.vo.ZlfxBqssAydqfbVo"
+        parameterType="map">
+        select
+                T.CBDW_SZSF AS name,
+                SUM(T.BQSJS) num1  ,
+                (
+                        SELECT
+                                SUM(BQSJS)
+                        FROM
+                                "APP"."APP_ZLFX_QSQK"
+                        WHERE
+                                1 = 1
+                            AND RQTJ BETWEEN #{sDate2} AND #{eDate2}
+                            AND CBDW_SZSF = T.CBDW_SZSF
+                            <if test="ajxz != null and ajxz != ''">
+                                AND AJXZ = #{ajxz}
+                            </if>
+                ) AS num2
+        from
+                "APP"."APP_ZLFX_QSQK" T
+        WHERE
+                1 = 1
+            AND T.RQTJ BETWEEN #{sDate} AND #{eDate}
+            <if test="ajxz != null and ajxz != ''">
+                AND AJXZ = #{ajxz}
+            </if>
+        GROUP BY
+                T.CBDW_SZSF
+    </select>
+
+    <!-- 列表计算总条数 -->
+    <select id="listPageAjlistTotal" resultType="java.lang.Long" parameterType="map">
+        SELECT
+                COUNT(1)
+        FROM
+                (
+                        SELECT
+                                AJMC
+                        FROM
+                                "ADM"."ADM_XSZT_XYRSCQS"
+                        WHERE
+                                1 = 1
+                            AND CBDW_BM LIKE CONCAT (#{code}, '%')
+                            AND SJRQ BETWEEN #{sDate} AND #{eDate}
+                            <if test="ajmc != null and ajmc !=''">
+                                AND AJMC LIKE CONCAT('%',#{ajmc},'%')
+                            </if>
+                            <if test="bmsah != null and bmsah !=''">
+                                AND BMSAH LIKE CONCAT('%',#{bmsah},'%')
+                            </if>
+                )
+    </select>
+    <!---->
+    <select id="listPageAjlist" resultType="huacloud.jwdsj.module.zlfx.bqss.model.vo.ZlfxBqssListVo"
+        parameterType="map">
+        SELECT
+            AJMC AS ajmc,
+            BMSAH AS bmsah,
+            AJ_SLRQ AS slsj
+        FROM
+            "ADM"."ADM_XSZT_XYRSCQS"
+        WHERE
+        1 = 1
+            AND CBDW_BM LIKE CONCAT (#{code}, '%')
+            AND SJRQ BETWEEN #{sDate} AND #{eDate}
+        <if test="ajmc != null and ajmc !=''">
+            AND AJMC LIKE CONCAT('%',#{ajmc},'%')
+        </if>
+        <if test="bmsah != null and bmsah !=''">
+            AND BMSAH LIKE CONCAT('%',#{bmsah},'%')
+        </if>
+        limit #{s1},#{s2}
+    </select>
+</mapper>

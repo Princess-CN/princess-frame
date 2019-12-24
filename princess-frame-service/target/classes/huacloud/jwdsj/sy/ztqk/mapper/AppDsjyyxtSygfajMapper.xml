@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="huacloud.jwdsj.module.sy.ztqk.mapper.AppDsjyyxtSygfajMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="huacloud.jwdsj.module.sy.ztqk.model.vo.AppDsjyyxtSygfajEntityVo">
+        <result column="ETL_DT" property="etlDt" />
+        <result column="CBDW_BM" property="cbdwBm" />
+        <result column="CBDW_MC" property="cbdwMc" />
+        <result column="CBDW_SZCS" property="cbdwSzcs" />
+        <result column="CBDW_SZQX" property="cbdwSzqx" />
+        <result column="CBDW_SZSF" property="cbdwSzsf" />
+        <result column="YWLX" property="ywlx" />
+        <result column="AJXZ" property="ajxz" />
+        <result column="RQTJ" property="rqtj" />
+        <result column="SLJS" property="sljs" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ETL_DT, CBDW_BM, CBDW_MC, CBDW_SZCS, CBDW_SZQX, CBDW_SZSF, YWLX, AJXZ, RQTJ, SLJS
+    </sql>
+    
+    <select id="selectZtqkPhList" resultMap="BaseResultMap"
+	    parameterType="huacloud.jwdsj.module.sy.ztqk.model.qo.SyZtqkIndexQo">
+			SELECT
+			nvl ( AJXZ, '其他' ) as AJXZ,
+			sum( SLJS ) sljs		
+			FROM
+			APP.APP_DSJYYXT_SYGFAJ
+			WHERE 1=1 
+			AND RQTJ BETWEEN #{syZtqkIndexQo.beginDate}
+			AND #{syZtqkIndexQo.endDate}
+			GROUP BY
+			AJXZ
+			ORDER BY
+			AJXZ DESC
+			LIMIT 10
+      </select>
+
+</mapper>

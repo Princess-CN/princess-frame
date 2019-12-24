@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="huacloud.jwdsj.module.ajlxfx.dbqkfx.mapper.DbqkMapper">
+
+    <select id="countScdbqkslscdb" resultType="huacloud.jwdsj.module.ajlxfx.dbqkfx.model.vo.DbscdbqkVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.dbqkfx.model.dto.DbqkfxDto">
+
+    SELECT
+        SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}  AND  #{endDate}  THEN T.SLSCDBJS ELSE 0 END ) dbjsCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate} AND  #{tbEndDate} THEN T.SLSCDBJS ELSE 0 END ) dbjsCountTb,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.SLSCDBRS ELSE 0 END ) dbrsCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate} THEN T.SLSCDBRS ELSE 0 END ) dbrsCountTb,
+
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.SJJS ELSE 0 END ) sjCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate} THEN T.SJJS ELSE 0 END ) sjCountTb,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.SJJS ELSE 0 END )
+        /
+        CASE WHEN
+             SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.SLSCDBJS ELSE 0 END ) ==0 THEN 1
+        ELSE
+             SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.SLSCDBJS ELSE 0 END ) END sjl,
+
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.DBRS ELSE 0 END ) dbCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate} THEN T.DBRS ELSE 0 END ) dbCountTb,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.DBRS ELSE 0 END )
+          /
+        CASE WHEN
+         SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN (NVL(T.DBRS,0)+NVL(T.BBRS,0)) ELSE 0 END) == 0 THEN 1
+        ELSE
+         SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN (NVL(T.DBRS,0)+NVL(T.BBRS,0)) ELSE 0 END) END  dbl,
+
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BBRS ELSE 0 END ) bbCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate} THEN T.BBRS ELSE 0 END ) bbCountTb,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BBRS ELSE 0 END )
+          /
+        CASE WHEN
+         SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN (NVL(T.DBRS,0)+NVL(T.BBRS,0)) ELSE 0 END) == 0 THEN 1
+        ELSE
+         SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN (NVL(T.DBRS,0)+NVL(T.BBRS,0)) ELSE 0 END) END  bbl,
+
+
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHQSRS ELSE 0 END ) bhqsCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate} THEN T.BHQSRS ELSE 0 END ) bhqsCountTb,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHQSRS ELSE 0 END )
+        /
+        CASE WHEN
+         SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN (NVL(T.BHQSRS,0)+NVL(T.BHBQSRS,0)) ELSE 0 END) == 0 THEN 1
+        ELSE
+         SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN (NVL(T.BHQSRS,0)+NVL(T.BHBQSRS,0)) ELSE 0 END) END  bhqsl,
+
+
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHBQSRS ELSE 0 END ) bhbqsCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate} THEN T.BHBQSRS ELSE 0 END ) bhbqsCountTb,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHBQSRS ELSE 0 END )
+        /
+        CASE WHEN
+         SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN (NVL(T.BHQSRS,0)+NVL(T.BHBQSRS,0)) ELSE 0 END) == 0 THEN 1
+        ELSE
+         SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN (NVL(T.BHQSRS,0)+NVL(T.BHBQSRS,0)) ELSE 0 END) END  bhbqsl,
+
+
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHYZRS ELSE 0 END ) bhyzCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate} THEN T.BHYZRS ELSE 0 END ) bhyzCountTb,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHYZRS ELSE 0 END )
+        /
+        CASE WHEN
+         SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN (NVL(T.BHYZRS,0)+NVL(T.BHWZRS,0)) ELSE 0 END) == 0 THEN 1
+        ELSE
+         SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN (NVL(T.BHYZRS,0)+NVL(T.BHWZRS,0)) ELSE 0 END) END  bhyzl,
+
+
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHWZRS ELSE 0 END ) bhwzCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate} THEN T.BHWZRS ELSE 0 END ) bhwzCountTb,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHWZRS ELSE 0 END )
+        /
+        CASE WHEN
+         SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN (NVL(T.BHYZRS,0)+NVL(T.BHWZRS,0)) ELSE 0 END) == 0 THEN 1
+        ELSE
+         SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN (NVL(T.BHYZRS,0)+NVL(T.BHWZRS,0)) ELSE 0 END) END  bhwzl,
+
+
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.YSDWCHRS ELSE 0 END ) ysdwCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate} THEN T.YSDWCHRS ELSE 0 END ) ysdwCountTb,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.YSDWCHRS ELSE 0 END )
+        /
+        CASE WHEN
+         SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN (NVL(T.YSDWCHRS,0)+NVL(T.DBRS,0)+NVL(T.BBRS,0)) ELSE 0 END) == 0 THEN 1
+        ELSE
+         SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN (NVL(T.YSDWCHRS,0)+NVL(T.DBRS,0)+NVL(T.BBRS,0)) ELSE 0 END) END  ysdwchl,
+
+
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHWZ_FDBZJRS ELSE 0 END ) fdbzjwzCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHWZ_ZJBZRS ELSE 0 END ) zjbzbxpwzCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHWZ_FDBZJRS ELSE 0 END )
+        /
+        CASE WHEN
+             SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN NVL(T.BHWZ_ZJBZRS,0)+NVL(T.BHWZ_FDBZJRS,0) ELSE 0 END )==0 THEN 1
+        ELSE
+             SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN NVL(T.BHWZ_ZJBZRS,0)+NVL(T.BHWZ_FDBZJRS,0) ELSE 0 END ) END fdbzjwzzb,
+
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHWZ_ZJBZRS ELSE 0 END )
+        /
+        CASE WHEN
+             SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN NVL(T.BHWZ_ZJBZRS,0)+NVL(T.BHWZ_FDBZJRS,0) ELSE 0 END )==0 THEN 1
+        ELSE
+             SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN NVL(T.BHWZ_ZJBZRS,0)+NVL(T.BHWZ_FDBZJRS,0) ELSE 0 END ) END zjbzbxpwzzb,
+
+
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN NVL(T.BHWZ_ZJBZRS,0)+NVL(T.BHWZ_FDBZJRS,0) ELSE 0 END ) gwzcpCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate}  THEN NVL(T.BHWZ_ZJBZRS,0)+NVL(T.BHWZ_FDBZJRS,0) ELSE 0 END ) gwzcpCountTb,
+
+
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHYZ_DCFJXRS ELSE 0 END ) dcfjxCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHYZ_CPYQTXRS ELSE 0 END ) yqtxCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHYZ_DCFJXRS ELSE 0 END )
+        /
+        CASE WHEN
+              SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN NVL(T.BHYZ_DCFJXRS,0)+NVL(T.BHYZ_CPYQTXRS,0) ELSE 0 END ) == 0 THEN 1
+        ELSE
+              SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN NVL(T.BHYZ_DCFJXRS,0)+NVL(T.BHYZ_CPYQTXRS,0) ELSE 0 END ) END dcfjxzb,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.BHYZ_CPYQTXRS ELSE 0 END )
+        /
+        CASE WHEN
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN NVL(T.BHYZ_DCFJXRS,0)+NVL(T.BHYZ_CPYQTXRS,0) ELSE 0 END ) == 0 THEN 1
+        ELSE
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN NVL(T.BHYZ_DCFJXRS,0)+NVL(T.BHYZ_CPYQTXRS,0) ELSE 0 END ) END yqtxzb,
+
+        SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN NVL(T.BHYZ_DCFJXRS,0)+NVL(T.BHYZ_CPYQTXRS,0) ELSE 0 END ) bhyzcpCount,
+        SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate}  THEN NVL(T.BHYZ_DCFJXRS,0)+NVL(T.BHYZ_CPYQTXRS,0) ELSE 0 END ) bhyzcpCountTb
+
+    FROM APP.APP_AJLXFX_DB_SYZB T
+    WHERE T.RQTJ BETWEEN #{tbBeginDate}  AND  #{endDate}
+    <if test="dwbm!=null and dwbm.length gt 3">
+        AND T.CBDW_BM = #{dwbm}
+    </if>
+
+    </select>
+
+
+    <select id="getDbjsList" resultType="huacloud.jwdsj.module.ajlxfx.dbqkfx.model.vo.DbrsVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.dbqkfx.model.dto.DbqkfxDto">
+        SELECT
+            TO_CHAR(T.RQTJ,'YYYY-MM') AS RQ ,
+            NVL(SUM(T.SLSCDBJS),0) AS SZ
+        FROM APP.APP_AJLXFX_DB_SYZB T
+        WHERE T.RQTJ BETWEEN #{beginDate}  AND  #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+        GROUP BY TO_CHAR(T.RQTJ,'YYYY-MM')
+        ORDER BY TO_CHAR(T.RQTJ,'YYYY-MM')
+    </select>
+
+    <select id="getDbrsList" resultType="huacloud.jwdsj.module.ajlxfx.dbqkfx.model.vo.DbrsVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.dbqkfx.model.dto.DbqkfxDto">
+        SELECT
+        TO_CHAR(T.RQTJ,'YYYY-MM') AS RQ ,
+        NVL(SUM(T.SLSCDBRS),0) AS SZ
+        FROM APP.APP_AJLXFX_DB_SYZB T
+        WHERE T.RQTJ BETWEEN #{beginDate}  AND  #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+        GROUP BY TO_CHAR(T.RQTJ,'YYYY-MM')
+        ORDER BY TO_CHAR(T.RQTJ,'YYYY-MM')
+    </select>
+
+    <select id="countZb" parameterType="huacloud.jwdsj.module.ajlxfx.dbqkfx.model.dto.DbqkfxDto"
+            resultType="huacloud.jwdsj.module.ajlxfx.dbqkfx.model.vo.DbqxzbVo">
+        SELECT
+            SUM(CASE WHEN T.YWQX = '社会危险性' THEN 1 ELSE 0 END) shwhxCount,
+            SUM(CASE WHEN T.YWQX = '曾经故意犯罪' THEN 1 ELSE 0 END) cjgyfzCount,
+            SUM(CASE WHEN T.YWQX = '身份不明' THEN 1 ELSE 0 END) sfbmdbCount,
+            SUM(CASE WHEN T.YWQX = '可能判处10年有期徒刑以上刑罚' THEN 1 ELSE 0 END) tenyearxfCount,
+            SUM(CASE WHEN T.YWQX = '违反取保候审监视居住规定' THEN 1 ELSE 0 END) wfqbhsjsjzgdCount,
+            SUM(CASE WHEN T.YWLX = '逮捕情形' THEN 1 ELSE 0 END) dbqxrs,
+
+            SUM(CASE WHEN T.YWQX = '社会危险性' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.YWLX = '逮捕情形' THEN 1 ELSE 0 END) == 0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '逮捕情形' THEN 1 ELSE 0 END) END shwhxzb,
+
+            SUM(CASE WHEN T.YWQX = '曾经故意犯罪' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.YWLX = '逮捕情形' THEN 1 ELSE 0 END) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '逮捕情形' THEN 1 ELSE 0 END) END cjgyfzzb,
+            SUM(CASE WHEN T.YWQX = '身份不明' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.YWLX = '逮捕情形' THEN 1 ELSE 0 END) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '逮捕情形' THEN 1 ELSE 0 END) END sfbmdbzb,
+            SUM(CASE WHEN T.YWQX = '可能判处10年有期徒刑以上刑罚' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.YWLX = '逮捕情形' THEN 1 ELSE 0 END) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '逮捕情形' THEN 1 ELSE 0 END) END tenyearxfzb,
+            SUM(CASE WHEN T.YWQX = '违反取保候审监视居住规定' THEN 1 ELSE 0 END)  /
+            CASE WHEN
+            SUM(CASE WHEN T.YWLX = '逮捕情形' THEN 1 ELSE 0 END) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '逮捕情形' THEN 1 ELSE 0 END) END wfqbhsjsjzgdzb,
+
+            SUM(CASE WHEN T.YWQX = '不构成犯罪' THEN 1 ELSE 0 END) bgcfzbbCount,
+            SUM(CASE WHEN T.YWQX = '证据不足不捕' THEN 1 ELSE 0 END) zjbzbbCount,
+            SUM(CASE WHEN T.YWQX = '调查后排除非法证据' THEN 1 ELSE 0 END) dchpcffzjbbCount,
+            SUM(CASE WHEN T.YWQX = '无社会危害性' THEN 1 ELSE 0 END) wshwhxbbCount,
+            SUM(CASE WHEN T.YWQX = '适用其他情形' THEN 1 ELSE 0 END) syqtqxbbCount,
+            SUM(CASE WHEN T.YWQX = '符合监视居住条件' THEN 1 ELSE 0 END) fhjsjztjbbCount,
+            SUM(CASE WHEN T.YWQX = '刑事和解不捕'  THEN 1 ELSE 0 END ) xshjbbCount,
+
+            SUM(CASE WHEN T.YWLX = '不捕情形' THEN 1 ELSE 0 END) bdbqxrs,
+            SUM(CASE WHEN T.YWQX = '不构成犯罪' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.YWLX = '不捕情形' THEN 1 ELSE 0 END) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '不捕情形' THEN 1 ELSE 0 END) END bgcfzbbzb,
+
+            SUM(CASE WHEN T.YWQX = '证据不足不捕' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.YWLX = '不捕情形' THEN 1 ELSE 0 END) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '不捕情形' THEN 1 ELSE 0 END) END zjbzbbzb,
+
+            SUM(CASE WHEN T.YWQX = '调查后排除非法证据' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.YWLX = '不捕情形' THEN 1 ELSE 0 END) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '不捕情形' THEN 1 ELSE 0 END) END dchpcffzjbbzb,
+
+            SUM(CASE WHEN T.YWQX = '无社会危害性' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.YWLX = '不捕情形' THEN 1 ELSE 0 END) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '不捕情形' THEN 1 ELSE 0 END) END wshwhxbbzb,
+
+            SUM(CASE WHEN T.YWQX = '适用其他情形' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.YWLX = '不捕情形' THEN 1 ELSE 0 END) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '不捕情形' THEN 1 ELSE 0 END) END syqtqxbbzb,
+
+            SUM(CASE WHEN T.YWQX = '符合监视居住条件' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.YWLX = '不捕情形' THEN 1 ELSE 0 END) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '不捕情形' THEN 1 ELSE 0 END) END fhjsjztjbbzb,
+
+            SUM(CASE WHEN T.YWQX = '刑事和解不捕' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.YWLX = '不捕情形' THEN 1 ELSE 0 END) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '不捕情形' THEN 1 ELSE 0 END) END xshjbbzb,
+
+            SUM(CASE WHEN T.YWQX = '法定不起诉' THEN 1 ELSE 0 END) shwhxCount,
+            SUM(CASE WHEN T.YWQX = '犯罪情节轻微不起诉' THEN 1 ELSE 0 END) cjgyfzCount,
+            SUM(CASE WHEN T.YWQX = '证据不足不起诉' THEN 1 ELSE 0 END) sfbmdbCount,
+            SUM(CASE WHEN T.YWQX = '附条件不起诉' THEN 1 ELSE 0 END) tenyearxfCount,
+            SUM(CASE WHEN T.YWQX IN ('法定不起诉','犯罪情节轻微不起诉','证据不足不起诉','附条件不起诉') THEN 1 ELSE 0 END) bhbqsqxrs,
+
+            SUM(CASE WHEN T.YWQX = '法定不起诉' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.YWQX IN ('法定不起诉','犯罪情节轻微不起诉','证据不足不起诉','附条件不起诉') THEN 1 ELSE 0 END) == 0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWQX IN ('法定不起诉','犯罪情节轻微不起诉','证据不足不起诉','附条件不起诉') THEN 1 ELSE 0 END) END fdbqszb,
+            SUM(CASE WHEN T.YWQX = '犯罪情节轻微不起诉' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.YWQX IN ('法定不起诉','犯罪情节轻微不起诉','证据不足不起诉','附条件不起诉') THEN 1 ELSE 0 END) == 0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWQX IN ('法定不起诉','犯罪情节轻微不起诉','证据不足不起诉','附条件不起诉') THEN 1 ELSE 0 END) END fzqjqwbqszb,
+            SUM(CASE WHEN T.YWQX = '证据不足不起诉' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.YWQX IN ('法定不起诉','犯罪情节轻微不起诉','证据不足不起诉','附条件不起诉') THEN 1 ELSE 0 END) == 0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWQX IN ('法定不起诉','犯罪情节轻微不起诉','证据不足不起诉','附条件不起诉') THEN 1 ELSE 0 END) END zjbzbqszb,
+            SUM(CASE WHEN T.YWQX = '附条件不起诉' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.YWQX IN ('法定不起诉','犯罪情节轻微不起诉','证据不足不起诉','附条件不起诉') THEN 1 ELSE 0 END) == 0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWQX IN ('法定不起诉','犯罪情节轻微不起诉','证据不足不起诉','附条件不起诉') THEN 1 ELSE 0 END) END ftjbqszb,
+
+            SUM(CASE WHEN T.YWQX = '捕后轻刑不满3年有期徒刑人数' THEN 1 ELSE 0 END) bmthreetxCount,
+            SUM(CASE WHEN T.YWQX = '捕后轻刑拘役人数' THEN 1 ELSE 0 END) jyCount,
+            SUM(CASE WHEN T.YWQX = '捕后轻刑管制人数' THEN 1 ELSE 0 END) gzCount,
+            SUM(CASE WHEN T.YWQX = '捕后轻刑单处附加刑人数' THEN 1 ELSE 0 END) dcfjxCount,
+            SUM(CASE WHEN T.YWQX = '捕后轻刑免于刑事处罚人数' THEN 1 ELSE 0 END) myxscfCount,
+            SUM(CASE WHEN T.YWLX = '捕后判轻刑情形'  THEN 1 ELSE 0 END) bhqpqxrs,
+            SUM(CASE WHEN T.YWQX = '捕后轻刑不满3年有期徒刑人数' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN SUM(CASE WHEN T.YWLX = '捕后判轻刑情形' THEN 1 ELSE 0 END) == 0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '捕后判轻刑情形' THEN 1 ELSE 0 END) END bmthreetxzb,
+
+            SUM(CASE WHEN T.YWQX = '捕后轻刑拘役人数' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN SUM(CASE WHEN T.YWLX = '捕后判轻刑情形' THEN 1 ELSE 0 END) == 0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '捕后判轻刑情形' THEN 1 ELSE 0 END) END jyzb,
+
+            SUM(CASE WHEN T.YWQX = '捕后轻刑管制人数' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN SUM(CASE WHEN T.YWLX = '捕后判轻刑情形' THEN 1 ELSE 0 END) == 0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '捕后判轻刑情形' THEN 1 ELSE 0 END) END gzzb,
+
+            SUM(CASE WHEN T.YWQX = '捕后轻刑单处附加刑人数' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN SUM(CASE WHEN T.YWLX = '捕后判轻刑情形' THEN 1 ELSE 0 END) == 0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '捕后判轻刑情形' THEN 1 ELSE 0 END) END dcfjxzb,
+
+            SUM(CASE WHEN T.YWQX = '捕后轻刑免于刑事处罚人数' THEN 1 ELSE 0 END)
+            /
+            CASE WHEN SUM(CASE WHEN T.YWLX = '捕后判轻刑情形' THEN 1 ELSE 0 END) == 0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.YWLX = '捕后判轻刑情形' THEN 1 ELSE 0 END) END myxscfzb
+
+        FROM APP.APP_AJLXFX_DB_DWZB T
+        WHERE T.RQTJ BETWEEN #{beginDate}  AND  #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+    </select>
+    
+    <select id="countBbjd" resultType="huacloud.jwdsj.module.ajlxfx.dbqkfx.model.vo.DbbbjdVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.dbqkfx.model.dto.DbqkfxDto">
+
+        SELECT
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.DBPBJDTCFYRS ELSE 0 END ) gadbbjdtcfyCount,
+            SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate}  THEN T.DBPBJDTCFYRS ELSE 0 END ) gadbbjdtcfyCountTb,
+
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.DBPBJDTCFYRS ELSE 0 END )
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.SLSCDBJS ELSE 0 END ) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.SLSCDBJS ELSE 0 END ) END gadbbjdtcfybl,
+
+
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.DBPBJDTCFHRS ELSE 0 END ) gadbbjdtcfhCount,
+            SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate}  THEN T.DBPBJDTCFHRS ELSE 0 END ) gadbbjdtcfhCountTb,
+
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.DBPBJDTCFHRS ELSE 0 END )
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.SLSCDBJS ELSE 0 END ) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.SLSCDBJS ELSE 0 END ) END gadbbjdtcfhbl,
+
+
+
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.FYHGBYBBJDRS ELSE 0 END ) fyhjcjggbybbjdCount,
+            SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate}  THEN T.FYHGBYBBJDRS ELSE 0 END ) fyhjcjggbybbjdCountTb,
+
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.FYHGBYBBJDRS ELSE 0 END )
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.DBPBJDTCFYRS ELSE 0 END ) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.DBPBJDTCFYRS ELSE 0 END ) END fyhjcjggbybbjdbl,
+
+
+
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.FHHGBYBBJDRS ELSE 0 END ) fhhjcjggbybbjdCount,
+            SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate}  THEN T.FHHGBYBBJDRS ELSE 0 END ) fhhjcjggbybbjdCountTb,
+
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.FHHGBYBBJDRS ELSE 0 END )
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.DBPBJDTCFYRS ELSE 0 END ) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.DBPBJDTCFYRS ELSE 0 END ) END fhhjcjggbybbjdbl,
+
+
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.DBHBQSJDTCFYRS ELSE 0 END ) gadbhbqsjdtcfyCount,
+            SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate}  THEN T.DBHBQSJDTCFYRS ELSE 0 END ) gadbhbqsjdtcfyCountTb,
+
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.DBHBQSJDTCFYRS ELSE 0 END )
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.BHBQSRS ELSE 0 END ) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.BHBQSRS ELSE 0 END ) END gadbhbqsjdtcfybl,
+
+
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.DBHBQSJDTCFHRS ELSE 0 END ) gadbhbqsjdtcfhCount,
+            SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate}  THEN T.DBHBQSJDTCFHRS ELSE 0 END ) gadbhbqsjdtcfhCountTb,
+
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.DBHBQSJDTCFHRS ELSE 0 END )
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.BHBQSRS ELSE 0 END ) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.BHBQSRS ELSE 0 END ) END gadbhbqsjdtcfhbl,
+
+
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.FYHGBYBHBQSJDRS ELSE 0 END ) fyhjcjggbybhbqsjdCount,
+            SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate}  THEN T.FYHGBYBHBQSJDRS ELSE 0 END ) fyhjcjggbybhbqsjdCountTb,
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.FYHGBYBHBQSJDRS ELSE 0 END )
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.DBHBQSJDTCFHRS ELSE 0 END ) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.DBHBQSJDTCFHRS ELSE 0 END ) END fyhjcjggbybhbqsjdbl,
+
+
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.FHHGBYBHBQSJDRS ELSE 0 END ) fhhjcjggbybhbqsjdCount,
+            SUM(CASE WHEN T.RQTJ BETWEEN #{tbBeginDate} AND  #{tbEndDate}  THEN T.FHHGBYBHBQSJDRS ELSE 0 END ) fhhjcjggbybhbqsjdCountTb,
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate}  AND  #{endDate} THEN T.FHHGBYBHBQSJDRS ELSE 0 END )
+            /
+            CASE WHEN
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.DBHBQSJDTCFHRS ELSE 0 END ) ==0 THEN 1
+            ELSE
+            SUM(CASE WHEN T.RQTJ BETWEEN #{beginDate} AND  #{endDate} THEN T.DBHBQSJDTCFHRS ELSE 0 END ) END fhhjcjggbybhbqsjdbl
+
+        FROM APP.APP_AJLXFX_DB_SYZB T
+        WHERE T.RQTJ BETWEEN #{tbBeginDate}  AND  #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+
+    </select>
+
+
+
+</mapper>

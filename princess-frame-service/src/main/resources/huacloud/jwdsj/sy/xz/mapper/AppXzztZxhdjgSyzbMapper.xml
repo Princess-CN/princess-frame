@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="huacloud.jwdsj.module.sy.xz.mapper.AppXzztZxhdjgSyzbMapper">
+
+     <resultMap id="xzztZxhdSyzb" type="huacloud.jwdsj.module.sy.xz.model.vo.AppXzztZxhdjgSyzbVo"> 
+         <result column="ETL_DT" property="etlDt"/>
+        <result column="CBDW_BM" property="cbdwBm"/>
+        <result column="CBDW_MC" property="cbdwMc"/>
+        <result column="CBDW_SZCS" property="cbdwSzcs"/>
+        <result column="CBDW_SZQX" property="cbdwSzqx"/>       
+        <result column="CBDW_SZSF" property="cbdwSzsf"/>
+        <result column="AJXZ_MC" property="ajxzMc"/>
+        <result column="RQTJ" property="rqtj"/>
+        <result column="SLJS" property="sljs"/>
+        <result column="XZJGMC" property="xzjgmc"/>
+        <result column="TCJCJYJS" property="tcjcjyjs"/>
+        <result column="CNJCJYJS" property="cnjcjyjs"/>
+        <result column="FYXSAJJS" property="fyxsajjs"/>
+        <result column="XZJGBLXZZAJJS" property="xzjgblxzzajjs"/>
+        <result column="XZJGWFAJJS" property="xzjgwfajjs"/>
+             
+    </resultMap>
+
+
+    <select id="selectXzZtxhdjgIndex" resultMap="xzztZxhdSyzb"
+	parameterType="huacloud.jwdsj.module.sy.xz.model.qo.SyXzIndexQo">
+		SELECT SUM(SLJS) as SLJS,
+		SUM(TCJCJYJS) as TCJCJYJS,
+		SUM(CNJCJYJS) as CNJCJYJS,
+		SUM(FYXSAJJS) as FYXSAJJS,
+		SUM(XZJGBLXZZAJJS) as XZJGBLXZZAJJS,
+		SUM(XZJGWFAJJS) as XZJGWFAJJS
+		FROM APP.APP_XZZT_ZXHDJG_SYZB
+		WHERE 1=1 
+		<if test="syXzIndexQo.beginDate != null ">
+		 AND RQTJ BETWEEN #{syXzIndexQo.beginDate} AND #{syXzIndexQo.endDate}
+		</if>
+		 <if test="syXzIndexQo.dwbm != null">
+			and CBDW_BM like CONCAT(CONCAT('',#{syXzIndexQo.dwbm}),'%')
+		</if>
+    </select>
+    <select id="selectXzZtxhdjgList" resultMap="xzztZxhdSyzb"
+	 parameterType="huacloud.jwdsj.module.sy.xz.model.qo.SyXzIndexQo">
+	 SELECT
+		SLJS,
+		RQTJ,
+		TCJCJYJS,
+		CNJCJYJS,
+		FYXSAJJS,
+		XZJGBLXZZAJJS,
+		XZJGWFAJJS
+		FROM APP.APP_XZZT_ZXHDJG_SYZB
+		WHERE 1=1 
+		<if test="syXzIndexQo.beginDate != null ">
+		 AND RQTJ BETWEEN #{syXzIndexQo.beginDate} AND #{syXzIndexQo.endDate}
+		</if>
+		 <if test="syXzIndexQo.dwbm != null">
+			and CBDW_BM like CONCAT(CONCAT('',#{syXzIndexQo.dwbm}),'%')
+		</if>
+		ORDER BY RQTJ
+		LIMIT 10 
+    </select>
+    
+    <select id="selectXzztZfPhList" resultMap="xzztZxhdSyzb"
+	    parameterType="huacloud.jwdsj.module.sy.xz.model.qo.SyXzIndexQo">
+			SELECT
+			nvl ( ajxz_mc, '其他' ) as AJXZ_MC,
+			sum( SLJS ) sljs		
+			FROM
+			APP.APP_XZZT_ZXHDJG_SYZB
+			WHERE 1=1 
+		   <if test="syXzIndexQo.ajxzMc != null">
+		     AND AJXZ_MC = #{syXzIndexQo.ajxzMc}
+		   </if>
+			AND RQTJ BETWEEN #{syXzIndexQo.beginDate}
+			AND #{syXzIndexQo.endDate}
+			GROUP BY
+			AJXZ_MC
+			ORDER BY
+			AJXZ_MC DESC
+			LIMIT 10
+       </select> 
+       
+       
+       <select id="selectXzztZfListByYear" resultMap="xzztZxhdSyzb"
+	    parameterType="huacloud.jwdsj.module.sy.xz.model.qo.SyXzIndexQo">
+			SELECT  to_date(to_char(t.RQTJ,'yyyy'),'yyyy') as RQTJ,
+			sum(t.SLJS)as SLJS,
+			sum(t.TCJCJYJS)as TCJCJYJS,
+			sum(t.CNJCJYJS)as CNJCJYJS,
+			sum(t.FYXSAJJS)as FYXSAJJS,
+			sum(t.XZJGBLXZZAJJS)as XZJGBLXZZAJJS,
+			sum(t.XZJGWFAJJS)as XZJGWFAJJS    
+		    FROM APP.APP_XZZT_ZXHDJG_SYZB t
+		    group by to_char(t.RQTJ,'yyyy')
+		    order by RQTJ
+       </select>
+       
+       <select id="selectXzztZfListByMonth" resultMap="xzztZxhdSyzb"
+	    parameterType="huacloud.jwdsj.module.sy.xz.model.qo.SyXzIndexQo">
+			SELECT  to_date(to_char(t.RQTJ,'yyyy-mm'),'yyyy-mm') as RQTJ,
+			sum(t.SLJS)as SLJS,
+			sum(t.TCJCJYJS)as TCJCJYJS,
+			sum(t.CNJCJYJS)as CNJCJYJS,
+			sum(t.FYXSAJJS)as FYXSAJJS,
+			sum(t.XZJGBLXZZAJJS)as XZJGBLXZZAJJS,
+			sum(t.XZJGWFAJJS)as XZJGWFAJJS    
+		    FROM APP.APP_XZZT_ZXHDJG_SYZB t
+		    where 1=1 AND t.RQTJ BETWEEN #{syXzIndexQo.beginDate} AND #{syXzIndexQo.endDate}
+		    group by to_char(t.RQTJ,'yyyy-mm')
+		    order by to_char(t.RQTJ,'yyyy-mm');
+       </select>
+</mapper>

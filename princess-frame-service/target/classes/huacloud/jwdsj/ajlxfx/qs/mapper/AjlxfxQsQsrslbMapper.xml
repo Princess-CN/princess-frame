@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="huacloud.jwdsj.module.ajlxfx.qs.mapper.AjlxfxQsQsrslbMapper">
+
+    <select id="selectAjfb" resultType="huacloud.jwdsj.module.ajlxfx.qs.model.vo.AjfbVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qs.model.qo.AjfbQo">
+        select
+                <choose>
+                    <when test='dwjb == "1"'>
+                        CBDW_SZSF AS DWMC,
+                    </when>
+                    <when test='dwjb == "2"'>
+                        CBDW_SZCS AS DWMC,
+                    </when>
+                    <when test='dwjb == "3"'>
+                        CBDW_SZQX AS DWMC,
+                    </when>
+                </choose>
+                SUM(CASE WHEN AJ_SLRQ BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) ZBZ,
+                SUM(CASE WHEN AJ_SLRQ BETWEEN #{tqksrq} AND #{tqjzrq} THEN 1 ELSE 0 END) TQZBZ
+        FROM ADM.ADM_XSZT_XYRSCQS
+        WHERE ((AJ_SLRQ BETWEEN #{ksrq} AND #{jzrq})
+        OR (AJ_SLRQ BETWEEN #{tqksrq} AND #{tqjzrq}))
+        <if test="ajlx != null">
+            AND AJLX = #{ajlx}
+        </if>
+        AND CBDW_BM LIKE #{dwbm}||'%'
+        GROUP BY
+        <choose>
+            <when test='dwjb == "1"'>
+                CBDW_SZSF
+            </when>
+            <when test='dwjb == "2"'>
+                CBDW_SZCS
+            </when>
+            <when test='dwjb == "3"'>
+                CBDW_SZQX
+            </when>
+        </choose>
+    </select>
+    <select id="selectAyfb" resultType="huacloud.jwdsj.module.ajlxfx.qs.model.vo.AyfbVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qs.model.qo.AyfbQo">
+        SELECT YS_AYMC AS AJXZ, SUM(CASE WHEN AJ_SLRQ BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) ZBZ,
+                SUM(CASE WHEN AJ_SLRQ BETWEEN #{tqksrq} AND #{tqjzrq} THEN 1 ELSE 0 END) TQZBZ
+        FROM ADM.ADM_XSZT_SCQS
+        WHERE ((AJ_SLRQ BETWEEN #{ksrq} AND #{jzrq})
+        OR (AJ_SLRQ BETWEEN #{tqksrq} AND #{tqjzrq}))
+        AND CBDW_BM LIKE #{dwbm}||'%'
+        <if test="gjz != null">
+            AND YS_AYMC LIKE '%'||#{gjz}||'%'
+        </if>
+        <if test="ajlx != null">
+            AND AJLX = #{ajlx}
+        </if>
+        GROUP BY YS_AYMC
+        ORDER BY SUM(CASE WHEN AJ_SLRQ BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) DESC
+        LIMIT #{beginNum},#{pageSize}
+    </select>
+
+    <select id="selectQslQk" resultType="huacloud.jwdsj.module.ajlxfx.qs.model.vo.AjfbVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qs.model.qo.QslqkQo">
+        select
+        <choose>
+            <when test='dwjb == "1"'>
+                CBDW_SZSF AS DWMC,
+            </when>
+            <when test='dwjb == "2"'>
+                CBDW_SZCS AS DWMC,
+            </when>
+            <when test='dwjb == "3"'>
+                CBDW_SZQX AS DWMC,
+            </when>
+        </choose>
+        SUM(CASE WHEN AJ_SLRQ BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) ZBZ,
+        SUM(CASE WHEN AJ_SLRQ BETWEEN #{tqksrq} AND #{tqjzrq} THEN 1 ELSE 0 END) TQZBZ
+        FROM ADM.ADM_XSZT_XYRSCQS
+        WHERE ((AJ_SLRQ BETWEEN #{ksrq} AND #{jzrq})
+        OR (AJ_SLRQ BETWEEN #{tqksrq} AND #{tqjzrq}))
+        <if test="ajlx != null">
+            AND AJLX = #{ajlx}
+        </if>
+        AND YS_AYMC = #{ajxz}
+        AND CBDW_BM LIKE #{dwbm}||'%'
+        GROUP BY
+        <choose>
+            <when test='dwjb == "1"'>
+                CBDW_SZSF
+            </when>
+            <when test='dwjb == "2"'>
+                CBDW_SZCS
+            </when>
+            <when test='dwjb == "3"'>
+                CBDW_SZQX
+            </when>
+        </choose>
+    </select>
+
+    <select id="selectXyrlb" resultType="huacloud.jwdsj.module.ajlxfx.qs.model.vo.XyrlbVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qs.model.qo.AjlbQo">
+        SELECT BMSAH,AJMC,TO_DATE(AJ_SJRQ,'YYYY-MM-DD') AS SJRQ,XM AS XYRXM
+        FROM ADM.ADM_XSZT_SCQS
+        WHERE AJ_SLRQ BETWEEN #{ksrq} AND #{jzrq} AND CBDW_BM LIKE #{dwbm}||'%'
+        <if test="bmsah != null">
+            AND BMSAH LIKE '%'||#{bmsah}||'%'
+        </if>
+        <if test="ajmc != null">
+            AND AJMC LIKE '%'||#{ajmc}||'%'
+        </if>
+        <if test="ajlx != null">
+            AND AJLX = #{ajlx}
+        </if>
+        LIMIT #{beginNum},#{pageSize}
+    </select>
+
+    <select id="selectAjByBmsah" resultType="huacloud.jwdsj.module.ajlxfx.qs.model.vo.AjjyxxVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qs.model.qo.AjlbQo">
+        SELECT BMSAH,AJMC,SLRQ,SJRQ,CBDW_MC AS CBDW,DATA_SRC  AS AJLY,AQZY,YSAY_AYMC AS AY,TYSAH
+        FROM "ADM"."ADM_XSZT_SCQS"
+        WHERE BMSAH = #{bmsah}
+    </select>
+    <select id="selectXyrByBmsah" resultType="huacloud.jwdsj.module.ajlxfx.qs.model.vo.XyrjyxxVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qs.model.qo.AjlbQo">
+        SELECT XM AS XYRXM,XB_MC AS XB,ZJHM,HJSZD_MC AS HJSZD,ZYZAD_MC AS ZAD
+        FROM "ADM"."ADM_XSZT_XYRSCQS"
+        WHERE BMSAH = #{bmsah}
+        LIMIT #{beginNum},1
+    </select>
+
+</mapper>

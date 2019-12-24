@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="huacloud.jwdsj.module.zlfx.mapper.AdmXsztBhscqsMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ETL_DT,BMSAH,TYSAH,CBDW_BM,CBDW_MC,CBDW_SZSF,CBDW_SZCS,CBDW_SZQX,AJMC,AJLX,ZRRBM,XM,XB_MC,ZJLX_MC,ZJHM,ZSDXXDZ,SJRQ,SJCLQK_DM,SJCLQK_MC,SJAY_AYDM,SJAY_AYMC,QZCSCQRQ,QZCS_DM,QZCS_MC,YYSPJRQ,YSXGX_MC,YSXGXXQ,YSFJXJTQK,YSFJXQK_MCS,YSHXKYQ,CHQSRQ,BHQSRS,BHBQSRS,BHCHQSRS,YSYZRS,YSWZ_FDBZJRS,YSWZ_ZJBZRS,BHYSQX_BMSNYQTXRS,BHYSQX_JYRS,BHYSQX_GZRS,BHYSQX_DCFJXRS,BHYSQX_MYXSCFRS,BHYSPHXRS,YSCPYQTXRS,YSDCFJXRS,DATA_SRC
+    </sql>
+
+
+    <!--刑事捕后审查起诉 selectXsbhscqs-->
+    <select id="selectXsbhscqs" resultType="huacloud.jwdsj.module.zlfx.module.entity.AdmXsztBhscqsEntity" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        select ajmc, bmsah, sjrq
+        from ADM.ADM_XSZT_BHSCQS
+        WHERE BHQSRS != 0
+        AND sjrq BETWEEN #{beginDate} AND #{endDate}
+        AND CBDW_BM LIKE #{dwbm}||'%'
+        <if test="ajmc != null and ajmc !=''">
+            AND AJMC LIKE COCNAT('%',#{ajmc},'%')
+        </if>
+        <if test="bmsah != null and bmsah !=''">
+            AND BMSAH LIKE COCNAT('%',#{bmsah},'%')
+        </if>
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!--刑事捕后审查起诉-->
+    <select id="selectXsbhscqsTal" resultType="java.lang.Integer" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        select count(*) from (
+        select ajmc, bmsah, sjrq
+        from ADM.ADM_XSZT_BHSCQS
+        WHERE BHQSRS != 0
+        AND sjrq BETWEEN #{beginDate} AND #{endDate}
+        AND CBDW_BM LIKE #{dwbm}||'%'
+        <if test="ajmc != null and ajmc !=''">
+            AND AJMC LIKE COCNAT('%',#{ajmc},'%')
+        </if>
+        <if test="bmsah != null and bmsah !=''">
+            AND BMSAH LIKE COCNAT('%',#{bmsah},'%')
+        </if>
+        )
+    </select>
+
+
+</mapper>

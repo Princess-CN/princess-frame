@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="huacloud.jwdsj.module.ajbfx.mapper.AjbfxMapper">
+
+
+    <select id="countAjbqk" resultType="huacloud.jwdsj.module.ajbfx.model.vo.AjbfxVo"
+            parameterType="huacloud.jwdsj.module.ajbfx.model.dto.AjbfxDto">
+        SELECT
+            <if test=" dwbm == null || dwbm.length lte 3 ">
+                T.CBDW_SZSF CITYNAME,
+            </if>
+            <if test="  dwbm.length gt 3 and dwbm.length lte 5 ">
+                T.CBDW_SZCS CITYNAME,
+            </if>
+            <if test=" dwbm.length gt 5 ">
+                T.CBDW_SZQX CITYNAME,
+            </if>
+            TO_CHAR(T.SCQS_SLRQ,'YYYY-MM')  MONTH ,
+            SUM(1)  CASES,
+            (SUM(CASE WHEN T.BPZDBFY_SLRQ    BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.BPZDBFH_SLRQ     BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.DBSS_SLRQ        BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.PZYCZCJYQX_SLRQ  BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.YCTCRQ           BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.ECTCRQ           BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.YCYCRQ           BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.ECYCRQ           BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.SCYCRQ           BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.BQSFY_SLRQ       BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.BQSFH_SLRQ       BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.ESSS_SLRQ        BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.ESKS_SLRQ        BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.SPJDCXKS_SLRQ    BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.FYZXJDZS_SLRQ    BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.FHCSYS_SLRQ      BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.FHCSES_SLRQ      BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.XSSSSF_SLRQ      BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.XSSSCFF_SLRQ     BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.BFFYCPXSSS_SLRQ  BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END)) AS NUMBER
+        FROM  ADM.ADM_XSZT_AJBFX T WHERE 1 = 1
+        <if test=" name != null and name == 1 ">
+            AND T.AJLX = '普通刑事案件'
+        </if>
+        <if test=" name != null and name == 2 ">
+            AND T.AJLX = '重大犯罪案件'
+        </if>
+        <if test=" name != null and name == 3 ">
+            AND T.AJLX = '职务犯罪案件'
+        </if>
+        <if test=" name != null and name == 4 ">
+            AND T.AJLX = '经济犯罪案件'
+        </if>
+        <if test=" name != null and name == 9 ">
+            AND T.AJLX = '未检'
+        </if>
+        AND   T.SCQS_SLRQ  BETWEEN #{beginDate} AND  #{endDate}
+        <if test="dwbm !=null and dwbm !='' ">
+            AND  T.CBDW_BM LIKE CONCAT('',#{dwbm},'%')
+        </if>
+        GROUP BY
+        <if test=" dwbm == null || dwbm.length lte 3 ">
+            T.CBDW_SZSF ,
+        </if>
+        <if test=" dwbm.length gt 3 and dwbm.length lte 5 ">
+            T.CBDW_SZCS ,
+        </if>
+        <if test=" dwbm.length gt 5 ">
+            T.CBDW_SZQX ,
+        </if>
+        TO_CHAR(T.SCQS_SLRQ,'YYYY-MM')
+        ORDER BY TO_CHAR(T.SCQS_SLRQ,'YYYY-MM')
+    </select>
+    
+    <select id="countAslfb" resultType="huacloud.jwdsj.module.ajbfx.model.vo.AjbfxVo"
+            parameterType="huacloud.jwdsj.module.ajbfx.model.dto.AjbfxDto">
+        SELECT
+            SUM(CASE WHEN T.BPZDBFY_SLRQ     BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) bpzdbfySlrqNumber,
+            SUM(CASE WHEN T.BPZDBFH_SLRQ     BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) bpzdbfhSlrqNumber,
+            SUM(CASE WHEN T.DBSS_SLRQ        BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) dbssSlrqNumber,
+            SUM(CASE WHEN T.PZYCZCJYQX_SLRQ  BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) pzyczcjyqxSlrqNumber,
+            SUM(CASE WHEN T.YCTCRQ           BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) yctcrqNumber,
+            SUM(CASE WHEN T.ECTCRQ           BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) ectcrqNumber,
+            SUM(CASE WHEN T.YCYCRQ           BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) ycycrqNumber,
+            SUM(CASE WHEN T.ECYCRQ           BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) ecycrqNumber,
+            SUM(CASE WHEN T.SCYCRQ           BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) scycrqNumber,
+            SUM(CASE WHEN T.BQSFY_SLRQ       BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) bqsfySlrqNumber,
+            SUM(CASE WHEN T.BQSFH_SLRQ       BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) bqsfhSlrqNumber,
+            SUM(CASE WHEN T.ESSS_SLRQ        BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) esssSlrqNumber,
+            SUM(CASE WHEN T.ESKS_SLRQ        BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) esksSlrqNumber,
+            SUM(CASE WHEN T.SPJDCXKS_SLRQ    BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) spjdcxksSlrqNumber,
+            SUM(CASE WHEN T.FYZXJDZS_SLRQ    BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) fyzxjdzsSlrqNumber,
+            SUM(CASE WHEN T.FHCSYS_SLRQ      BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) fhcsysSlrqNumber,
+            SUM(CASE WHEN T.FHCSES_SLRQ      BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) fhcsesSlrqNumber,
+            SUM(CASE WHEN T.XSSSSF_SLRQ      BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) xssssfSlrqNumber,
+            SUM(CASE WHEN T.XSSSCFF_SLRQ     BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) xssscffSlrqNumber,
+            SUM(CASE WHEN T.BFFYCPXSSS_SLRQ  BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) bffycpxsssSlrqNumber
+        FROM  ADM.ADM_XSZT_AJBFX T WHERE 1 = 1
+        <if test=" name != null and name == 1 ">
+            AND T.AJLX = '普通刑事案件'
+        </if>
+        <if test=" name != null and name == 2 ">
+            AND T.AJLX = '重大犯罪案件'
+        </if>
+        <if test=" name != null and name == 3 ">
+            AND T.AJLX = '职务犯罪案件'
+        </if>
+        <if test=" name != null and name == 4 ">
+            AND T.AJLX = '经济犯罪案件'
+        </if>
+        <if test=" name != null and name == 9 ">
+            AND T.AJLX = '未检'
+        </if>
+        AND   T.SCQS_SLRQ  BETWEEN #{beginDate} AND  #{endDate}
+        <if test="dwbm != null and dwbm.length != 3 ">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+    </select>
+
+    <select id="asjfb" resultType="huacloud.jwdsj.module.ajbfx.model.vo.AjbfxVo"
+            parameterType="huacloud.jwdsj.module.ajbfx.model.dto.AjbfxDto">
+
+    </select>
+
+    <select id="countJdzmfbfx" resultType="huacloud.jwdsj.module.ajbfx.model.vo.AjbfxVo"
+            parameterType="huacloud.jwdsj.module.ajbfx.model.dto.AjbfxDto">
+        SELECT
+        T.SDAY_AYMC ZMNAME,
+        SUM(CASE WHEN T.BPZDBFY_SLRQ     BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) bpzdbfySlrqNumber,
+        SUM(CASE WHEN T.BPZDBFH_SLRQ     BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) bpzdbfhSlrqNumber,
+        SUM(CASE WHEN T.DBSS_SLRQ        BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) dbssSlrqNumber,
+        SUM(CASE WHEN T.PZYCZCJYQX_SLRQ  BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) pzyczcjyqxSlrqNumber,
+        SUM(CASE WHEN T.YCTCRQ           BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) yctcrqNumber,
+        SUM(CASE WHEN T.ECTCRQ           BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) ectcrqNumber,
+        SUM(CASE WHEN T.YCYCRQ           BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) ycycrqNumber,
+        SUM(CASE WHEN T.ECYCRQ           BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) ecycrqNumber,
+        SUM(CASE WHEN T.SCYCRQ           BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) scycrqNumber,
+        SUM(CASE WHEN T.BQSFY_SLRQ       BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) bqsfySlrqNumber,
+        SUM(CASE WHEN T.BQSFH_SLRQ       BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) bqsfhSlrqNumber,
+        SUM(CASE WHEN T.ESSS_SLRQ        BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) esssSlrqNumber,
+        SUM(CASE WHEN T.ESKS_SLRQ        BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) esksSlrqNumber,
+        SUM(CASE WHEN T.SPJDCXKS_SLRQ    BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) spjdcxksSlrqNumber,
+        SUM(CASE WHEN T.FYZXJDZS_SLRQ    BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) fyzxjdzsSlrqNumber,
+        SUM(CASE WHEN T.FHCSYS_SLRQ      BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) fhcsysSlrqNumber,
+        SUM(CASE WHEN T.FHCSES_SLRQ      BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) fhcsesSlrqNumber,
+        SUM(CASE WHEN T.XSSSSF_SLRQ      BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) xssssfSlrqNumber,
+        SUM(CASE WHEN T.XSSSCFF_SLRQ     BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) xssscffSlrqNumber,
+        SUM(CASE WHEN T.BFFYCPXSSS_SLRQ  BETWEEN  #{beginDate} AND  #{endDate}  THEN 1 ELSE 0 END) bffycpxsssSlrqNumber
+        FROM  ADM.ADM_XSZT_AJBFX T
+        WHERE 1 = 1
+        <if test=" name != null and name == 1 ">
+            AND T.AJLX = '普通刑事案件'
+        </if>
+        <if test=" name != null and name == 2 ">
+            AND T.AJLX = '重大犯罪案件'
+        </if>
+        <if test=" name != null and name == 3 ">
+            AND T.AJLX = '职务犯罪案件'
+        </if>
+        <if test=" name != null and name == 4 ">
+            AND T.AJLX = '经济犯罪案件'
+        </if>
+        <if test=" name != null and name == 9 ">
+            AND T.AJLX = '未检'
+        </if>
+        AND   T.SCQS_SLRQ  BETWEEN #{beginDate} AND  #{endDate}
+        <if test="dwbm != null and dwbm.length != 3 ">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+        GROUP BY T.SDAY_AYMC
+    </select>
+
+
+</mapper>

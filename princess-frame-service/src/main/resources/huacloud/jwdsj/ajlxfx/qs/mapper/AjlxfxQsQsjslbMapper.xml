@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="huacloud.jwdsj.module.ajlxfx.qs.mapper.AjlxfxQsQsjslbMapper">
+
+    <select id="selectAjfb" resultType="huacloud.jwdsj.module.ajlxfx.qs.model.vo.AjfbVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qs.model.qo.AjfbQo">
+        select
+                <choose>
+                    <when test='dwjb == "1"'>
+                        CBDW_SZSF AS DWMC,
+                    </when>
+                    <when test='dwjb == "2"'>
+                        CBDW_SZCS AS DWMC,
+                    </when>
+                    <when test='dwjb == "3"'>
+                        CBDW_SZQX AS DWMC,
+                    </when>
+                </choose>
+                SUM(CASE WHEN SLRQ BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) ZBZ,
+                SUM(CASE WHEN SLRQ BETWEEN #{tqksrq} AND #{tqjzrq} THEN 1 ELSE 0 END) TQZBZ
+        FROM ADM.ADM_XSZT_SCQS
+        WHERE ((SLRQ BETWEEN #{ksrq} AND #{jzrq})
+        OR (SLRQ BETWEEN #{tqksrq} AND #{tqjzrq}))
+        <if test="ajlx != null">
+            AND AJLX = #{ajlx}
+        </if>
+        AND CBDW_BM LIKE #{dwbm}||'%'
+        GROUP BY
+        <choose>
+            <when test='dwjb == "1"'>
+                CBDW_SZSF
+            </when>
+            <when test='dwjb == "2"'>
+                CBDW_SZCS
+            </when>
+            <when test='dwjb == "3"'>
+                CBDW_SZQX
+            </when>
+        </choose>
+    </select>
+
+    <select id="selectAjqs" resultType="huacloud.jwdsj.module.ajlxfx.qs.model.vo.AjqsVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qs.model.qo.AjqsQo">
+        <choose>
+            <when test='cxlx == "N"'>
+                SELECT YEAR(RQTJ) AS SJ,NVL(SUM(SCQSJS),0) DQZBZ
+                FROM "APP"."APP_AJLXFX_QSQK" WHERE CBDW_BM LIKE #{dwbm}||'%'
+                <if test="ajlx != null">
+                    AND AJLX = #{ajlx}
+                </if>
+                GROUP BY YEAR(RQTJ) ORDER BY YEAR(RQTJ)
+            </when>
+            <when test='cxlx == "Y"'>
+                SELECT MONTH(RQTJ) AS SJ,SUM(CASE WHEN RQTJ BETWEEN #{dqqssj} AND #{dqjzsj} THEN SCQSJS ELSE 0 END) DQZBZ,
+                        SUM(CASE WHEN RQTJ BETWEEN #{tqqssj} AND #{tqjzsj} THEN SCQSJS ELSE 0 END) TQZBZ
+                FROM "APP"."APP_AJLXFX_QSQK"
+                WHERE ((RQTJ BETWEEN #{dqqssj} AND #{dqjzsj})
+                      OR (RQTJ BETWEEN #{tqqssj} AND #{tqjzsj}))
+                      AND CBDW_BM LIKE #{dwbm}||'%'
+                <if test="ajlx != null">
+                      AND AJLX = #{ajlx}
+                </if>
+                GROUP BY MONTH(RQTJ)
+                ORDER BY MONTH(RQTJ)
+            </when>
+        </choose>
+    </select>
+
+    <select id="selectAjqsZs" resultType="java.lang.Double" parameterType="huacloud.jwdsj.module.ajlxfx.qs.model.qo.AyfbQo">
+        SELECT NVL(SUM(1),0)
+        FROM ADM.ADM_XSZT_SCQS
+        WHERE SLRQ BETWEEN #{ksrq} AND #{jzrq}
+        AND CBDW_BM LIKE #{dwbm}||'%'
+        <if test="gjz != null">
+            AND YSAY_AYMC LIKE '%'||#{gjz}||'%'
+        </if>
+        <if test="ajlx != null">
+            AND AJLX = #{ajlx}
+        </if>
+    </select>
+
+    <select id="selectAyfb" resultType="huacloud.jwdsj.module.ajlxfx.qs.model.vo.AyfbVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qs.model.qo.AyfbQo">
+        SELECT YSAY_AYMC AS AJXZ, SUM(CASE WHEN SLRQ BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) ZBZ,
+                SUM(CASE WHEN SLRQ BETWEEN #{tqksrq} AND #{tqjzrq} THEN 1 ELSE 0 END) TQZBZ
+        FROM ADM.ADM_XSZT_SCQS
+        WHERE ((SLRQ BETWEEN #{ksrq} AND #{jzrq})
+        OR (SLRQ BETWEEN #{tqksrq} AND #{tqjzrq}))
+        AND CBDW_BM LIKE #{dwbm}||'%'
+        <if test="gjz != null">
+            AND YSAY_AYMC LIKE '%'||#{gjz}||'%'
+        </if>
+        <if test="ajlx != null">
+            AND AJLX = #{ajlx}
+        </if>
+        GROUP BY YSAY_AYMC
+        ORDER BY SUM(CASE WHEN SLRQ BETWEEN #{ksrq} AND #{jzrq} THEN 1 ELSE 0 END) DESC
+        LIMIT #{beginNum},#{pageSize}
+    </select>
+
+    <select id="selectAjlb" resultType="huacloud.jwdsj.module.ajlxfx.qs.model.vo.AjlbVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qs.model.qo.AjlbQo">
+        SELECT BMSAH,AJMC,TO_DATE(SJRQ,'YYYY-MM-DD') AS SJRQ
+        FROM ADM.ADM_XSZT_SCQS
+        WHERE SLRQ BETWEEN #{ksrq} AND #{jzrq} AND CBDW_BM LIKE #{dwbm}||'%'
+        <if test="bmsah != null">
+            AND BMSAH LIKE '%'||#{bmsah}||'%'
+        </if>
+        <if test="ajmc != null">
+            AND AJMC LIKE '%'||#{ajmc}||'%'
+        </if>
+        <if test="ajlx != null">
+            AND AJLX = #{ajlx}
+        </if>
+        LIMIT #{beginNum},#{pageSize}
+    </select>
+    <select id="selectAjByBmsah" resultType="huacloud.jwdsj.module.ajlxfx.qs.model.vo.AjjyxxVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qs.model.qo.AjlbQo">
+        SELECT BMSAH,AJMC,SLRQ,SJRQ,CBDW_MC AS CBDW,DATA_SRC  AS AJLY,AQZY,YSAY_AYMC AS AY,TYSAH
+        FROM "ADM"."ADM_XSZT_SCQS"
+        WHERE BMSAH = #{bmsah}
+    </select>
+    <select id="selectXyrByBmsah" resultType="huacloud.jwdsj.module.ajlxfx.qs.model.vo.XyrjyxxVo"
+            parameterType="huacloud.jwdsj.module.ajlxfx.qs.model.qo.AjlbQo">
+        SELECT XM AS XYRXM,XB_MC AS XB,ZJHM,HJSZD_MC AS HJSZD,ZYZAD_MC AS ZAD
+        FROM "ADM"."ADM_XSZT_XYRSCQS"
+        WHERE BMSAH = #{bmsah}
+        LIMIT #{beginNum},1
+    </select>
+
+</mapper>

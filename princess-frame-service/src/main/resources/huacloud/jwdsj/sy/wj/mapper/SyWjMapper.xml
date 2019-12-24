@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="huacloud.jwdsj.module.sy.wj.mapper.SyWjMapper">
+
+
+    <select id="selectWjajblqk" resultType="huacloud.jwdsj.module.sy.wj.model.vo.WjslqkVo"
+            parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto">
+            SELECT
+                  NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.SLSCDBRS ELSE 0 END ),0) SLSCDBRS,
+                  NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.SLSCDBRS ELSE 0 END ),0) SLSCDBRSTB,
+                  NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.SLSCQSRS ELSE 0 END ),0) SLSCQSRS,
+                  NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.SLSCQSRS ELSE 0 END ),0) SLSCQSRSTB,
+                  NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.PZDBWCNRFZXYRRS ELSE 0 END ),0) PZDBRS,
+                  NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.PZDBWCNRFZXYRRS ELSE 0 END ),0) PZDBRSTB,
+                  NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.GSSJSQSRS ELSE 0 END ),0) GSSJQSRS,
+                  NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.GSSJSQSRS ELSE 0 END ),0) GSSJQSRSTB
+            FROM APP.APP_WJZT_SYZB T
+            WHERE 1 = 1 AND T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{endDate}
+            <if test="dwbm!=null and dwbm.length gt 3">
+                AND T.CBDW_BM = #{dwbm}
+            </if>
+    </select>
+
+    <select id="getScdbList" resultType="huacloud.jwdsj.module.sy.wj.model.vo.WjscdbVo"
+            parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto">
+        SELECT
+              TO_CHAR(T.RQTJ,'YYYY-MM') AS RQ ,
+              NVL(SUM(T.SLSCDBRS),0) SCDBSZ
+        FROM APP.APP_WJZT_SYZB T
+        WHERE 1 = 1 AND T.RQTJ  BETWEEN  #{beginDate} AND   #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+        GROUP BY TO_CHAR(T.RQTJ,'YYYY-MM')
+        ORDER BY TO_CHAR(T.RQTJ,'YYYY-MM')
+    </select>
+    
+    <select id="getScqsList" resultType="huacloud.jwdsj.module.sy.wj.model.vo.WjscqsVo"
+            parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto">
+        SELECT
+            TO_CHAR(T.RQTJ,'YYYY-MM') AS RQ ,
+            NVL(SUM(T.SLSCQSRS),0) SCQSSZ
+        FROM APP.APP_WJZT_SYZB T
+        WHERE 1 = 1 AND T.RQTJ  BETWEEN  #{beginDate} AND   #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+        GROUP BY TO_CHAR(T.RQTJ,'YYYY-MM')
+        ORDER BY TO_CHAR(T.RQTJ,'YYYY-MM')
+    </select>
+    
+    <select id="countPzdbbbl" parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto" resultType="java.lang.Double">
+        SELECT
+            SUM(NVL(T.BPZDBRS, 0))
+              /
+            (CASE WHEN
+                SUM(NVL(T.BPZDBRS, 0) + NVL(T.PZDBWCNRFZXYRRS, 0))  &lt;= 0 THEN 1
+            ELSE SUM(NVL(T.BPZDBRS, 0) + NVL(T.PZDBWCNRFZXYRRS, 0)) END)
+        FROM APP.APP_WJZT_SYZB T
+        WHERE 1 = 1 AND T.RQTJ  BETWEEN  #{beginDate} AND   #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+    </select>
+
+    
+    <select id="countGssjqsbqsl" parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto" resultType="java.lang.Double">
+        SELECT
+            SUM(NVL(T.GSSJSBQSRS, 0))
+            /
+            (CASE WHEN
+            SUM(NVL(T.GSSJSQSRS, 0) + NVL(T.GSSJSBQSRS, 0))  &lt;= 0 THEN 1
+            ELSE SUM(NVL(T.GSSJSQSRS, 0) + NVL(T.GSSJSBQSRS, 0)) END)
+        FROM APP.APP_WJZT_SYZB T
+        WHERE 1 = 1 AND T.RQTJ  BETWEEN  #{beginDate} AND   #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+    </select>
+
+
+
+    <select id="selectAjbAjsjts" resultType="huacloud.jwdsj.module.sy.wj.model.vo.SyWjVo"
+            parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto">
+        SELECT
+           NVL((SUM(CASE WHEN T.BPZDBFY_SLRQ    BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.BPZDBFH_SLRQ     BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.DBSS_SLRQ        BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.PZYCZCJYQX_SLRQ  BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.YCTCRQ           BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.ECTCRQ           BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.YCYCRQ           BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.ECYCRQ           BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.SCYCRQ           BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.BQSFY_SLRQ       BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.BQSFH_SLRQ       BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.ESSS_SLRQ        BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.ESKS_SLRQ        BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.SPJDCXKS_SLRQ    BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.FYZXJDZS_SLRQ    BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.FHCSYS_SLRQ      BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.FHCSES_SLRQ      BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.XSSSSF_SLRQ      BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.XSSSCFF_SLRQ     BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.BFFYCPXSSS_SLRQ  BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END)),0) CASENUMBER,
+            NVL(SUM(1),0) NUMBER
+		FROM ADM.ADM_XSZT_AJBFX T
+		WHERE 1 = 1
+		AND T.AJLX = '未检'
+		AND  T.SCQS_SLRQ BETWEEN  #{beginDate} AND #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+    </select>
+    
+    <select id="countCaseAvg" resultType="java.lang.Double"
+            parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto">
+        SELECT
+            (SUM(CASE WHEN T.BPZDBFY_SLRQ    BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.BPZDBFH_SLRQ     BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.DBSS_SLRQ        BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.PZYCZCJYQX_SLRQ  BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.YCTCRQ           BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.ECTCRQ           BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.YCYCRQ           BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.ECYCRQ           BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.SCYCRQ           BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.BQSFY_SLRQ       BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.BQSFH_SLRQ       BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.ESSS_SLRQ        BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.ESKS_SLRQ        BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.SPJDCXKS_SLRQ    BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.FYZXJDZS_SLRQ    BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.FHCSYS_SLRQ      BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.FHCSES_SLRQ      BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.XSSSSF_SLRQ      BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.XSSSCFF_SLRQ     BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END) +
+            SUM(CASE WHEN T.BFFYCPXSSS_SLRQ  BETWEEN #{beginDate} AND #{endDate} THEN 1 ELSE 0 END))
+            /
+            (CASE WHEN SUM(1) &lt; 0 THEN 1 ELSE SUM(1) END )
+        FROM ADM.ADM_XSZT_AJBFX T
+        WHERE 1 = 1
+        AND T.AJLX = '未检'
+        AND  T.SCQS_SLRQ BETWEEN  #{beginDate} AND #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+    </select>
+
+
+
+    <select id="select" resultType="huacloud.jwdsj.module.sy.wj.model.vo.WjFtjbqsVo"
+            parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto">
+          SELECT
+              NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.JDFTJBQSRS ELSE 0 END ),0) JDFTJBQSRS,
+              NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.JDFTJBQSRS ELSE 0 END ),0) JDFTJBQSRSTB,
+              NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.FTJBQSHQSRS ELSE 0 END ),0) FTJBQSHQSRS,
+              NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.FTJBQSHQSRS ELSE 0 END ),0) FTJBQSHQSRSTB,
+              NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.FTJBQSKYQMHBQSRS ELSE 0 END ),0) FTJBQSKYQMHBQSRS,
+              NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.FTJBQSKYQMHBQSRS ELSE 0 END ),0) FTJBQSKYQMHBQSRSTB,
+              NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}     AND   #{endDate}       THEN T.DWCNRZZQSRS ELSE 0 END ),0) DWCNRZZQSRS,
+              NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{tbBeginDate}   AND   #{tbEndDate}     THEN T.DWCNRZZQSRS ELSE 0 END ),0) DWCNRZZQSRSTB
+          FROM  APP.APP_WJZT_SYZB T
+          WHERE  T.RQTJ  BETWEEN  #{tbBeginDate} AND  #{endDate}
+          <if test="dwbm!=null and dwbm.length gt 3">
+                AND T.CBDW_BM = #{dwbm}
+          </if>
+    </select>
+  
+    
+    <select id="countFtjbqsl" parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto"
+            resultType="java.lang.Double">
+        SELECT
+            SUM(T.JDFTJBQSRS)
+            /
+            CASE WHEN SUM(T.JDFTJBQSRS) &lt;= 0 THEN 1 ELSE SUM(T.JDFTJBQSRS) END
+        FROM APP.APP_WJZT_SYZB T
+        WHERE 1 = 1 AND T.RQTJ  BETWEEN  #{beginDate} AND   #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+    </select>
+    
+    <select id="getFtjbqshqsList" parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto"
+            resultType="huacloud.jwdsj.module.sy.wj.model.vo.WjftjbqshqsVo">
+        SELECT
+            TO_CHAR(T.RQTJ,'YYYY-MM') AS RQ ,
+            NVL(SUM(T.FTJBQSHQSRS),0) FTJBQSHQSSZ
+        FROM APP.APP_WJZT_SYZB T
+        WHERE 1 = 1 AND T.RQTJ  BETWEEN  #{beginDate} AND   #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+        GROUP BY TO_CHAR(T.RQTJ,'YYYY-MM')
+        ORDER BY TO_CHAR(T.RQTJ,'YYYY-MM')
+        LIMIT 10
+    </select>
+
+
+    <select id="getFtjbqskyqmhbqsList" parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto"
+            resultType="huacloud.jwdsj.module.sy.wj.model.vo.WjftjbqskyqmhbqsVo">
+        SELECT
+            TO_CHAR(T.RQTJ,'YYYY-MM') AS RQ ,
+            NVL(SUM(T.FTJBQSKYQMHBQSRS),0) FTJBQSKYQMHBQSSZ
+        FROM APP.APP_WJZT_SYZB T
+        WHERE 1 = 1 AND T.RQTJ  BETWEEN  #{beginDate} AND   #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+        GROUP BY TO_CHAR(T.RQTJ,'YYYY-MM')
+        ORDER BY TO_CHAR(T.RQTJ,'YYYY-MM')
+        LIMIT 10
+    </select>
+
+
+    <select id="getDwcnrzzqsList" parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto"
+            resultType="huacloud.jwdsj.module.sy.wj.model.vo.WjdwcnrzzqsVo">
+        SELECT
+            TO_CHAR(T.RQTJ,'YYYY-MM') AS RQ ,
+            NVL(SUM(T.DWCNRZZQSRS),0) DWCNRZZQSSZ
+        FROM APP.APP_WJZT_SYZB T
+        WHERE 1 = 1 AND T.RQTJ  BETWEEN  #{beginDate} AND   #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+        GROUP BY TO_CHAR(T.RQTJ,'YYYY-MM')
+        ORDER BY TO_CHAR(T.RQTJ,'YYYY-MM')
+        LIMIT 10
+    </select>
+
+    <select id="selectSjsqswcnrfz" resultType="huacloud.jwdsj.module.sy.wj.model.vo.WjExfzqkVo"
+            parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto">
+          SELECT
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}  AND   #{endDate}  THEN T.SJSQSWCNRFZZ14Z16ZSDRS ELSE 0 END ),0) DELINQUENCY,
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}  AND   #{endDate}  THEN T.SJWCNRZS ELSE 0 END ),0) DELINQUENCYTOTAL,
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}  AND   #{endDate}  THEN T.PCSNYSYQTXHWQTXDGYSRZ14Z16ZSRS ELSE 0 END ),0) MURDER,
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}  AND   #{endDate}  THEN T.PCSNYSYQTXHWQTXDGYSRZZWCNRS ELSE 0 END ),0) MURDERTOTAL,
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}  AND   #{endDate}  THEN T.FYPCSNYSYQTXHWQTXDGYSRZRS ELSE 0 END ),0) COURTMURDER,
+                NVL(SUM(CASE WHEN T.RQTJ BETWEEN  #{beginDate}  AND   #{endDate}  THEN T.PCSNYSYQTXHWQTXDGYSRZZWCNRS ELSE 0 END ),0) COURTMURDERTOTAL
+          FROM  APP.APP_WJZT_SYZB T
+          WHERE T.RQTJ  BETWEEN  #{beginDate} AND  #{endDate}
+          <if test="dwbm!=null and dwbm.length gt 3">
+              AND T.CBDW_BM = #{dwbm}
+          </if>
+    </select>
+
+    <select id="selectSjsqswcnrfzpm" resultType="huacloud.jwdsj.module.sy.wj.model.vo.SyWjVo"
+            parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto">
+        SELECT
+              M.NAME,
+              NVL(N.SL,0) SL
+        FROM
+            (SELECT DISTINCT (CASE WHEN T.AJXZ_MC IS NULL THEN '其他' ELSE T.AJXZ_MC END) NAME FROM APP.APP_WJZT_SYZB  T ) M
+        LEFT JOIN
+            (SELECT
+                  (CASE WHEN T.AJXZ_MC IS NULL THEN '其他' ELSE T.AJXZ_MC END) NAME ,
+                  NVL(SUM(T.SJWCNRZS),0) SL
+            FROM APP.APP_WJZT_SYZB  T
+            WHERE T.RQTJ BETWEEN  #{beginDate}  AND  #{endDate}
+            <if test="dwbm!=null and dwbm.length gt 3">
+                AND T.CBDW_BM = #{dwbm}
+            </if>
+            GROUP BY T.AJXZ_MC
+            ) N
+        ON  M.NAME = N.NAME WHERE NVL(N.SL,0) > 0
+    </select>
+
+
+
+    <select id="selectQhwcnrqyfz" resultType="huacloud.jwdsj.module.sy.wj.model.vo.WjQhwcnrqyfzVo"
+            parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto">
+        SELECT
+            NVL(SUM((CASE WHEN  T.RQTJ BETWEEN  #{beginDate}    AND  #{endDate}   THEN T.QHWCNRQYFZPBRS ELSE 0 END)),0) QHWCNRQYFZPBRS,
+            NVL(SUM((CASE WHEN  T.RQTJ BETWEEN  #{tbBeginDate}  AND  #{tbEndDate} THEN T.QHWCNRQYFZPBRS ELSE 0 END)),0) QHWCNRQYFZPBRSTB,
+            NVL(SUM((CASE WHEN  T.RQTJ BETWEEN  #{beginDate}    AND  #{endDate}   THEN T.QHBM14ZSWCNRQYFZPBRS ELSE 0 END)),0) QHBMSSZSWCNRQYFZPBRS,
+            NVL(SUM((CASE WHEN  T.RQTJ BETWEEN  #{tbBeginDate}  AND  #{tbEndDate} THEN T.QHBM14ZSWCNRQYFZPBRS ELSE 0 END)),0) QHBMSSZSWCNRQYFZPBRSTB,
+            NVL(SUM((CASE WHEN  T.RQTJ BETWEEN  #{beginDate}    AND  #{endDate}   THEN T.SJXYQLYZBLFZPBRS ELSE 0 END)),0) SJXYQLYZBLFZPBRS,
+            NVL(SUM((CASE WHEN  T.RQTJ BETWEEN  #{tbBeginDate}  AND  #{tbEndDate} THEN T.SJXYQLYZBLFZPBRS ELSE 0 END)),0) SJXYQLYZBLFZPBRSTB,
+            NVL(SUM((CASE WHEN  T.RQTJ BETWEEN  #{beginDate}    AND  #{endDate}   THEN T.QHWCNRQYFZQSRS ELSE 0 END)),0) QHWCNRQYFZQSRS,
+            NVL(SUM((CASE WHEN  T.RQTJ BETWEEN  #{tbBeginDate}  AND  #{tbEndDate} THEN T.QHWCNRQYFZQSRS ELSE 0 END)),0) QHWCNRQYFZQSRSTB,
+            NVL(SUM((CASE WHEN  T.RQTJ BETWEEN  #{beginDate}    AND  #{endDate}   THEN T.QHBM14ZSWCNRQYFZQSRS ELSE 0 END)),0) QHBMSSZSWCNRQYFZQSRS,
+            NVL(SUM((CASE WHEN  T.RQTJ BETWEEN  #{tbBeginDate}  AND  #{tbEndDate} THEN T.QHBM14ZSWCNRQYFZQSRS ELSE 0 END)),0) QHBMSSZSWCNRQYFZQSRSTB,
+            NVL(SUM((CASE WHEN  T.RQTJ BETWEEN  #{beginDate}    AND  #{endDate}   THEN T.SJXYQLYZBLFZQSRS ELSE 0 END)),0) SJXYQLYZBLFZQSRS,
+            NVL(SUM((CASE WHEN  T.RQTJ BETWEEN  #{tbBeginDate}  AND  #{tbEndDate} THEN T.SJXYQLYZBLFZQSRS ELSE 0 END)),0) SJXYQLYZBLFZQSRSTB
+        FROM APP.APP_WJZT_SYZB T WHERE 1 = 1
+        AND T.RQTJ BETWEEN  #{tbBeginDate} AND  #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+    </select>
+
+    <select id="selectXqzb" resultType="huacloud.jwdsj.module.sy.wj.model.vo.WjXqzbVo"
+            parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto">
+        SELECT
+              NVL(SUM(T.XQWCNRFZRS),0) XQWCNRFZRS,
+              NVL(SUM(T.QHWCNRFZZS),0) QHWCNRFZZS
+        FROM  APP.APP_WJZT_SYZB T WHERE 1 = 1
+        AND  T.RQTJ BETWEEN  #{beginDate}  AND  #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+    </select>
+
+
+
+    <select id="selectXqwcnrfzqkfb" resultType="huacloud.jwdsj.module.sy.wj.model.vo.WjXqwcnrfzqkfbVo"
+            parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto">
+        SELECT
+            M.ZM,
+            NVL(N.NUMBER,0) NUMBER
+        FROM
+            (SELECT DISTINCT  T.AJXZ_MC ZM FROM APP.APP_WJZT_SYZB T) M
+        LEFT JOIN
+            (SELECT
+                  T.AJXZ_MC ZM ,
+                  NVL(SUM(T.XQWCNRFZRS),0) NUMBER
+            FROM APP.APP_WJZT_SYZB T
+            WHERE 1 = 1
+            AND T.RQTJ BETWEEN  #{beginDate}  AND  #{endDate}
+            <if test="dwbm!=null and dwbm.length gt 3">
+                AND T.CBDW_BM = #{dwbm}
+            </if>
+            GROUP BY  T.AJXZ_MC
+           ) N
+        ON M.ZM = N.ZM
+        ORDER BY NVL(N.NUMBER,0) DESC
+    </select>
+
+
+    <select id="selectShdcslfb" resultType="huacloud.jwdsj.module.sy.wj.model.vo.WjShdcslfbVo"
+            parameterType="huacloud.jwdsj.module.sy.wj.model.dto.SyWjDto">
+        SELECT
+            (CASE WHEN T.CBDW_SZSF IS NULL OR T.CBDW_SZSF = '' THEN '其他' ELSE T.CBDW_SZSF END ) DQMZ,
+            NVL(SUM (CASE WHEN T.RQTJ  BETWEEN  #{beginDate}    AND  #{endDate}     THEN T.KZSHDCSL ELSE 0 END),0) ZBZ,
+            NVL(SUM (CASE WHEN T.RQTJ  BETWEEN  #{tbBeginDate}    AND  #{tbEndDate}     THEN T.KZSHDCSL ELSE 0 END),0) TBZBZ
+        FROM APP.APP_WJZT_SYZB T
+        WHERE T.RQTJ BETWEEN #{tbBeginDate}  AND  #{endDate}
+        <if test="dwbm!=null and dwbm.length gt 3">
+            AND T.CBDW_BM = #{dwbm}
+        </if>
+        GROUP BY T.CBDW_SZSF
+    </select>
+</mapper>

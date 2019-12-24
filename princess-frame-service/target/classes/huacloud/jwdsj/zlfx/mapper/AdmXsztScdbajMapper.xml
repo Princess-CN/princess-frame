@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="huacloud.jwdsj.module.zlfx.mapper.AdmXsztScdbajMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ETL_DT,BMSAH,TYSAH,CBDW_BM,CBDW_MC,CBDW_SZSF,CBDW_SZCS,CBDW_SZQX,AJMC,AJLX,AJZMJS,AJZMZS,TQJR_AJLX,SLRQ,SJCLJG_MC,SJRQ,SDAY_AYDM,SDAY_AYMC,YSAY_AYDM,YSAY_AYMC,JRZCRQ,AQZY,SHSE_SLSCDBJS,SHSE_SLSCQSJS,SLSCDBJS,DBJS,BBJS,SJJS,SLWJJS,TQJRJS,AJBJTS
+    </sql>
+
+
+    <!--刑事审查逮捕案件 selectXsscdbaj-->
+    <select id="selectXsscdbaj" resultType="huacloud.jwdsj.module.zlfx.module.entity.AdmXsztScdbajEntity" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        select ajmc, bmsah, slrq
+        from ADM.ADM_XSZT_SCDBAJ
+        WHERE BBJS != 0
+        AND slrq BETWEEN #{beginDate} AND #{endDate}
+        AND CBDW_BM LIKE #{dwbm}||'%'
+        <if test="ajmc != null and ajmc !=''">
+            AND AJMC LIKE COCNAT('%',#{ajmc},'%')
+        </if>
+        <if test="bmsah != null and bmsah !=''">
+            AND BMSAH LIKE COCNAT('%',#{bmsah},'%')
+        </if>
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!--刑事审查逮捕案件 selectXsscdbaj-->
+    <select id="selectXsscdbajTal" resultType="java.lang.Integer" parameterType="huacloud.jwdsj.module.zlfx.module.qo.ZlfxQo">
+        select count(*) from (
+        select ajmc, bmsah, slrq
+        from ADM.ADM_XSZT_SCDBAJ
+        WHERE BBJS != 0
+        AND slrq BETWEEN #{beginDate} AND #{endDate}
+        AND CBDW_BM LIKE #{dwbm}||'%'
+        <if test="ajmc != null and ajmc !=''">
+            AND AJMC LIKE COCNAT('%',#{ajmc},'%')
+        </if>
+        <if test="bmsah != null and bmsah !=''">
+            AND BMSAH LIKE COCNAT('%',#{bmsah},'%')
+        </if>
+        )
+    </select>
+</mapper>

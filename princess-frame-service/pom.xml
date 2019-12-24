@@ -1,0 +1,113 @@
+﻿<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>princess</groupId>
+		<artifactId>princess-frame</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>princess-frame-service</artifactId>
+
+	<dependencies>
+
+		<!-- _project| -->
+		<dependency>
+			<groupId>princess</groupId>
+			<artifactId>princess-frame-common</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<!-- _springboot$jdbc -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jdbc</artifactId>
+		</dependency>
+
+		<!-- _dm| -->
+		<dependency>
+			<groupId>dm</groupId>
+			<artifactId>DmJdbcDriver18</artifactId>
+		</dependency>
+
+		<!-- _druid| -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid-spring-boot-starter</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-elasticsearch -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+		</dependency>
+
+		<!-- swagger -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+		</dependency>
+
+		<!-- test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+		</dependency>
+
+		<!-- mybatis-plus代码自动生成工具  mybatis-plus-generator，velocity-engine-core -->
+		<dependency>
+		    <groupId>com.baomidou</groupId>
+		    <artifactId>mybatis-plus-generator</artifactId>
+		    <version>3.2.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.velocity</groupId>
+		    <artifactId>velocity-engine-core</artifactId>
+		    <version>2.1</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.freemarker</groupId>
+		    <artifactId>freemarker</artifactId>
+		    <version>2.3.29</version>
+		</dependency>
+	</dependencies>
+
+	<!--<([mvn clean package])> -->
+	<!--<build> -->
+	<!--<finalName>jwdsj-server</finalName> -->
+	<!--<plugins> -->
+	<!--<plugin> -->
+	<!--<groupId>org.springframework.boot</groupId> -->
+	<!--<artifactId>spring-boot-maven-plugin</artifactId> -->
+	<!--<configuration> -->
+	<!--<mainClass>huacloud.jwdsj.JwdsjWebApplication</mainClass> -->
+	<!--</configuration> -->
+	<!--</plugin> -->
+	<!--&lt;!&ndash; 打包过程忽略Junit测试 &ndash;&gt; -->
+	<!--<plugin> -->
+	<!--<groupId>org.apache.maven.plugins</groupId> -->
+	<!--<artifactId>maven-surefire-plugin</artifactId> -->
+	<!--<configuration> -->
+	<!--<useSystemClassLoader>false</useSystemClassLoader> -->
+	<!--</configuration> -->
+	<!--</plugin> -->
+	<!--</plugins> -->
+	<!--</build> -->
+
+	<version>1.0.0</version>
+</project>
