@@ -44,7 +44,7 @@
 		<com.google.guava>20.0</com.google.guava>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<activation.version>1.1.1</activation.version>
-		<pdfbox.version>2.0.16</pdfbox.version>
+		<pdfbox.version>2.0.24</pdfbox.version>
 		<mail.version>1.6.1</mail.version>
 		<fontbox.version>2.0.1</fontbox.version>
 		<httpcore.version>4.4.10</httpcore.version>
