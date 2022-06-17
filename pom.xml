@@ -38,7 +38,7 @@
 		<spring.boot.admin.version>2.0.0</spring.boot.admin.version>
 		<kaptcha.version>0.0.9</kaptcha.version>
 		<swagger.version>2.9.2</swagger.version>
-		<fastjson.version>1.2.48</fastjson.version>
+		<fastjson.version>1.2.83</fastjson.version>
 		<jjwt.version>0.7.0</jjwt.version>
 		<java-jwt.version>3.4.0</java-jwt.version>
 		<com.google.guava>20.0</com.google.guava>
